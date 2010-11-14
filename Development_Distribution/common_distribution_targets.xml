@@ -25,6 +25,7 @@
 		<ant antfile="build_plot_plugin.xml" />
 		<ant antfile="build_music_plugin.xml" />
 		<ant antfile="build_charmcascades_plugin.xml" />
+		<ant antfile="build_charm_entry_plugin.xml" />
 		<!-- Additional Sources -->
 		<ant antfile="build_blog_inkmonkeys_plugin.xml" />
 		<ant antfile="build_blog_inkmonkeys_vol8_plugin.xml" />

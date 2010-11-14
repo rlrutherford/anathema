@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="Build Charm Entry Plugin" default="Build Charm Entry">
+
+	<import file="common_plugin_targets.xml" />
+
+	<property name="projectset" value="Charm_Entry" />
+	<property name="module.name" value="charm_entry" />
+
+	<property file="plugin.directories.properties" />
+		
+	<target name="Build Charm Entry" depends="Compile, Build JAR"/>
+</project>

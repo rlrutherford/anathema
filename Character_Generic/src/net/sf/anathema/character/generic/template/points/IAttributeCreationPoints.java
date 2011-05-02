@@ -13,6 +13,8 @@ public interface IAttributeCreationPoints extends ICloneable<IAttributeCreationP
   public int getFavorableTraitCount();
 
   public int getCount(AttributeGroupPriority priority);
+  
+  public boolean isCasteAxis();
 
   public int[] getCounts();
 }

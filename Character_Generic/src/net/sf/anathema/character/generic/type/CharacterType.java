@@ -45,6 +45,17 @@ public enum CharacterType implements ICharacterType {
       visitor.visitSidereal(this);
     }
   },
+  ALCHEMICAL("Alchemical") {//$NON-NLS-1$
+	    @Override
+	    public void accept(ICharacterTypeVisitor visitor) {
+	      visitor.visitAlchemical(this);
+	    }
+	    
+	    @Override
+	    public FavoringTraitType getFavoringTraitType() {
+	      return FavoringTraitType.AttributeType;
+	    }
+	  },
   MORTAL("Mortal") {//$NON-NLS-1$
     @Override
     public void accept(ICharacterTypeVisitor visitor) {

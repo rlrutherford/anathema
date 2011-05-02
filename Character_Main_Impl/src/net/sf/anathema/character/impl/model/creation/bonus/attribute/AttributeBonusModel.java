@@ -13,10 +13,22 @@ public class AttributeBonusModel extends AbstractSpendingModel {
       AttributeCostCalculator attributeCalculator,
       AttributeGroupPriority priority,
       ICreationPoints creationPoints) {
-    super("Attributes", priority.getId()); //$NON-NLS-1$
+    super("Attributes", creationPoints.getAttributeCreationPoints().isCasteAxis() ?
+    		getCasteAxisString(priority) : priority.getId()); //$NON-NLS-1$
     this.attributeCalculator = attributeCalculator;
     this.priority = priority;
     this.creationPoints = creationPoints;
+  }
+  
+  private static String getCasteAxisString(AttributeGroupPriority priority)
+  {
+	  switch (priority)
+	  {
+	  case Primary: return "Caste";
+	  case Secondary: return "Favored";
+	  case Tertiary: return "Other";
+	  }
+	  return "Caste";
   }
 
   public int getSpentBonusPoints() {

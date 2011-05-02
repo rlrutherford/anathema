@@ -23,6 +23,10 @@ public enum MagicalMaterial implements IIdentificate {
       public void visitSidereal(ICharacterType visitedType) {
         material[0] = Starmetal;
       }
+      
+      public void visitAlchemical(ICharacterType visitedType) {
+          //material[0] = ;
+        }
 
       public void visitMortal(ICharacterType visitedType) {
         // nothing to do

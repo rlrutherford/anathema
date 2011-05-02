@@ -1,0 +1,30 @@
+<exaltedCharacterTemplate characterType="Alchemical" subtemplate="default">
+  <general>
+    <edition edition="SecondEdition"/>
+    <abilityGroups uses="trait/DefaultSecondEditionAbilityGroup.template" />
+    <attributeGroups uses="template/AlchemicalAttributeGroup.template"/>
+    <essence uses="DefaultEssence.template" />
+    <traitCollection uses="trait/DefaultTraitCollection.template"/>
+    <magicTemplate uses="template/AlchemicalMagic2nd.template"/>
+    <presentation uses="template/LunarPresentation.template"/>
+    <additionalTemplates>
+    </additionalTemplates>
+    <healthTemplate>
+      <toughnessControllingTrait type="Stamina"/>
+    </healthTemplate>
+  </general>
+  <creation>
+    <bonusPointCosts uses="DefaultBonusPointCost2nd.template"/>
+    <creationPoints>
+      <attributeDots primary="8" secondary="6" tertiary="4" favoredPicks="3" casteAxis="true"/>
+      <abilityDots general="25"/>
+      <backgroundDots count="15" />
+      <virtueDots count="5" />
+      <bonusPoints count="18" />
+      <charmPicks favored="0" general="0"/>
+    </creationPoints>
+  </creation>
+  <experience>
+    <experiencePointCost uses="experience/DefaultExperienceCost.template" />
+  </experience>
+</exaltedCharacterTemplate>

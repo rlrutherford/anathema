@@ -1,0 +1,8 @@
+<magicTemplate>
+	<freePicksPredicate defaultResponse="true"/>
+	<favoringTraitType type="AttributeType"/>
+	<charmTemplate charmType="Alchemical">
+		<martialArts level="Terrestrial" highLevel="true" /> 
+	</charmTemplate>
+	<spellTemplate maximumSorceryCircle="None" maximumNecromancyCircle="None"/>
+</magicTemplate>

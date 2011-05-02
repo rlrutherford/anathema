@@ -1,0 +1,17 @@
+<attributeGroups>
+  <group id="Physical">
+    <trait type="Strength" casteId="Orichalcum,Adamant"/>
+    <trait type="Dexterity" casteId="Starmetal,Moonsilver"/>
+    <trait type="Stamina" casteId="Soulsteel,Jade"/>
+  </group>
+  <group id="Social">
+     <trait type="Charisma" casteId="Orichalcum,Jade"/>
+     <trait type="Manipulation" casteId="Soulsteel,Starmetal"/>
+     <trait type="Appearance" casteId="Moonsilver,Adamant"/>    
+  </group>
+  <group id="Mental">
+    <trait type="Perception" casteId="Soulsteel,Adamant"/>
+    <trait type="Intelligence" casteId="Orichalcum,Starmetal"/>
+    <trait type="Wits" casteId="Moonsilver,Jade"/>
+  </group>  
+</attributeGroups>

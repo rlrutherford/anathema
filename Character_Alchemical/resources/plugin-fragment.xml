@@ -1,0 +1,16 @@
+<!DOCTYPE plugin-fragment PUBLIC "-//JPF//Java Plug-in Manifest 0.6" "http://jpf.sourceforge.net/plugin_0_6.dtd">
+<plugin-fragment id="net.sf.anathema.character.alchemical" version="1.03" plugin-id="net.sf.anathema.character" plugin-version="1.03">
+	<runtime>		
+		<library id="alchemical" path="./" type="code">
+			<export prefix="*"/>
+		</library>
+		<library id="alchemicalresources" path="./" type="resources">
+			<export prefix="*"/>
+		</library>
+	</runtime>
+	<extension plugin-id="net.sf.anathema.core"	point-id="AnathemaResources" id="AlchemicalResources">
+		<parameter id="bundle" value="Alchemical"/>
+		<parameter id="bundle" value="Charms_Alchemical"/>
+		<parameter id="bundle" value="Charms_Alchemical_Pages"/>
+	</extension>
+</plugin-fragment>

@@ -32,6 +32,7 @@ public class BackgroundBonusPointCostCalculator {
 
   public void calculateBonusPoints() {
     clear();
+    backgroundConfiguration.update();
     IDefaultTrait[] backgrounds = backgroundConfiguration.getBackgrounds();
     IDefaultTrait[] sortedBackgrounds = additionalPools.sortBackgrounds(backgrounds);
     for (IDefaultTrait background : sortedBackgrounds) {
@@ -41,16 +42,17 @@ public class BackgroundBonusPointCostCalculator {
 
   private void handleBackground(IDefaultTrait background) {
     int backgroundValue = background.getCalculationValue();
+    int maxFree = 3; // for now
     ITraitCostModifier costModifier = rules.getCostModifier(background.getType());
     int additionalDotsToSpend = costModifier.getAdditionalDotsToSpend(backgroundValue);
     int additionalBonusPointsToSpend = costModifier.getAdditionalBonusPointsToSpend(backgroundValue);
     int modifiedTotalBackgroundValue = backgroundValue + additionalDotsToSpend;
-    int dotsToSpent = Math.min(backgroundValue, 3) - background.getInitialValue() + additionalDotsToSpend;
+    int dotsToSpent = Math.min(backgroundValue, maxFree) - background.getAbsoluteMinValue() + additionalDotsToSpend;
     int remainingDots = freeBackgroundDots - dotsSpent;
     int dotsSpentOnBackground = Math.min(remainingDots, dotsToSpent);
     dotsSpent += dotsSpentOnBackground;
     int bonusPointsSpentOnBackground = 0;
-    for (int value = dotsSpentOnBackground + background.getInitialValue();
+    for (int value = dotsSpentOnBackground + background.getAbsoluteMinValue();
     	 value < modifiedTotalBackgroundValue; value++) {
       bonusPointsSpentOnBackground += costs.getBackgroundBonusPointCost().getRatingCosts(value);
     }

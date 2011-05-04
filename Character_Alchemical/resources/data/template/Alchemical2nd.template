@@ -18,7 +18,7 @@
     <creationPoints>
       <attributeDots primary="8" secondary="6" tertiary="4" favoredPicks="3" favoredDots="1" casteAxis="true"/>
       <abilityDots general="25"/>
-      <backgroundDots count="15" />
+      <backgroundDots count="10" />
       <virtueDots count="5" />
       <bonusPoints count="18" />
       <charmPicks favored="0" general="0"/>

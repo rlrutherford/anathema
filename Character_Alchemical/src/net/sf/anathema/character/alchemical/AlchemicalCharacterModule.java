@@ -36,6 +36,11 @@ import net.sf.anathema.lib.util.Identificate;
 public class AlchemicalCharacterModule extends NullObjectCharacterModuleAdapter {
   private static final int ESSENCE_MAX = EssenceTemplate.SYSTEM_ESSENCE_MAX;
   
+  public static final String BACKGROUND_ID_CLASS = "Class"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_COMMAND = "Command"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_EIDOLIN = "Eidolin"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_SAVANT = "AlchemicalSavant"; //$NON-NLS-1$
+  
   @Override
   public void registerCommonData(ICharacterGenerics characterGenerics)
   {
@@ -52,19 +57,13 @@ public class AlchemicalCharacterModule extends NullObjectCharacterModuleAdapter 
 
   @Override
   public void addBackgroundTemplates(ICharacterGenerics generics) {
-    /*IIdentificateRegistry<IBackgroundTemplate> backgroundRegistry = generics.getBackgroundRegistry();
-    ITemplateType[] defaultTemplateType = new ITemplateType[] { DefaultSiderealTemplate.TEMPLATE_TYPE, revisedType };
-    backgroundRegistry.add(new CharacterTypeBackgroundTemplate(BACKGROUND_ID_ACQUAINTANCES, CharacterType.SIDEREAL));
-    backgroundRegistry.add(new CharacterTypeBackgroundTemplate(BACKGROUND_ID_CONNECTIONS, CharacterType.SIDEREAL));
-    backgroundRegistry.add(new TemplateTypeBackgroundTemplate(BACKGROUND_ID_CELESTIAL_MANSE, defaultTemplateType));
-    backgroundRegistry.add(new EditionSpecificCharacterTypeBackgroundTemplate(BACKGROUND_ID_FAVOR, CharacterType.SIDEREAL, ExaltedEdition.FirstEdition));
-    backgroundRegistry.add(new EditionSpecificCharacterTypeBackgroundTemplate(BACKGROUND_ID_HEAVENLY_FAVOR, CharacterType.SIDEREAL, ExaltedEdition.FirstEdition));
-    backgroundRegistry.add(new TemplateTypeBackgroundTemplate(BACKGROUND_ID_SALARY, defaultTemplateType));
-    backgroundRegistry.add(new TemplateTypeBackgroundTemplate(
-        BACKGROUND_ID_SAVANT,
-        defaultTemplateType,
-        LowerableState.Default));
-    backgroundRegistry.add(new TemplateTypeBackgroundTemplate(BACKGROUND_ID_SIFU, defaultTemplateType));*/
+    IIdentificateRegistry<IBackgroundTemplate> backgroundRegistry = generics.getBackgroundRegistry();
+    //ITemplateType[] defaultTemplateType = new ITemplateType[] { defaultType, revisedType };
+    backgroundRegistry.add(new CharacterTypeBackgroundTemplate(BACKGROUND_ID_CLASS, CharacterType.ALCHEMICAL));
+    backgroundRegistry.add(new CharacterTypeBackgroundTemplate(BACKGROUND_ID_COMMAND, CharacterType.ALCHEMICAL));
+    backgroundRegistry.add(new CharacterTypeBackgroundTemplate(BACKGROUND_ID_EIDOLIN, CharacterType.ALCHEMICAL));
+    backgroundRegistry.add(new CharacterTypeBackgroundTemplate(BACKGROUND_ID_SAVANT, CharacterType.ALCHEMICAL));
+    
   }
 
   @Override

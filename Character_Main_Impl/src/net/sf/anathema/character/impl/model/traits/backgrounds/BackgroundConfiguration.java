@@ -55,6 +55,28 @@ public class BackgroundConfiguration implements IBackgroundConfiguration {
 	  	  fireBackgroundAddedEvent(background);
   }
   
+  public void update()
+  {
+	  for (IBackgroundTemplate background : getAllAvailableBackgroundTemplates())
+	  {
+		  ITraitTemplate traitTemplate = traitTemplates.getTraitTemplate(background);
+		  IDefaultTrait trait = getBackgroundByTemplate(background);
+		  boolean notShown = false;
+		  if (trait == null)
+		  {
+		    TraitRules rules = new TraitRules(background, traitTemplate, context.getLimitationContext());
+		    trait = new DefaultTrait(rules, context, new FriendlyValueChangeChecker());
+		    notShown = true;
+		  }
+		  if (trait.getCreationValue() < trait.getAbsoluteMinValue())
+		  {
+			  if (notShown)
+				  addBackground(background);
+			  trait.setCurrentValue(trait.getAbsoluteMinValue());
+		  }
+	  }
+  }
+  
   public IBackgroundTemplate[] getAllAvailableBackgroundTemplates() {
     List<IBackgroundTemplate> backgroundList = new ArrayList<IBackgroundTemplate>();
     for (IBackgroundTemplate backgroundTemplate : backgroundRegistry.getAll()) {

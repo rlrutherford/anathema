@@ -9,8 +9,8 @@ public class GenericTraitTemplate extends ReflectionCloneableObject<IClonableTra
     IClonableTraitTemplate {
 
   private Integer minimumValue;
-  private Integer casteMinimumValue;
-  private Integer favoredMinimumValue;
+  private Integer casteMinimumValue = 0;
+  private Integer favoredMinimumValue = 0;
   private Integer zeroLevelValue;
   private Integer startValue = 0;
   private LowerableState lowerableState;

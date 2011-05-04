@@ -47,6 +47,8 @@ public class DefaultTrait extends AbstractFavorableTrait implements IFavorableDe
         castes,
         favoredIncrementChecker,
         this,
+        traitRules.getCasteMinimumValue(),
+        traitRules.getFavoredMinimumValue(),
         traitRules.isRequiredFavored()));
     listening.addChangeListener(changeListener);
     getFavorization().updateFavorableStateToCaste();

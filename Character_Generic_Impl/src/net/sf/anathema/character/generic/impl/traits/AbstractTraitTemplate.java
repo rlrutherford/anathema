@@ -17,6 +17,16 @@ public abstract class AbstractTraitTemplate implements ITraitTemplate {
     this.lowerable = lowerable;
     this.zeroValue = zeroValue;
   }
+  
+  public int getCasteMinimumValue()
+  {
+	  return 0;
+  }
+  
+  public int getFavoredMinimumValue()
+  {
+	  return 1;
+  }
 
   public final int getStartValue() {
     return startValue;

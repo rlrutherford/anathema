@@ -21,6 +21,8 @@ public class GenericTraitTemplateParser {
   private static final String ATTRIB_IS_REQUIRED_FAVORED = "isRequiredFavored"; //$NON-NLS-1$
   private static final String ATTRIB_MINIMUM = "minimum";
   private static final String TAG_MINIMUM = "minimum"; //$NON-NLS-1$
+  private static final String TAG_CASTE_MINIMUM = "casteMinimum"; //$NON-NLS-1$
+  private static final String TAG_FAVORED_MINIMUM = "favoredMinimum"; //$NON-NLS-1$
   private static final String TAG_LIMITATION = "limitation"; //$NON-NLS-1$
   private static final String VALUE_STATIC = "Static"; //$NON-NLS-1$
   private static final String VALUE_ESSENCE = "Essence"; //$NON-NLS-1$
@@ -44,6 +46,14 @@ public class GenericTraitTemplateParser {
     Element minimumValueElement = ElementUtilities.getRequiredElement(traitElement, TAG_MINIMUM);
     defaultTraitTemplate.setMinimumValue(ElementUtilities.getRequiredIntAttrib(minimumValueElement, ATTRIB_VALUE));
     defaultTraitTemplate.setLimitation(parseLimitation(traitElement));
+    
+    Element casteMinimumValueElement = traitElement.element(TAG_CASTE_MINIMUM);
+    defaultTraitTemplate.setCasteMinimumValue(casteMinimumValueElement != null ?
+    		ElementUtilities.getRequiredIntAttrib(casteMinimumValueElement, ATTRIB_VALUE) : 0);
+    Element favoredMinimumValueElement = traitElement.element(TAG_FAVORED_MINIMUM);
+    defaultTraitTemplate.setFavoredMinimumValue(favoredMinimumValueElement != null ?
+    		ElementUtilities.getRequiredIntAttrib(favoredMinimumValueElement, ATTRIB_VALUE) : 0);
+    
     return defaultTraitTemplate;
   }
   
@@ -62,6 +72,12 @@ public class GenericTraitTemplateParser {
 	    defaultTraitTemplate.setMinimumValue(minimumValueElement != null ?
 	    		ElementUtilities.getRequiredIntAttrib(minimumValueElement, ATTRIB_VALUE) :
 	    		ElementUtilities.getIntAttrib(traitElement, ATTRIB_MINIMUM, 0));
+	    Element casteMinimumValueElement = traitElement.element(TAG_CASTE_MINIMUM);
+	    defaultTraitTemplate.setCasteMinimumValue(casteMinimumValueElement != null ?
+	    		ElementUtilities.getRequiredIntAttrib(casteMinimumValueElement, ATTRIB_VALUE) : 0);
+	    Element favoredMinimumValueElement = traitElement.element(TAG_FAVORED_MINIMUM);
+	    defaultTraitTemplate.setFavoredMinimumValue(favoredMinimumValueElement != null ?
+	    		ElementUtilities.getRequiredIntAttrib(favoredMinimumValueElement, ATTRIB_VALUE) : 0);
 	    if (traitElement.element(TAG_LIMITATION) != null)
 	    	defaultTraitTemplate.setLimitation(parseLimitation(traitElement));
 	    else

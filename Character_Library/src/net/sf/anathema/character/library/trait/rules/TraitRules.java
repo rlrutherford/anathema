@@ -46,6 +46,16 @@ public class TraitRules implements ITraitRules
     }
     return modifiedCreationRange.getLowerBound();
   }
+  
+  public int getCasteMinimumValue()
+  {
+	  return template.getCasteMinimumValue();
+  }
+  
+  public int getFavoredMinimumValue()
+  {
+	  return template.getFavoredMinimumValue();
+  }
 
   public int getStartValue() {
     return template.getStartValue();

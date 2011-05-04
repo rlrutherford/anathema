@@ -33,4 +33,14 @@ public class CasteRangeTraitTemplate extends AbstractTraitTemplate {
   public ITraitLimitation getLimitation() {
     return limitation;
   }
+  
+  public int getCasteMinimumValue()
+  {
+	  return defaultTemplate.getCasteMinimumValue();
+  }
+  
+  public int getFavoredMinimumValue()
+  {
+	  return defaultTemplate.getFavoredMinimumValue();
+  }
 }

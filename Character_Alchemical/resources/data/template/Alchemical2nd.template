@@ -4,7 +4,7 @@
     <abilityGroups uses="trait/DefaultSecondEditionAbilityGroup.template" />
     <attributeGroups uses="template/AlchemicalAttributeGroup.template"/>
     <essence uses="DefaultEssence.template" />
-    <traitCollection uses="trait/DefaultTraitCollection.template"/>
+    <traitCollection uses="template/AlchemicalTraitCollection.template"/>
     <magicTemplate uses="template/AlchemicalMagic2nd.template"/>
     <presentation uses="template/LunarPresentation.template"/>
     <additionalTemplates>
@@ -16,7 +16,7 @@
   <creation>
     <bonusPointCosts uses="DefaultBonusPointCost2nd.template"/>
     <creationPoints>
-      <attributeDots primary="8" secondary="6" tertiary="4" favoredPicks="3" casteAxis="true"/>
+      <attributeDots primary="8" secondary="6" tertiary="4" favoredPicks="3" favoredDots="1" casteAxis="true"/>
       <abilityDots general="25"/>
       <backgroundDots count="15" />
       <virtueDots count="5" />

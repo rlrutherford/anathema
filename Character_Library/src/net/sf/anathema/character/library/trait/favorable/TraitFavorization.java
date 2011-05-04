@@ -19,18 +19,34 @@ public class TraitFavorization implements ITraitFavorization {
   private final ICasteType[] castes;
   private final boolean isRequiredFavored;
   private final IBasicCharacterData basicData;
+  private final int casteMinimum;
+  private final int favoredMinimum;
+  
+  public TraitFavorization(
+	      IBasicCharacterData basicData,
+	      ICasteType[] castes,
+	      IIncrementChecker favoredIncrementChecker,
+	      ITrait trait,
+	      boolean isRequiredFavored)
+  {
+	  this(basicData, castes, favoredIncrementChecker, trait, 0, 1, isRequiredFavored);
+  }
 
   public TraitFavorization(
       IBasicCharacterData basicData,
       ICasteType[] castes,
       IIncrementChecker favoredIncrementChecker,
       ITrait trait,
+      int casteMinimum,
+      int favoredMinimum,
       boolean isRequiredFavored) {
     this.basicData = basicData;
     this.castes = castes;
     this.favoredIncrementChecker = favoredIncrementChecker;
     this.trait = trait;
     this.isRequiredFavored = isRequiredFavored;
+    this.casteMinimum = casteMinimum;
+    this.favoredMinimum = favoredMinimum;
     this.state = isRequiredFavored ? FavorableState.Favored : FavorableState.Default;
   }
 
@@ -72,7 +88,10 @@ public class TraitFavorization implements ITraitFavorization {
   }
 
   public int getMinimalValue() {
-    return this.state == FavorableState.Favored ? 1 : 0;
+	int minValue = 0;
+	minValue = this.state == FavorableState.Caste ? casteMinimum : minValue;
+	minValue = this.state == FavorableState.Favored ? favoredMinimum : minValue;
+    return minValue;
   }
 
   public void setFavored(boolean favored) {

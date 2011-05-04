@@ -20,4 +20,14 @@ public class AlternateRequirementTraitMinimum implements ITraitMinimum {
         ? requirement.getFreeMinimum()
         : requirement.getStrictMinimum();
   }
+  
+  public int getCasteMinimumValue()
+  {
+	  return 0;
+  }
+  
+  public int getFavoredMinimumValue()
+  {
+	  return 1;
+  }
 }

@@ -29,6 +29,16 @@ public class AggregatedTraitTemplate implements ITraitTemplate {
   public LowerableState getLowerableState() {
     return template.getLowerableState();
   }
+  
+  public int getCasteMinimumValue()
+  {
+	  return template.getCasteMinimumValue();
+  }
+  
+  public int getFavoredMinimumValue()
+  {
+	  return template.getFavoredMinimumValue();
+  }
 
   public int getStartValue() {
     return startValue;

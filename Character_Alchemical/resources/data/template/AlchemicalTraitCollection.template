@@ -1,0 +1,9 @@
+<traitTemplates uses="trait/DefaultTraitCollection.template">
+  <attributes>
+    <defaultTrait startValue="1" lowerableState="Default">
+      <limitation type="Essence"/>
+      <minimum value="1"/>
+      <casteMinimum value="2"/>
+    </defaultTrait>
+  </attributes>
+</traitTemplates>

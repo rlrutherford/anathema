@@ -51,6 +51,8 @@ public class AggregatedTrait extends AbstractFavorableTrait implements IAggregat
         castes,
         favoredIncrementChecker,
         this,
+        traitRules.getCasteMinimumValue(),
+        traitRules.getFavoredMinimumValue(),
         traitRules.isRequiredFavored());
     this.subTraits = new AggregationSubTraitContainer(
         traitRules,

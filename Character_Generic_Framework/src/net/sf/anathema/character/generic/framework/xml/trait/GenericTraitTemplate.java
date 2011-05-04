@@ -9,6 +9,8 @@ public class GenericTraitTemplate extends ReflectionCloneableObject<IClonableTra
     IClonableTraitTemplate {
 
   private Integer minimumValue;
+  private Integer casteMinimumValue;
+  private Integer favoredMinimumValue;
   private Integer zeroLevelValue;
   private Integer startValue = 0;
   private LowerableState lowerableState;
@@ -34,6 +36,16 @@ public class GenericTraitTemplate extends ReflectionCloneableObject<IClonableTra
   public int getMinimumValue(ILimitationContext limitationContext) {
     return minimumValue;
   }
+  
+  public int getCasteMinimumValue()
+  {
+	  return casteMinimumValue;
+  }
+  
+  public int getFavoredMinimumValue()
+  {
+	  return favoredMinimumValue;
+  }
 
   public final void setLimitation(ITraitLimitation limitation) {
     this.limitation = limitation;
@@ -46,6 +58,14 @@ public class GenericTraitTemplate extends ReflectionCloneableObject<IClonableTra
   public final void setMinimumValue(int minimumValue) {
     this.minimumValue = minimumValue;
   }
+  
+  public final void setCasteMinimumValue(int minimumValue) {
+	    this.casteMinimumValue = minimumValue;
+	  }
+  
+  public final void setFavoredMinimumValue(int minimumValue) {
+	    this.favoredMinimumValue = minimumValue;
+	  }
 
   public final void setStartValue(int startValue) {
 	  if (startValue > this.startValue)

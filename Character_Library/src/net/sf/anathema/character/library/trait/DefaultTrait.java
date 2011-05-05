@@ -90,7 +90,7 @@ public class DefaultTrait extends AbstractFavorableTrait implements IFavorableDe
   }
 
   public void setCreationValue(int value) {
-    if (getFavorization().isFavored()) {
+    if (getFavorization().isCasteOrFavored()) {
       value = Math.max(value, getFavorization().getMinimalValue());
     }
     int correctedValue = getTraitRules().getCreationValue(value);

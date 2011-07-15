@@ -8,6 +8,7 @@
     <magicTemplate uses="template/AlchemicalMagic2nd.template"/>
     <presentation uses="template/LunarPresentation.template"/>
     <additionalTemplates>
+    	<template id="Alchemical.CharmSlots" dedicated="4" generic="4"/>
     </additionalTemplates>
     <healthTemplate>
       <toughnessControllingTrait type="Stamina"/>

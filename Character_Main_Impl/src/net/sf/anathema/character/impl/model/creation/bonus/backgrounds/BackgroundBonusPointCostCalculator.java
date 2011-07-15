@@ -48,7 +48,8 @@ public class BackgroundBonusPointCostCalculator {
     int additionalDotsToSpend = costModifier.getAdditionalDotsToSpend(backgroundValue);
     int additionalBonusPointsToSpend = costModifier.getAdditionalBonusPointsToSpend(backgroundValue);
     int modifiedTotalBackgroundValue = backgroundValue + additionalDotsToSpend;
-    int dotsToSpent = Math.max(0, Math.min(backgroundValue, maxFree) - background.getInitialValue())
+    int dotsToSpent = Math.max(0, Math.min(backgroundValue, maxFree)
+    				              - Math.max(background.getInitialValue(), background.getAbsoluteMinValue()))
     				  + additionalDotsToSpend;
     int remainingDots = freeBackgroundDots - dotsSpent;
     int dotsSpentOnBackground = Math.min(remainingDots, dotsToSpent);

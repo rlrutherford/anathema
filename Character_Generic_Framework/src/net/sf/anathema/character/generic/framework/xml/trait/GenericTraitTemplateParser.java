@@ -28,6 +28,7 @@ public class GenericTraitTemplateParser {
   private static final String TAG_FAVORED_MINIMUM = "favoredMinimum"; //$NON-NLS-1$
   private static final String TAG_LIMITATION = "limitation"; //$NON-NLS-1$
   private static final String TAG_TAG = "tag";
+  private static final String TAG_MAX_FREE = "maxFree";
   private static final String VALUE_STATIC = "Static"; //$NON-NLS-1$
   private static final String VALUE_ESSENCE = "Essence"; //$NON-NLS-1$
   private static final String VALUE_AGE = "Age"; //$NON-NLS-1$
@@ -84,6 +85,9 @@ public class GenericTraitTemplateParser {
     if (tagElement != null)
     	defaultTraitTemplate.setTag(ElementUtilities.getRequiredAttrib(tagElement, ATTRIB_VALUE));
     
+    Element maxFreeElement = traitElement.element(TAG_MAX_FREE);
+    if (maxFreeElement != null)
+    	defaultTraitTemplate.setMaxFree(ElementUtilities.getIntAttrib(maxFreeElement, ATTRIB_VALUE, -1));
     
     Element casteMinimumValueElement = traitElement.element(TAG_CASTE_MINIMUM);
     defaultTraitTemplate.setCasteMinimumValue(casteMinimumValueElement != null ?

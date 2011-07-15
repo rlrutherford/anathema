@@ -42,6 +42,11 @@ public class AlternateRequirementTraitTemplate extends AlternateRequirementTrait
     return false;
   }
   
+  public int getMaxFree()
+  {
+	  return 0;
+  }
+  
   public String getTag()
   {
 	  return null;

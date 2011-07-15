@@ -31,6 +31,8 @@ public interface ITraitRules {
   public int getStartValue();
 
   public int getZeroCalculationCost();
+  
+  public int getMaxFree();
 
   public boolean isLowerable();
 

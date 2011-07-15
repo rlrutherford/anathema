@@ -51,6 +51,11 @@ public abstract class AbstractTraitTemplate implements ITraitTemplate {
 	  return getMinimumValue(context);
   }
   
+  public int getMaxFree()
+  {
+	  return 0;
+  }
+  
   public String getTag()
   {
 	  return null;

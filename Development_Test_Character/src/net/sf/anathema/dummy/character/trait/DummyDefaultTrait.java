@@ -140,6 +140,11 @@ public class DummyDefaultTrait extends DummyModifiableGenericTrait implements ID
   public int getZeroCalculationValue() {
     return 0;
   }
+  
+  public int getMaxFree()
+  {
+	  return 0;
+  }
 
   public boolean isLowerable() {
     return false;

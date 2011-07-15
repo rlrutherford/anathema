@@ -12,6 +12,12 @@
 			<minimum value="0"/>
 		</defaultTrait>
 		
+		<specialTrait id="Artifact" startValue="0" lowerableState="Default" zeroLevel="0" isRequiredFavored="false">
+			<limitation type="Static" value="5"/>
+			<minimum value="0"/>
+			<maxFree value="5"/>
+		</specialTrait>
+		
 		<casteMinimumTraits caste="Orichalum">
 			<specialTrait id="Class" minimum="3"/>
 		</casteMinimumTraits>

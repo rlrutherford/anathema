@@ -42,7 +42,8 @@ public class BackgroundBonusPointCostCalculator {
 
   private void handleBackground(IDefaultTrait background) {
     int backgroundValue = background.getCalculationValue();
-    int maxFree = 3; // for now
+    int maxFree = background.getMaxFree();
+    maxFree = maxFree == -1 ? 3 : maxFree;
     ITraitCostModifier costModifier = rules.getCostModifier(background.getType());
     int additionalDotsToSpend = costModifier.getAdditionalDotsToSpend(backgroundValue);
     int additionalBonusPointsToSpend = costModifier.getAdditionalBonusPointsToSpend(backgroundValue);

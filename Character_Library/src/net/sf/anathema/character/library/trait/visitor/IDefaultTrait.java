@@ -11,6 +11,8 @@ public interface IDefaultTrait extends ITrait, IModifiableBasicTrait, IModifiabl
   public int getMinimalValue();
   
   public int getCalculationMinValue();
+  
+  public int getMaxFree();
 
   public void resetCurrentValue();
 

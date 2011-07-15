@@ -122,6 +122,11 @@ public class GenericRestrictedTraitTemplate extends ReflectionCloneableObject<IC
     return clone;
   }
   
+  public int getMaxFree()
+  {
+	  return traitTemplate.getMaxFree();
+  }
+  
   public String getTag()
   {
 	  return null;

@@ -14,5 +14,7 @@ public interface ITraitTemplate extends ITraitMinimum {
 
   public boolean isRequiredFavored();
   
+  public int getMaxFree();
+  
   public String getTag();
 }

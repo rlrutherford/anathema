@@ -14,6 +14,7 @@ public class GenericTraitTemplate extends ReflectionCloneableObject<IClonableTra
   private Integer favoredMinimumValue = 0;
   private Integer zeroLevelValue;
   private Integer startValue = 0;
+  private Integer maxFree = -1;
   private LowerableState lowerableState;
   private ITraitLimitation limitation;
   private boolean isRequiredFavored;
@@ -53,6 +54,11 @@ public class GenericTraitTemplate extends ReflectionCloneableObject<IClonableTra
   public int getFavoredMinimumValue()
   {
 	  return favoredMinimumValue;
+  }
+  
+  public int getMaxFree()
+  {
+	  return maxFree;
   }
 
   public final void setLimitation(ITraitLimitation limitation) {
@@ -105,6 +111,11 @@ public class GenericTraitTemplate extends ReflectionCloneableObject<IClonableTra
   public void setTag(String tag)
   {
 	  this.tag = tag;
+  }
+  
+  public void setMaxFree(int max)
+  {
+	  this.maxFree = max;
   }
   
   public int getCalculationMinValue(ILimitationContext context, ITraitType type)

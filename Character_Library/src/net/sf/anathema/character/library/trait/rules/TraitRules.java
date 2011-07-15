@@ -137,6 +137,11 @@ public class TraitRules implements ITraitRules
     }
     return allowedRange.getUpperBound();
   }
+  
+  public int getMaxFree()
+  {
+	  return template.getMaxFree();
+  }
 
   public int getExperienceCalculationValue(int creationValue, int experiencedValue, int currentValue) {
     if (template.getLowerableState() == LowerableState.LowerableRegain) {

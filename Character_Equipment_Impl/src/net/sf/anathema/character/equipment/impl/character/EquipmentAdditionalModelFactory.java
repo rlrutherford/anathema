@@ -10,9 +10,7 @@ import net.sf.anathema.character.generic.additionaltemplate.IAdditionalModel;
 import net.sf.anathema.character.generic.equipment.weapon.IArmourStats;
 import net.sf.anathema.character.generic.framework.additionaltemplate.model.IAdditionalModelFactory;
 import net.sf.anathema.character.generic.framework.additionaltemplate.model.ICharacterModelContext;
-import net.sf.anathema.character.generic.rules.IExaltedRuleSet;
 import net.sf.anathema.character.generic.template.additional.IAdditionalTemplate;
-import net.sf.anathema.character.generic.type.ICharacterType;
 
 public class EquipmentAdditionalModelFactory implements IAdditionalModelFactory {
 
@@ -25,15 +23,12 @@ public class EquipmentAdditionalModelFactory implements IAdditionalModelFactory 
   public IAdditionalModel createModel(IAdditionalTemplate additionalTemplate, ICharacterModelContext context) {
     IEquipmentAdditionalModelTemplate template = (IEquipmentAdditionalModelTemplate) additionalTemplate;
     IBasicCharacterData basicCharacterContext = context.getBasicCharacterContext();
-    ICharacterType characterType = basicCharacterContext.getCharacterType();
     IArmourStats naturalArmour = new NaturalSoak(context);
-    IExaltedRuleSet ruleSet = basicCharacterContext.getRuleSet();
     return new EquipmentAdditionalModel(
-        characterType,
+    	basicCharacterContext,
         naturalArmour,
         equipmentTemplateProvider,
-        ruleSet,
         new NaturalWeaponTemplate(),
-        template.getNaturalWeaponTemplate(characterType));
+        template.getNaturalWeaponTemplate(basicCharacterContext.getCharacterType()));
   }
 }

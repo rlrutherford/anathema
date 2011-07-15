@@ -1,0 +1,11 @@
+<magicTemplate>
+	<freePicksPredicate defaultResponse="true"/>
+	<favoringTraitType type="YoziType"/>
+	<charmTemplate charmType="Infernal">
+		<martialArts level="Celestial"/>
+		<alienCharms>
+			<caste type="Fiend"/>
+		</alienCharms>
+	</charmTemplate>
+	<spellTemplate maximumSorceryCircle="Solar" maximumNecromancyCircle="Labyrinth" subTemplate="net.sf.anathema.character.infernal.template.InfernalSpellMagicTemplate"/>
+</magicTemplate>

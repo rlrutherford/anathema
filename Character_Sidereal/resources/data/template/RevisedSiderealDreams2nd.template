@@ -9,10 +9,10 @@
     <presentation uses="template/SiderealPresentation.template"/>
     <additionalRules uses="template/SiderealAdditionalRules2nd.template">
      	<forbiddenBackgrounds>
-     		<backgroundReference id="Contacts" />
-     		<backgroundReference id="Influence" />
-     		<backgroundReference id="Followers" />
-     		<backgroundReference id="Cult" />
+    		<backgroundReference id="Contacts"/>
+    		<backgroundReference id="Followers"/>
+    		<backgroundReference id="Influence"/>
+    		<backgroundReference id="Resources"/>
      	</forbiddenBackgrounds>
      	<revisedIntimacies value="true" />
     	<willpowerVirtueBased value="false" />
@@ -35,7 +35,7 @@
     <bonusPointCosts uses="template/RevisedSiderealBonusPointCost2nd.template" />
     <creationPoints>
       <attributeDots primary="8" secondary="6" tertiary="4"/>
-      <abilityDots general="27" favored="10" favoredPicks="4" />
+      <abilityDots general="15" favored="10" favoredPicks="4" />
       <backgroundDots count="10" />
       <specialtyDots count="4" />
       <virtueDots count="5" />

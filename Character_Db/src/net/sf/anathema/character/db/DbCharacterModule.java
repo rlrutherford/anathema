@@ -4,7 +4,6 @@ import net.sf.anathema.character.db.aspect.DBAspect;
 import net.sf.anathema.character.db.magic.TerrestrialReinforcement;
 import net.sf.anathema.character.db.reporting.FirstEditionDbPartEncoder;
 import net.sf.anathema.character.db.reporting.SecondEditionDbPartEncoder;
-import net.sf.anathema.character.db.template.IDbSpecialCharms;
 import net.sf.anathema.character.db.virtueflaw.DbVirtueFlawModelFactory;
 import net.sf.anathema.character.db.virtueflaw.DbVirtueFlawParser;
 import net.sf.anathema.character.db.virtueflaw.DbVirtueFlawTemplate;
@@ -54,6 +53,9 @@ public class DbCharacterModule extends NullObjectCharacterModuleAdapter {
   public static final String BACKGROUND_ID_REPUTATION = "Reputation"; //$NON-NLS-1$
   public static final String BACKGROUND_ID_RETAINERS = "Retainers"; //$NON-NLS-1$
   public static final String BACKGROUND_ID_SORCERY = "Sorcery"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_PANOPLY = "DBDreamsPanoply"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_SAVANT = "DBDreamsSavant"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_SIFU = "DBDreamsSifu"; //$NON-NLS-1$
   private static final TemplateType dynastTemplateType = new TemplateType(CharacterType.DB);
   private static final TemplateType tabernacleTemplateType = new TemplateType(CharacterType.DB, new Identificate(
       "SequesteredTabernacleSubtype")); //$NON-NLS-1$
@@ -94,6 +96,8 @@ public class DbCharacterModule extends NullObjectCharacterModuleAdapter {
   private static final TemplateType dreamsRevisedTemplateType = new TemplateType(CharacterType.DB, new Identificate(
   "DreamsRevisedSubtype")); //$NON-NLS-1$
   
+  private static final TemplateType[] dreams = { dreamsTemplateType, dreamsRevisedTemplateType };
+  
   @Override
   public void registerCommonData(ICharacterGenerics characterGenerics) {
     characterGenerics.getGenericCharmStatsRegistry().register(
@@ -103,21 +107,6 @@ public class DbCharacterModule extends NullObjectCharacterModuleAdapter {
             new SecondExcellency(CharacterType.DB, ExaltedSourceBook.DragonBlooded2nd),
             new ThirdExcellency(CharacterType.DB, "3 m", ExaltedSourceBook.DragonBlooded2nd), //$NON-NLS-1$
             new TerrestrialReinforcement() });
-    characterGenerics.getCharmProvider().setSpecialCharms(
-        CharacterType.DB,
-        ExaltedEdition.FirstEdition,
-        IDbSpecialCharms.OX_BODY_TECHNIQUE);
-    characterGenerics.getCharmProvider().setSpecialCharms(
-        CharacterType.DB,
-        ExaltedEdition.SecondEdition,
-        IDbSpecialCharms.OX_BODY_TECHNIQUE_SECOND_EDITION,
-        IDbSpecialCharms.DRAGON_CLAW_ELEMENTAL_STRIKE,
-        IDbSpecialCharms.ELEMENT_PROTECTION_FORM,
-        IDbSpecialCharms.ELEMENT_SHELTER_CREATION_TECHNIQUE,
-        IDbSpecialCharms.ELEMENTAL_DEFENSE_TECHNIQUE,
-        IDbSpecialCharms.EXTENSION_ELEMENT_DRAGONS_BLESSING,
-        IDbSpecialCharms.TERRIFYING_ELEMENT_DRAGON_ROAR,
-        IDbSpecialCharms.UNASSAILABLE_BODY_OF_ELEMENT_DEFENSE);
     characterGenerics.getAdditionalTemplateParserRegistry().register(
         DbVirtueFlawTemplate.TEMPLATE_ID,
         new DbVirtueFlawParser());
@@ -180,6 +169,10 @@ public class DbCharacterModule extends NullObjectCharacterModuleAdapter {
     addLookshyBackgrounds(backgroundRegistry);
     addCultBackgrounds(backgroundRegistry);
     addSorcery(backgroundRegistry);
+    
+    backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_PANOPLY, dreams, ExaltedEdition.SecondEdition));
+    backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_SAVANT, dreams, ExaltedEdition.SecondEdition));
+    backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_SIFU, dreams, ExaltedEdition.SecondEdition));
   }
 
   private void addCultBackgrounds(IIdentificateRegistry<IBackgroundTemplate> backgroundRegistry) {

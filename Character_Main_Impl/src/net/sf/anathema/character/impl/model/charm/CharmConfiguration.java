@@ -41,6 +41,8 @@ import net.sf.anathema.character.model.charm.CharmLearnAdapter;
 import net.sf.anathema.character.model.charm.ICharmConfiguration;
 import net.sf.anathema.character.model.charm.ICharmLearnListener;
 import net.sf.anathema.character.model.charm.ILearningCharmGroup;
+import net.sf.anathema.character.model.charm.special.IMultiLearnableCharmConfiguration;
+import net.sf.anathema.character.model.charm.special.IMultipleEffectCharmConfiguration;
 import net.sf.anathema.character.model.health.IHealthConfiguration;
 import net.sf.anathema.charmtree.filters.ICharmFilter;
 import net.sf.anathema.lib.collection.DefaultValueHashMap;
@@ -184,14 +186,53 @@ public class CharmConfiguration implements ICharmConfiguration {
 	          }
 	        }
       }
+      
+      @Override
+      public void recalculateRequested()
+      {
+    	  for (ICharm charm : getLearnedCharms(true))
+    	  {
+    		  boolean prereqsMet = true;
+    		  for (ICharm parent : charm.getParentCharms())
+    		      for (String subeffectRequirement : charm.getParentSubeffects())
+    		    	  if (getSubeffectParent(subeffectRequirement).equals(parent.getId()))
+    		    	  {
+    		    		  ISpecialCharmConfiguration config = getSpecialCharmConfiguration(getSubeffectParent(subeffectRequirement));
+    		    		  if (config instanceof IMultipleEffectCharmConfiguration)
+    		    		  {
+    		    		      IMultipleEffectCharmConfiguration mConfig = (IMultipleEffectCharmConfiguration)config;
+    		    		      prereqsMet = prereqsMet && mConfig.getEffectById(getSubeffect(subeffectRequirement)).isLearned();
+    		    		  }
+    		    		  if (config instanceof IMultiLearnableCharmConfiguration)
+    		    		  {
+    		    		      IMultiLearnableCharmConfiguration mConfig = (IMultiLearnableCharmConfiguration)config;
+    		    		      String effect = getSubeffect(subeffectRequirement);
+    		    		      int requiredCount = Integer.parseInt(effect.replace("Repurchase", ""));
+    		    		      prereqsMet = mConfig.getCurrentLearnCount() >= requiredCount;
+    		    		  }
+    		    	  }
+    		  if (!prereqsMet)
+    			  getGroup(charm).forgetCharm(charm, context.getBasicCharacterContext().isExperienced());
+    	  }
+      }
     };
     for (ICharmGroup charmGroup : charmGroups) {
-      ILearningCharmGroup group = new LearningCharmGroup(getLearnStrategy(), charmGroup, this, learningCharmGroupContainer);
+      ILearningCharmGroup group = new LearningCharmGroup(getLearnStrategy(), charmGroup, this, learningCharmGroupContainer, this);
       newGroups.add(group);
       
       group.addCharmLearnListener(mergedListener);
     }
     return newGroups.toArray(new LearningCharmGroup[0]);
+  }
+  
+  private String getSubeffectParent(String subeffect)
+  {
+	  return subeffect.split("\\.")[0] + "." + subeffect.split("\\.")[1];
+  }
+  
+  private String getSubeffect(String subeffect)
+  {
+	  return subeffect.split("\\.")[3];
   }
 
   public ILearningCharmGroup[] getAllGroups() {
@@ -216,8 +257,15 @@ public class CharmConfiguration implements ICharmConfiguration {
     }
     throw new IllegalArgumentException("Charm Id did not contain a valid character type"); //$NON-NLS-1$
   }
+  
+  public String getCharmTrueName(String charmId)
+  {
+	  return provider.getCharmRename(context.getBasicCharacterContext().getRuleSet(), charmId);  
+  }
 
-  public ICharm getCharmById(String charmId) {
+  public ICharm getCharmById(String charmId)
+  {
+	charmId = getCharmTrueName(charmId);
     ICharm charm = martialArtsCharmTree.getCharmById(charmId);
     if (charm != null) {
       return charm;

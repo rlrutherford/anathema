@@ -8,11 +8,17 @@ public interface ICharacterTypeVisitor {
 
   public void visitSidereal(ICharacterType visitedType);
   
+  public void visitInfernal(ICharacterType visitedType);
+  
   public void visitAlchemical(ICharacterType visitedType);
 
   public void visitDB(ICharacterType visitedType);
 
   public void visitAbyssal(ICharacterType visitedType);
+  
+  public void visitSpirit(ICharacterType type);
+  
+  public void visitGhost(ICharacterType type);
 
   public void visitDragonKing(ICharacterType type);
 

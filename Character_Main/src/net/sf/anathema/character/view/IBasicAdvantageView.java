@@ -5,7 +5,7 @@ import javax.swing.ListCellRenderer;
 
 import net.sf.anathema.character.library.intvalue.IRemovableTraitView;
 import net.sf.anathema.character.library.trait.IModifiableCapTrait;
-import net.sf.anathema.framework.presenter.view.IButtonControlledObjectSelectionView;
+import net.sf.anathema.framework.presenter.view.IButtonControlledComboEditView;
 import net.sf.anathema.framework.presenter.view.IInitializableContentView;
 import net.sf.anathema.framework.presenter.view.ITextFieldComboBoxEditor;
 import net.sf.anathema.framework.value.IIntValueView;
@@ -17,11 +17,11 @@ public interface IBasicAdvantageView extends IInitializableContentView<IAdvantag
 
   public IIntValueView addWillpower(String labelText, int value, int maxValue);
 
-  public IButtonControlledObjectSelectionView<Object> addBackgroundSelectionView(
-      String labelText,
-      ITextFieldComboBoxEditor editor,
-      ListCellRenderer renderer,
-      Icon addIcon);
+  public IButtonControlledComboEditView<Object> addBackgroundSelectionView(
+	      String labelText,
+	      ListCellRenderer renderer,
+	      ITextFieldComboBoxEditor backgroundEditor,
+	      Icon addIcon);
 
   public IRemovableTraitView< ? > addBackgroundView(Icon deleteIcon, String labelText, int creationValue, int maxValue);
 

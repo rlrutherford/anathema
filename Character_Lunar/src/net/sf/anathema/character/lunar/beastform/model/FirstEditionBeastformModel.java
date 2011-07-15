@@ -12,8 +12,6 @@ import net.sf.anathema.character.generic.additionaltemplate.AdditionalModelType;
 import net.sf.anathema.character.generic.character.IGenericTraitCollection;
 import net.sf.anathema.character.generic.framework.additionaltemplate.listening.GlobalCharacterChangeAdapter;
 import net.sf.anathema.character.generic.framework.additionaltemplate.model.ICharacterModelContext;
-import net.sf.anathema.character.generic.framework.additionaltemplate.model.ITraitContext;
-import net.sf.anathema.character.generic.impl.rules.ExaltedEdition;
 import net.sf.anathema.character.generic.traits.types.AttributeGroupType;
 import net.sf.anathema.character.generic.traits.types.AttributeType;
 import net.sf.anathema.character.lunar.beastform.BeastformTemplate;
@@ -21,13 +19,14 @@ import net.sf.anathema.character.lunar.beastform.model.gift.GiftModel;
 import net.sf.anathema.character.lunar.beastform.model.gift.IGiftModel;
 import net.sf.anathema.character.lunar.beastform.presenter.IBeastformAttribute;
 import net.sf.anathema.character.lunar.beastform.presenter.IBeastformModel;
-import net.sf.anathema.character.lunar.template.ILunarSpecialCharms;
+import net.sf.anathema.character.mutations.model.IMutationsModel;
 import net.sf.anathema.lib.control.change.GlobalChangeAdapter;
 import net.sf.anathema.lib.control.change.IChangeListener;
 import net.sf.anathema.lib.control.intvalue.IIntValueChangedListener;
 import net.sf.anathema.lib.control.intvalue.IntValueControl;
 
 public class FirstEditionBeastformModel extends AbstractAdditionalModelAdapter implements IBeastformModel {
+  private final static String DEADLY_BEASTMAN_TRANSFORMATION = "Lunar.DeadlyBeastmanTransformation";
   private final ICharacterModelContext context;
   private final IntValueControl charmLearnControl = new IntValueControl();
   private final IBeastformGroupCost cost;
@@ -60,23 +59,19 @@ public class FirstEditionBeastformModel extends AbstractAdditionalModelAdapter i
 
   private void createAttributes() {
     List<IBeastformAttribute> attributes = new ArrayList<IBeastformAttribute>();
-    ITraitContext traitContext = context.getTraitContext();
     attributes.add(new BeastformAttribute(
-    	ExaltedEdition.FirstEdition,
+    	context,
         context.getTraitCollection().getTrait(AttributeType.Strength),
-        traitContext,
         1,
         cost));
     attributes.add(new BeastformAttribute(
-    	ExaltedEdition.FirstEdition,
+    	context,
         context.getTraitCollection().getTrait(AttributeType.Dexterity),
-        traitContext,
         2,
         cost));
     attributes.add(new BeastformAttribute(
-    	ExaltedEdition.FirstEdition,
+    	context,
         context.getTraitCollection().getTrait(AttributeType.Stamina),
-        traitContext,
         1,
         cost));
     for (IBeastformAttribute attribute : attributes) {
@@ -100,11 +95,11 @@ public class FirstEditionBeastformModel extends AbstractAdditionalModelAdapter i
   }
 
   public void setCharmLearnCount(int newValue) {
-    context.getMagicCollection().setLearnCount(ILunarSpecialCharms.DEADLY_BEASTMAN_TRANSFORMATION, newValue);
+    context.getMagicCollection().setLearnCount(DEADLY_BEASTMAN_TRANSFORMATION, newValue);
   }
 
   public int getCharmValue() {
-    return context.getMagicCollection().getLearnCount(ILunarSpecialCharms.DEADLY_BEASTMAN_TRANSFORMATION);
+    return context.getMagicCollection().getLearnCount(DEADLY_BEASTMAN_TRANSFORMATION);
   }
 
   public void addCharmLearnCountChangedListener(IIntValueChangedListener listener) {
@@ -128,6 +123,11 @@ public class FirstEditionBeastformModel extends AbstractAdditionalModelAdapter i
 
   public IGiftModel getGiftModel() {
     return giftModel;
+  }
+  
+  public IMutationsModel getMutationModel()
+  {
+	return null;
   }
 
   public IBeastformGroupCost getAttributeCostModel() {

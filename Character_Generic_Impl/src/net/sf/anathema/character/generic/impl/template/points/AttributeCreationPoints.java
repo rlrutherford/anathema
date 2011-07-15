@@ -12,20 +12,23 @@ public class AttributeCreationPoints extends ReflectionCloneableObject<IAttribut
   private final int secondary;
   private final int tertiary;
   private final int favoredPicks;
-  private final int extraDots;
+  private final int favoredDots;
+  private final int genericDots;
   private final boolean casteAxis;
 
   public AttributeCreationPoints(int primary, int secondary, int tertiary)
   {
-	  this(primary, secondary, tertiary, 0, 0, false);
+	  this(primary, secondary, tertiary, 0, 0, 0, false);
   }
   
-  public AttributeCreationPoints(int primary, int secondary, int tertiary, int picks, int dots, boolean casteAxis) {
+  public AttributeCreationPoints(int primary, int secondary, int tertiary, int picks,
+		  int favoredDots, int genericDots, boolean casteAxis) {
     this.primary = primary;
     this.secondary = secondary;
     this.tertiary = tertiary;
     this.favoredPicks = picks;
-    this.extraDots = dots;
+    this.favoredDots = favoredDots;
+    this.genericDots = genericDots;
     this.casteAxis = casteAxis;
   }
 
@@ -51,9 +54,14 @@ public class AttributeCreationPoints extends ReflectionCloneableObject<IAttribut
 	  return 0;
   }
   
-  public int getExtraDotCount()
+  public int getExtraFavoredDotCount()
   {
-	  return extraDots;
+	  return favoredDots;
+  }
+  
+  public int getExtraGenericDotCount()
+  {
+	  return genericDots;
   }
   
   public boolean isCasteAxis()
@@ -93,4 +101,9 @@ public class AttributeCreationPoints extends ReflectionCloneableObject<IAttribut
 		// TODO Auto-generated method stub
 		return 0;
 	}	
+	
+	public void informTraits(Object traits)
+	{
+		
+	}
 }

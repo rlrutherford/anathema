@@ -5,6 +5,7 @@ import net.sf.anathema.character.generic.traits.groups.ITraitTypeGroup;
 import net.sf.anathema.character.generic.traits.groups.TraitTypeGroup;
 import net.sf.anathema.character.generic.traits.types.OtherTraitType;
 import net.sf.anathema.character.generic.traits.types.VirtueType;
+import net.sf.anathema.character.generic.traits.types.YoziType;
 import net.sf.anathema.character.impl.model.context.CharacterListening;
 import net.sf.anathema.character.library.trait.ITrait;
 import net.sf.anathema.character.library.trait.favorable.FavorableState;
@@ -13,7 +14,7 @@ import net.sf.anathema.character.library.trait.favorable.IFavorableTrait;
 import net.sf.anathema.character.library.trait.specialties.ISpecialtiesConfiguration;
 import net.sf.anathema.character.library.trait.subtrait.ISubTrait;
 import net.sf.anathema.character.library.trait.subtrait.ISubTraitListener;
-import net.sf.anathema.character.library.trait.visitor.IDefaultTrait;
+import net.sf.anathema.character.model.background.IBackground;
 import net.sf.anathema.character.model.background.IBackgroundListener;
 import net.sf.anathema.character.model.traits.ICoreTraitConfiguration;
 
@@ -30,6 +31,7 @@ public class CharacterTraitListening {
   public void initListening() {
     initAttributeListening();
     initAbilityListening();
+    initYoziListening();
     initBackgroundListening();
     for (ITrait virtue : traitConfiguration.getTraits(VirtueType.values())) {
       listening.addTraitListening(virtue);
@@ -40,12 +42,12 @@ public class CharacterTraitListening {
 
   private void initBackgroundListening() {
     traitConfiguration.getBackgrounds().addBackgroundListener(new IBackgroundListener() {
-      public void backgroundRemoved(IDefaultTrait background) {
+      public void backgroundRemoved(IBackground background) {
         listening.removeTraitListening(background);
         listening.fireCharacterChanged();
       }
 
-      public void backgroundAdded(IDefaultTrait background) {
+      public void backgroundAdded(IBackground background) {
         listening.addTraitListening(background);
         listening.fireCharacterChanged();
       }
@@ -108,6 +110,29 @@ public class CharacterTraitListening {
 	            listening.fireCharacterChanged();
 	          }
 	        });
+	  }
+  }
+  
+  private void initYoziListening()
+  {
+	  for (YoziType yoziType : YoziType.values())
+	  {
+		  IFavorableTrait yozi;
+		  try
+		  {
+			   yozi = traitConfiguration.getFavorableTrait(yoziType);
+		  }
+		  catch (UnsupportedOperationException e)
+		  {
+			  break; //template does not support yozis
+		  }
+		  
+	      listening.addTraitListening(yozi);
+	      yozi.getFavorization().addFavorableStateChangedListener(new IFavorableStateChangedListener() {
+	        public void favorableStateChanged(FavorableState state) {
+	          listening.fireCharacterChanged();
+	        }
+	      });
 	  }
   }
 }

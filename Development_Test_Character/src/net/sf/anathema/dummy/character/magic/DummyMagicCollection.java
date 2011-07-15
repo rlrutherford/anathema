@@ -22,4 +22,15 @@ public class DummyMagicCollection implements IMagicCollection {
   public void setLearnCount(IMultiLearnableCharm multiLearnableCharm, int newValue) {
     counts.put(multiLearnableCharm, newValue);
   }
+
+	@Override
+	public int getLearnCount(String charmName) {
+		return 0;
+	}
+
+	@Override
+	public void setLearnCount(String charmName, int newValue) {
+		// TODO Auto-generated method stub
+		
+	}
 }

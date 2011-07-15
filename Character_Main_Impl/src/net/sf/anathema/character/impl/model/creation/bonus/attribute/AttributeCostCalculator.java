@@ -162,7 +162,8 @@ private TraitGroup[] createTraitGroups()
   {
 	  int bonusCost = 0;
 	  int wastedFreeDots = 0;
-	  int extraDotsLeft = this.getExtraDotCount();
+	  int extraFavoredDotsLeft = this.getExtraFavoredDotCount();
+	  int extraGenericDotsLeft = this.getExtraGenericDotCount();
 	  
 	  for (int i = 0; i != permutation.size(); i++)
 	  {
@@ -182,13 +183,15 @@ private TraitGroup[] createTraitGroups()
 	    			  attribute.getCurrentValue() > attribute.getInitialValue());
 		      int costFactor = costs.getAttributeCosts(attribute);
 		      ElementCreationCost cost = handleAttribute((IDefaultTrait) attribute, freePointsLeft,
-		    		  favoredInGroup ? extraDotsLeft : 0, costFactor);
+		    		  favoredInGroup ? extraFavoredDotsLeft : 0, extraGenericDotsLeft, costFactor);
 		      freePointsLeft -= cost.getDotsSpent();
-		      extraDotsLeft -= cost.getExtraDotsSpent();
+		      extraFavoredDotsLeft -= cost.getExtraFavoredDotsSpent();
+		      extraGenericDotsLeft -= cost.getExtraGenericDotsSpent();
 		      bonusCost += cost.getBonusPointsSpent();
 		      if (record)
 		      {
-		    	  increaseExtraDotSum(cost.getExtraDotsSpent());
+		    	  increaseExtraFavoredDotSum(cost.getExtraFavoredDotsSpent());
+		    	  increaseExtraGenericDotSum(cost.getExtraGenericDotsSpent());
 		    	  costsByAttribute.put(attribute, cost);
 		    	  orderedGroups.get(i).addTraitToCost(attribute, cost);
 		      }
@@ -198,9 +201,10 @@ private TraitGroup[] createTraitGroups()
 	  return sortingBonusCostScaleFactor * bonusCost + wastedFreeDots;
   }
 
-  private ElementCreationCost handleAttribute(IDefaultTrait attribute, int freeDots, int extraDots, int bonusPointCostFactor) {
+  private ElementCreationCost handleAttribute(IDefaultTrait attribute, int freeDots, int extraFavoredDots, int extraGenericDots,
+		  	int bonusPointCostFactor) {
     ICostElement element = new TraitCostElement(attribute);
-    return new ElementCreationCostCalculator().calculateElementCreationCost(element, freeDots, extraDots, bonusPointCostFactor);
+    return new ElementCreationCostCalculator().calculateElementCreationCost(element, freeDots, extraFavoredDots, extraGenericDots, bonusPointCostFactor);
   }
   
   private List<TraitGroupCost> createGroupCost(IAttributeCreationPoints points,

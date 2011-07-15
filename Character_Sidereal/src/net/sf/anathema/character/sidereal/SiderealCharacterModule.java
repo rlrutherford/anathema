@@ -11,6 +11,7 @@ import net.sf.anathema.character.generic.framework.magic.ThirdExcellency;
 import net.sf.anathema.character.generic.framework.module.NullObjectCharacterModuleAdapter;
 import net.sf.anathema.character.generic.impl.backgrounds.CharacterTypeBackgroundTemplate;
 import net.sf.anathema.character.generic.impl.backgrounds.EditionSpecificCharacterTypeBackgroundTemplate;
+import net.sf.anathema.character.generic.impl.backgrounds.EditionSpecificTemplateTypeBackgroundTemplate;
 import net.sf.anathema.character.generic.impl.backgrounds.TemplateTypeBackgroundTemplate;
 import net.sf.anathema.character.generic.impl.caste.CasteCollection;
 import net.sf.anathema.character.generic.impl.magic.persistence.CharmCache;
@@ -18,7 +19,6 @@ import net.sf.anathema.character.generic.impl.rules.ExaltedEdition;
 import net.sf.anathema.character.generic.impl.rules.ExaltedSourceBook;
 import net.sf.anathema.character.generic.impl.traits.EssenceTemplate;
 import net.sf.anathema.character.generic.magic.IMagicStats;
-import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharm;
 import net.sf.anathema.character.generic.template.ITemplateType;
 import net.sf.anathema.character.generic.template.TemplateType;
 import net.sf.anathema.character.generic.traits.LowerableState;
@@ -49,7 +49,6 @@ import net.sf.anathema.character.sidereal.paradox.SiderealParadoxViewFactory;
 import net.sf.anathema.character.sidereal.reporting.FirstEditionSiderealPartEncoder;
 import net.sf.anathema.character.sidereal.reporting.SecondEditionSiderealPartEncoder;
 import net.sf.anathema.character.sidereal.template.DefaultSiderealTemplate;
-import net.sf.anathema.character.sidereal.template.ISiderealSpecialCharms;
 import net.sf.anathema.lib.registry.IIdentificateRegistry;
 import net.sf.anathema.lib.registry.IRegistry;
 import net.sf.anathema.lib.resources.IResources;
@@ -68,21 +67,24 @@ public class SiderealCharacterModule extends NullObjectCharacterModuleAdapter {
   
   private static final TemplateType revisedType = new TemplateType(CharacterType.SIDEREAL, new Identificate(
   "Revised")); //$NON-NLS-1$
+  
+  private static final TemplateType dreamsType = new TemplateType(CharacterType.SIDEREAL, new Identificate(
+  "Dreams")); //$NON-NLS-1$
+  private static final TemplateType revisedDreamsType = new TemplateType(CharacterType.SIDEREAL, new Identificate(
+  "RevisedDreams")); //$NON-NLS-1$
+  
+  private static final TemplateType[] dreams = { dreamsType, revisedDreamsType };
+  
+  public static final String BACKGROUND_ID_ARSENAL = "SiderealDreamsArsenal"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_COMMAND = "SiderealDreamsCommand"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_HENCHMEN = "SiderealDreamsHenchmen"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_PANOPLY = "SiderealDreamsPanoply"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_REPUTATION = "SiderealDreamsReputation"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_RETAINERS = "SiderealDreamsRetainers"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_WEALTH = "SiderealDreamsWealth"; //$NON-NLS-1$
 
   @Override
   public void registerCommonData(ICharacterGenerics characterGenerics) {
-    ISpecialCharm[] firstEditioncharms = new ISpecialCharm[] {
-        ISiderealSpecialCharms.OX_BODY_TECHNIQUE,
-        ISiderealSpecialCharms.WORLD_SHAPING_ARTISTIC_VISION };
-    ISpecialCharm[] secondEditioncharms = new ISpecialCharm[] {
-            ISiderealSpecialCharms.OX_BODY_TECHNIQUE_2ND,
-            ISiderealSpecialCharms.WORLD_SHAPING_ARTISTIC_VISION_2ND,
-            ISiderealSpecialCharms.MANY_MISSILES_BOW,
-            ISiderealSpecialCharms.MASQUE_OF_THE_UNCANNY,
-            ISiderealSpecialCharms.MIRROR_SHATTERING_METHOD,
-            ISiderealSpecialCharms.WALLS_OF_SALT_AND_ASH};
-    characterGenerics.getCharmProvider().setSpecialCharms(CharacterType.SIDEREAL, ExaltedEdition.FirstEdition, firstEditioncharms);
-    characterGenerics.getCharmProvider().setSpecialCharms(CharacterType.SIDEREAL, ExaltedEdition.SecondEdition, secondEditioncharms);
     characterGenerics.getCasteCollectionRegistry().register(
         CharacterType.SIDEREAL,
         new CasteCollection(SiderealCaste.values()));
@@ -126,12 +128,22 @@ public class SiderealCharacterModule extends NullObjectCharacterModuleAdapter {
     backgroundRegistry.add(new TemplateTypeBackgroundTemplate(BACKGROUND_ID_CELESTIAL_MANSE, defaultTemplateType));
     backgroundRegistry.add(new EditionSpecificCharacterTypeBackgroundTemplate(BACKGROUND_ID_FAVOR, CharacterType.SIDEREAL, ExaltedEdition.FirstEdition));
     backgroundRegistry.add(new EditionSpecificCharacterTypeBackgroundTemplate(BACKGROUND_ID_HEAVENLY_FAVOR, CharacterType.SIDEREAL, ExaltedEdition.FirstEdition));
-    backgroundRegistry.add(new TemplateTypeBackgroundTemplate(BACKGROUND_ID_SALARY, defaultTemplateType));
+    backgroundRegistry.add(new CharacterTypeBackgroundTemplate(BACKGROUND_ID_SALARY, CharacterType.SIDEREAL));
     backgroundRegistry.add(new TemplateTypeBackgroundTemplate(
         BACKGROUND_ID_SAVANT,
         defaultTemplateType,
         LowerableState.Default));
     backgroundRegistry.add(new TemplateTypeBackgroundTemplate(BACKGROUND_ID_SIFU, defaultTemplateType));
+    
+    backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_ARSENAL, dreams, ExaltedEdition.SecondEdition));
+    backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_COMMAND, dreams, ExaltedEdition.SecondEdition));
+    backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_HENCHMEN, dreams, ExaltedEdition.SecondEdition));
+    backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_PANOPLY, dreams, ExaltedEdition.SecondEdition));
+    backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_REPUTATION, dreams, ExaltedEdition.SecondEdition));
+    backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_RETAINERS, dreams, ExaltedEdition.SecondEdition));
+    backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_SAVANT, dreams, ExaltedEdition.SecondEdition));
+    backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_SIFU, dreams, ExaltedEdition.SecondEdition));
+    backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_WEALTH, dreams, ExaltedEdition.SecondEdition));
   }
 
   @Override

@@ -6,6 +6,8 @@ public interface ITraitMinimum {
 
   public int getMinimumValue(ILimitationContext context);
   
+  public int getCalculationMinValue(ILimitationContext context, ITraitType traitType);
+  
   public int getCasteMinimumValue();
   
   public int getFavoredMinimumValue();

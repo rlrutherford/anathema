@@ -16,7 +16,6 @@ import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.model.charm.IComboConfiguration;
 import net.sf.anathema.character.view.magic.IComboViewProperties;
 import net.sf.anathema.framework.presenter.resources.BasicUi;
-import net.sf.anathema.framework.presenter.view.IdentificateListCellRenderer;
 import net.sf.anathema.lib.gui.list.LegalityCheckListCellRenderer;
 import net.sf.anathema.lib.resources.IResources;
 
@@ -29,9 +28,18 @@ public final class ComboViewProperties extends AbstractMagicLearnProperties impl
     this.charmInfoStringProvider = new CharmInfoStringBuilder(getResources());
     this.comboConfiguration = comboConfiguration;
   }
+  
+  public boolean canFinalizeWithXP()
+  {
+	  return comboConfiguration.canFinalizeWithXP();
+  }
 
   public Icon getFinalizeButtonIcon() {
     return new CharacterUI(getResources()).getFinalizeIcon();
+  }
+  
+  public Icon getFinalizeXPButtonIcon() {
+	return new CharacterUI(getResources()).getFinalizeXPIcon();
   }
 
   public String getAvailableComboCharmsLabel() {
@@ -51,7 +59,14 @@ public final class ComboViewProperties extends AbstractMagicLearnProperties impl
 
   @Override
   public ListCellRenderer getLearnedMagicRenderer() {
-    return new IdentificateListCellRenderer(getResources()) {
+    return new LegalityCheckListCellRenderer(getResources()) {
+      private static final long serialVersionUID = 6643949300795449115L;
+      
+      @Override
+      protected boolean isLegal(Object object) {
+        return comboConfiguration.isAllowedToRemove((ICharm) object);
+      }
+
       @Override
       public Component getListCellRendererComponent(
           JList list,
@@ -65,7 +80,7 @@ public final class ComboViewProperties extends AbstractMagicLearnProperties impl
             index,
             isSelected,
             cellHasFocus);
-        String tooltipString = charmInfoStringProvider.getInfoString((ICharm) value);
+        String tooltipString = charmInfoStringProvider.getInfoString((ICharm) value, null);
         renderComponent.setToolTipText(tooltipString);
         return renderComponent;
       }
@@ -74,6 +89,8 @@ public final class ComboViewProperties extends AbstractMagicLearnProperties impl
 
   public ListCellRenderer getAvailableMagicRenderer() {
     return new LegalityCheckListCellRenderer(getResources()) {
+      private static final long serialVersionUID = -4341837486327899321L;
+
       @Override
       protected boolean isLegal(Object object) {
         return comboConfiguration.isComboLegal((ICharm) object);
@@ -92,7 +109,7 @@ public final class ComboViewProperties extends AbstractMagicLearnProperties impl
             index,
             isSelected,
             cellHasFocus);
-        String tooltipString = charmInfoStringProvider.getInfoString((ICharm) value);
+        String tooltipString = charmInfoStringProvider.getInfoString((ICharm) value, null);
         renderComponent.setToolTipText(tooltipString);
         return renderComponent;
       }
@@ -110,6 +127,10 @@ public final class ComboViewProperties extends AbstractMagicLearnProperties impl
   public String getFinalizeButtonToolTip() {
     return getResources().getString("CardView.CharmConfiguration.ComboCreation.FinalizeToolTip"); //$NON-NLS-1$
   }
+  
+  public String getFinalizeXPButtonToolTip() {
+	    return getResources().getString("CardView.CharmConfiguration.ComboCreation.FinalizeXPToolTip"); //$NON-NLS-1$
+	  }
 
   public String getClearButtonToolTip() {
     return getResources().getString("CardView.CharmConfiguration.ComboCreation.ClearToolTip");} //$NON-NLS-1$

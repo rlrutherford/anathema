@@ -120,7 +120,7 @@ public class DefaultSiderealTemplate extends AbstractCharacterTemplate {
   private ISpellMagicTemplate createSpellMagicTemplate() {
     CircleType[] necromancyCircles = new CircleType[] { CircleType.Shadowlands };
     CircleType[] sorceryCircles = new CircleType[] { CircleType.Terrestrial, CircleType.Celestial };
-    return new SpellMagicTemplate(sorceryCircles, necromancyCircles);
+    return new SpellMagicTemplate(sorceryCircles, necromancyCircles, this);
   }
 
   public ITraitTemplateCollection getTraitTemplateCollection() {
@@ -137,5 +137,10 @@ public class DefaultSiderealTemplate extends AbstractCharacterTemplate {
 
   public IMagicTemplate getMagicTemplate() {
     return magicTemplate;
+  }
+  
+  public String[] getBaseHealthProviders()
+  {
+	  return new String[0];
   }
 }

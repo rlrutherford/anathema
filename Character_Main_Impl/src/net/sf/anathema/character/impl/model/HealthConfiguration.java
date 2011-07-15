@@ -19,16 +19,31 @@ public class HealthConfiguration implements IHealthConfiguration {
   private final List<IPainToleranceProvider> painResistanceProviders = new ArrayList<IPainToleranceProvider>();
   private final OxBodyTechniqueArbitrator arbitrator;
 
-  public HealthConfiguration(IGenericTrait toughnessControllingTrait)
+  public HealthConfiguration(IGenericTrait[] toughnessControllingTraits)
   {
-	  this.arbitrator = new OxBodyTechniqueArbitrator(toughnessControllingTrait);
+	  this.arbitrator = new OxBodyTechniqueArbitrator(toughnessControllingTraits);
   }
   
-  public HealthConfiguration(IGenericTrait toughnessControllingTrait,
-		  ICoreTraitConfiguration config) {
-    this.arbitrator = new OxBodyTechniqueArbitrator(toughnessControllingTrait);
+  public HealthConfiguration(IGenericTrait[] toughnessControllingTraits,
+		  ICoreTraitConfiguration config,
+		  String[] providers) {
+    this.arbitrator = new OxBodyTechniqueArbitrator(toughnessControllingTraits);
     
     addHealthLevelProvider(new DyingStaminaHealthLevelProvider(config));
+    
+    if (providers == null) return;
+    for (String providerString : providers)
+    {
+    	Class<?> loadedClass;
+		try {
+			loadedClass = Class.forName(providerString);
+			IHealthLevelProvider provider = (IHealthLevelProvider)
+    			loadedClass.getConstructors()[0].newInstance(config);
+			addHealthLevelProvider(provider);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
   }
 
   public void addHealthLevelProvider(IHealthLevelProvider provider) {

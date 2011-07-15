@@ -4,10 +4,14 @@ import net.sf.anathema.character.generic.magic.IMagic;
 import net.sf.anathema.character.generic.magic.charms.special.IMultiLearnableCharm;
 
 public interface IMagicCollection {
+	
+  public int getLearnCount(String charmName);
 
   public int getLearnCount(IMultiLearnableCharm multiLearnableCharm);
 
   public boolean isLearned(IMagic magic);
+  
+  public void setLearnCount(String charmName, int newValue);
 
   public void setLearnCount(IMultiLearnableCharm multiLearnableCharm, int newValue);
 }

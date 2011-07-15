@@ -9,6 +9,7 @@ import net.sf.anathema.character.generic.traits.types.AttributeType;
 import net.sf.anathema.character.generic.traits.types.ITraitTypeVisitor;
 import net.sf.anathema.character.generic.traits.types.OtherTraitType;
 import net.sf.anathema.character.generic.traits.types.VirtueType;
+import net.sf.anathema.character.generic.traits.types.YoziType;
 
 public class TraitTemplateCollection implements ITraitTemplateCollection {
 
@@ -44,6 +45,10 @@ public class TraitTemplateCollection implements ITraitTemplateCollection {
       public void visitAbility(AbilityType type) {
         traitTemplate[0] = templateFactory.createAbilityTemplate(type);
       }
+      
+      public void visitYozi(YoziType type) {
+    	  traitTemplate[0] = templateFactory.createYoziTemplate(type);
+        }
 
       public void visitCustomTraitType(ITraitType visitedType) {
         throw new UnsupportedOperationException("Trait Template Collection can't handle custom trait types"); //$NON-NLS-1$
@@ -51,4 +56,41 @@ public class TraitTemplateCollection implements ITraitTemplateCollection {
     });
     return traitTemplate[0];
   }
+  
+  public final ITraitTemplate getDefaultTraitTemplate(ITraitType traitType) {
+	    final ITraitTemplate[] traitTemplate = new ITraitTemplate[1];
+	    traitType.accept(new ITraitTypeVisitor() {
+	      public void visitBackground(IBackgroundTemplate template) {
+	        traitTemplate[0] = templateFactory.createDefaultBackgroundTemplate();
+	      }
+
+	      public void visitWillpower(OtherTraitType type) {
+	        }
+
+	      public void visitEssence(OtherTraitType type) {
+
+	      }
+
+	      public void visitVirtue(VirtueType type) {
+
+	      }
+
+	      public void visitAttribute(AttributeType type) {
+
+	      }
+
+	      public void visitAbility(AbilityType type) {
+
+	      }
+	      
+	      public void visitYozi(YoziType type) {
+
+	        }
+
+	      public void visitCustomTraitType(ITraitType visitedType) {
+
+	      }
+	    });
+	    return traitTemplate[0];
+	  }
 }

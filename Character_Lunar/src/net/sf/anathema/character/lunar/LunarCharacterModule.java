@@ -18,17 +18,13 @@ import net.sf.anathema.character.generic.impl.backgrounds.EditionSpecificBackgro
 import net.sf.anathema.character.generic.impl.backgrounds.EditionSpecificCharacterTypeBackgroundTemplate;
 import net.sf.anathema.character.generic.impl.backgrounds.EditionSpecificTemplateTypeBackgroundTemplate;
 import net.sf.anathema.character.generic.impl.caste.CasteCollection;
-import net.sf.anathema.character.generic.impl.magic.charm.special.TraitCapModifyingCharm;
 import net.sf.anathema.character.generic.impl.rules.ExaltedEdition;
 import net.sf.anathema.character.generic.impl.rules.ExaltedSourceBook;
 import net.sf.anathema.character.generic.impl.traits.EssenceTemplate;
 import net.sf.anathema.character.generic.magic.IMagicStats;
-import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharm;
 import net.sf.anathema.character.generic.rules.IExaltedEdition;
 import net.sf.anathema.character.generic.template.ITemplateType;
 import net.sf.anathema.character.generic.template.TemplateType;
-import net.sf.anathema.character.generic.traits.ITraitType;
-import net.sf.anathema.character.generic.traits.types.AttributeType;
 import net.sf.anathema.character.generic.type.CharacterType;
 import net.sf.anathema.character.lunar.beastform.BeastformModelFactory;
 import net.sf.anathema.character.lunar.beastform.BeastformPersisterFactory;
@@ -48,7 +44,6 @@ import net.sf.anathema.character.lunar.renown.RenownTemplate;
 import net.sf.anathema.character.lunar.renown.RenownViewFactory;
 import net.sf.anathema.character.lunar.reporting.FirstEditionLunarPartEncoder;
 import net.sf.anathema.character.lunar.reporting.SecondEditionLunarPartEncoder;
-import net.sf.anathema.character.lunar.template.ILunarSpecialCharms;
 import net.sf.anathema.character.lunar.virtueflaw.LunarVirtueFlawModelFactory;
 import net.sf.anathema.character.lunar.virtueflaw.LunarVirtueFlawPersisterFactory;
 import net.sf.anathema.character.lunar.virtueflaw.LunarVirtueFlawTemplate;
@@ -84,6 +79,19 @@ public class LunarCharacterModule extends NullObjectCharacterModuleAdapter {
   "Dreams")); //$NON-NLS-1$
   private static final TemplateType revisedDreamsType = new TemplateType(CharacterType.LUNAR, new Identificate(
   "DreamsRevised")); //$NON-NLS-1$
+  
+  private static final TemplateType[] dreams = { dreamsType, revisedDreamsType };
+  
+  public static final String BACKGROUND_ID_ARSENAL = "LunarDreamsArsenal"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_COMMAND = "LunarDreamsCommand"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_CONNECTIONS = "LunarDreamsConnections"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_HENCHMEN = "LunarDreamsHenchmen"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_PANOPLY = "LunarDreamsPanoply"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_RETAINERS = "LunarDreamsRetainers"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_SALARY = "LunarDreamsSalary"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_SAVANT = "LunarDreamsSavant"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_SIFU = "LunarDreamsSifu"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_WEALTH = "LunarDreamsWealth"; //$NON-NLS-1$
 
   @Override
   public void registerCommonData(ICharacterGenerics characterGenerics) {
@@ -99,16 +107,6 @@ public class LunarCharacterModule extends NullObjectCharacterModuleAdapter {
     characterGenerics.getAdditionalTemplateParserRegistry().register(
         LunarVirtueFlawTemplate.TEMPLATE_ID,
         new LunarVirtueFlawParser());
-    characterGenerics.getCharmProvider().setSpecialCharms(
-        CharacterType.LUNAR,
-        ExaltedEdition.FirstEdition,
-        new ISpecialCharm[] {
-                ILunarSpecialCharms.DEADLY_BEASTMAN_TRANSFORMATION,
-                ILunarSpecialCharms.OX_BODY_TECHNIQUE });
-    characterGenerics.getCharmProvider().setSpecialCharms(
-        CharacterType.LUNAR,
-        ExaltedEdition.SecondEdition,
-        getSpecialCharmArray(ExaltedEdition.SecondEdition));
     
     Map<IExaltedEdition, ICasteType[]> editionMap = new HashMap<IExaltedEdition, ICasteType[]>();
     editionMap.put(ExaltedEdition.FirstEdition, LunarCaste.getModernValues());
@@ -130,37 +128,6 @@ public class LunarCharacterModule extends NullObjectCharacterModuleAdapter {
                 new FlawlessFocus(),
                 new ImpossibleImprovement()});
   }
-  
-  private ISpecialCharm[] getSpecialCharmArray(IExaltedEdition edition)
-  {
-	  if (edition == ExaltedEdition.SecondEdition)
-	  {
-		  ISpecialCharm baseSet[] = new ISpecialCharm[] {
-	                ILunarSpecialCharms.OX_BODY_TECHNIQUE_2ND,
-	                ILunarSpecialCharms.IMPRESSIONS_OF_STRENGTH,
-	                ILunarSpecialCharms.RIGHTEOUS_LION_DEFENSE,
-	                ILunarSpecialCharms.ADDER_FANG_METHOD,
-	                ILunarSpecialCharms.BESIEGING_THE_BASTION,
-	                ILunarSpecialCharms.COBRA_EYE_METHOD,
-	                ILunarSpecialCharms.PERFECT_OUTSIDER_UNDERSTANDING,
-	                ILunarSpecialCharms.SILVER_LUNAR_CHA,
-	                ILunarSpecialCharms.SILVER_LUNAR_STA,
-	                ILunarSpecialCharms.SILVER_LUNAR_WIT};
-		  
-		  int attributeCount = AttributeType.values().length;
-		  ISpecialCharm[] masterSet = new ISpecialCharm[baseSet.length + attributeCount];
-		  for (int i = 0; i != baseSet.length; i++) masterSet[i] = baseSet[i];
-		  
-		  for (int i = 0; i != attributeCount; i++)
-		  {
-			  ITraitType type = AttributeType.values()[i];
-			  masterSet[baseSet.length + i] = new TraitCapModifyingCharm("Lunar.ImpossibleImprovement."
-					  + type.getId(), type, 1);
-		  }
-		  return masterSet;		  
-	  }
-	  return null;
-  }
 
   @Override
   public void addBackgroundTemplates(ICharacterGenerics generics) {
@@ -171,8 +138,19 @@ public class LunarCharacterModule extends NullObjectCharacterModuleAdapter {
       
       backgroundRegistry.add(new CharacterTypeBackgroundTemplate(BACKGROUND_ID_SOLAR_BOND, CharacterType.LUNAR));
       backgroundRegistry.add(new EditionSpecificCharacterTypeBackgroundTemplate(BACKGROUND_ID_REPUTATION, CharacterType.LUNAR, ExaltedEdition.SecondEdition));
-      backgroundRegistry.add(new EditionSpecificCharacterTypeBackgroundTemplate(BACKGROUND_ID_TATTOO_ARTIFACT, CharacterType.LUNAR, ExaltedEdition.SecondEdition));
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_TATTOO_ARTIFACT, new ITemplateType[] { castelessType, revisedCastelessType }, ExaltedEdition.SecondEdition));
       backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_TABOO, new ITemplateType[] { castelessType, revisedCastelessType }, ExaltedEdition.SecondEdition));
+      
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_ARSENAL, dreams, ExaltedEdition.SecondEdition));
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_COMMAND, dreams, ExaltedEdition.SecondEdition));
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_CONNECTIONS, dreams, ExaltedEdition.SecondEdition));
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_HENCHMEN, dreams, ExaltedEdition.SecondEdition));
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_PANOPLY, dreams, ExaltedEdition.SecondEdition));
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_RETAINERS, dreams, ExaltedEdition.SecondEdition));
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_SALARY, dreams, ExaltedEdition.SecondEdition));
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_SAVANT, dreams, ExaltedEdition.SecondEdition));
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_SIFU, dreams, ExaltedEdition.SecondEdition));
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_WEALTH, dreams, ExaltedEdition.SecondEdition));
   }
 
   @Override

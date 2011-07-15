@@ -10,10 +10,32 @@
     <additionalRules>
     	<additionalPools>
     		<multilearnablePool>
-    			<charmReference id="Solar.ImmanentSolarGlory"/>    			
-    			<peripheralPool multiplier="10"/>
+    			<charmReference id="Solar.ImmanentSolarGlory"/>
+    			<otherPool id="ImmanentSolarGlory" multiplier="10"/>
     		</multilearnablePool>
-    	</additionalPools> 
+    		<multilearnablePool>
+    			<charmReference id="Solar.ImmanentSolarGloryBureaucracy"/>
+    			<otherPool id="ImmanentSolarGloryBureaucracy" multiplier="10"/>
+    		</multilearnablePool>
+    		<multilearnablePool>
+    			<charmReference id="Solar.ImmanentSolarGloryLarceny"/>
+    			<otherPool id="ImmanentSolarGloryLarceny" multiplier="10"/>
+    		</multilearnablePool>
+    		<multilearnablePool>
+    			<charmReference id="Solar.ImmanentSolarGloryPerformance"/>
+    			<otherPool id="ImmanentSolarGloryPerformance" multiplier="10"/>
+    		</multilearnablePool>
+    		<multilearnablePool>
+    			<charmReference id="Solar.ImmanentSolarGloryWar"/>
+    			<otherPool id="ImmanentSolarGloryWar" multiplier="10"/>
+    		</multilearnablePool>
+    	</additionalPools>
+    	<forbiddenBackgrounds>
+    		<backgroundReference id="Contacts"/>
+    		<backgroundReference id="Followers"/>
+    		<backgroundReference id="Influence"/>
+    		<backgroundReference id="Resources"/>
+    	</forbiddenBackgrounds>
     </additionalRules>
     <additionalTemplates>
       <template id="SolarVirtueFlaw" />
@@ -26,7 +48,7 @@
     <bonusPointCosts uses="DefaultBonusPointCost2nd.template" />
     <creationPoints>
       <attributeDots primary="8" secondary="6" tertiary="4" />
-      <abilityDots general="30" favored="10" favoredPicks="5" />
+      <abilityDots general="15" favored="10" favoredPicks="5" />
       <backgroundDots count="12" />
       <virtueDots count="5" />
       <bonusPoints count="15" />

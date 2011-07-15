@@ -21,6 +21,16 @@ public class TraitDependentMultiLearnableCharm extends AbstractMultiLearnableCha
     this.traitType = traitType;
     this.countModifier = modifier;
   }
+  
+  public int getModifier()
+  {
+	  return countModifier;
+  }
+  
+  public ITraitType getTraitType()
+  {
+	  return traitType;
+  }
 
   public int getAbsoluteLearnLimit() {
     return absoluteLearnLimit;
@@ -33,5 +43,10 @@ public class TraitDependentMultiLearnableCharm extends AbstractMultiLearnableCha
     count = Math.max(count, 0);
     count = Math.min(count, absoluteLearnLimit);
     return count;
+  }
+  
+  public String toString()
+  {
+	  return "[" + getCharmId() + ";" + traitType + (countModifier != 0 ? ";" + countModifier : "") + "]";
   }
 }

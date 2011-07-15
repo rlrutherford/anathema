@@ -44,6 +44,27 @@ public class ArmourStatsDecorationFactory implements IEquipmentStatsDecorationFa
       public String getId() {
         return getName().getId();
       }
+
+		@Override
+		public void setUseAttunementModifiers(boolean value) {
+			stats.setUseAttunementModifiers(value);
+		}
+		
+		@Override
+		public boolean useAttunementModifiers()
+		{
+			return stats.useAttunementModifiers();
+		}
+		
+		public Object[] getApplicableMaterials()
+		{
+			return stats.getApplicableMaterials();
+		}
+		
+		public void setApplicableMaterials(Object[] materials)
+		{
+			stats.setApplicableMaterials(materials);
+		}
     };
   }
 }

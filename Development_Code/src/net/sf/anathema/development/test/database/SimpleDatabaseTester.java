@@ -16,25 +16,25 @@ public class SimpleDatabaseTester {
     // queryDatabase();
   }
 
-  @SuppressWarnings( { "rawtypes", "unused" })
+  @SuppressWarnings( { "unused" })
   private static void queryDatabase() {
     ObjectContainer db = Db4o.openFile("TestSimple.yap");
-    ObjectSet<Map> query = db.query(new Predicate<Map>() {
+    ObjectSet<Map<?, ?>> query = db.query(new Predicate<Map<?, ?>>() {
       @Override
-      public boolean match(Map map) {
+      public boolean match(Map<?, ?> map) {
         return true;
       }
     });
-    Map map = query.get(0);
+    Map<?, ?> map = query.get(0);
     Person person = (Person) map.get(Gender.Female);
     System.out.println(person.getName());
     db.close();
   }
 
-  @SuppressWarnings("rawtypes")
   private static void fillDatabase() {
     ObjectContainer db = Db4o.openFile("TestSimple.yap");
-    Map map = new HashedMap();
+    @SuppressWarnings("unchecked")
+    Map<Gender, Person> map = new HashedMap();
     Person sandra = new Person("Sandra", Gender.Female);
     map.put(Gender.Female, sandra);
     Person urs = new Person("Urs", Gender.Male);

@@ -9,7 +9,8 @@ import net.sf.anathema.character.generic.rules.IEditionVisitor;
 import net.sf.anathema.character.generic.rules.IExaltedEdition;
 import net.sf.anathema.character.generic.rules.IExaltedRuleSet;
 import net.sf.anathema.character.generic.template.ICharacterTemplate;
-import net.sf.anathema.character.generic.type.ICharacterType;
+import net.sf.anathema.character.generic.traits.IGenericTrait;
+import net.sf.anathema.character.generic.traits.ITraitType;
 import net.sf.anathema.character.impl.generic.GenericCharacter;
 import net.sf.anathema.character.impl.model.advance.ExperiencePointConfiguration;
 import net.sf.anathema.character.impl.model.charm.CharmConfiguration;
@@ -22,7 +23,6 @@ import net.sf.anathema.character.impl.model.statistics.ExtendedConfiguration;
 import net.sf.anathema.character.impl.model.traits.CoreTraitConfiguration;
 import net.sf.anathema.character.impl.model.traits.essence.EssencePoolConfiguration;
 import net.sf.anathema.character.impl.model.traits.listening.CharacterTraitListening;
-import net.sf.anathema.character.library.trait.ITrait;
 import net.sf.anathema.character.model.ICharacterStatistics;
 import net.sf.anathema.character.model.ISpellConfiguration;
 import net.sf.anathema.character.model.advance.IExperiencePointConfiguration;
@@ -83,19 +83,16 @@ public class CharacterStatistics implements ICharacterStatistics {
     this.concept = initConcept();
     this.traitConfiguration = new CoreTraitConfiguration(template, context, generics.getBackgroundRegistry());
     new CharacterTraitListening(traitConfiguration, context.getCharacterListening()).initListening();
-    ITrait toughnessTrait = getTraitConfiguration().getTrait(template.getToughnessControllingTraitType());
-    this.health = new HealthConfiguration(toughnessTrait, traitConfiguration);
+    this.health = new HealthConfiguration(getTraitArray(template.getToughnessControllingTraitTypes()), traitConfiguration, template.getBaseHealthProviders());
     this.charms = new CharmConfiguration(health, context, generics.getTemplateRegistry(), generics.getCharmProvider());
     initCharmListening(charms);
-    this.essencePool = new EssencePoolConfiguration(
-        template.getEssenceTemplate(),
-        template.getAdditionalRules(),
-        context);
+    this.essencePool = new EssencePoolConfiguration(template.getEssenceTemplate(),
+                                                    template.getAdditionalRules(),
+                                                    context);
     charms.initListening();
-    this.combos = new ComboConfiguration(charms, context.getComboLearnStrategy(), rules.getEdition());
+    this.combos = new ComboConfiguration(charms, context.getComboLearnStrategy(), rules.getEdition(), experiencePoints);
     combos.addComboConfigurationListener(new CharacterChangeComboListener(context.getCharacterListening()));
-    ICharacterType characterType = template.getTemplateType().getCharacterType();
-    this.spells = new SpellConfiguration(charms, context.getSpellLearnStrategy(), characterType, rules.getEdition());
+    this.spells = new SpellConfiguration(charms, context.getSpellLearnStrategy(), template, rules.getEdition());
     this.spells.addChangeListener(new IChangeListener() {
       public void changeOccured() {
         context.getCharacterListening().fireCharacterChanged();
@@ -107,6 +104,14 @@ public class CharacterStatistics implements ICharacterStatistics {
         context.getCharacterListening().fireCharacterChanged();
       }
     });
+  }
+  
+  private IGenericTrait[] getTraitArray(ITraitType[] types)
+  {
+	  IGenericTrait[] traits = new IGenericTrait[types.length];
+	  for (int i = 0; i != types.length; i++)
+		  traits[i] = traitConfiguration.getTrait(types[i]); 
+	  return traits;
   }
 
   private void initExperienceListening() {

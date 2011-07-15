@@ -1,10 +1,10 @@
 package net.sf.anathema.character.reporting.sheet.second;
 
 import net.sf.anathema.character.generic.character.IGenericCharacter;
+import net.sf.anathema.character.generic.character.IGenericDescription;
 import net.sf.anathema.character.generic.character.IGenericTraitCollection;
+import net.sf.anathema.character.generic.equipment.IEquipmentModifiers;
 import net.sf.anathema.character.generic.impl.CharacterUtilties;
-import net.sf.anathema.character.generic.traits.types.AbilityType;
-import net.sf.anathema.character.generic.traits.types.AttributeType;
 import net.sf.anathema.character.reporting.sheet.common.IPdfContentBoxEncoder;
 import net.sf.anathema.character.reporting.sheet.pageformat.IVoidStateFormatConstants;
 import net.sf.anathema.character.reporting.sheet.second.social.SocialCombatStatsTableEncoder;
@@ -39,14 +39,15 @@ public class SecondEditionSocialCombatStatsEncoder implements IPdfContentBoxEnco
     this.font = TableEncodingUtilities.createFont(baseFont);
   }
 
-  public String getHeaderKey() {
+  public String getHeaderKey(IGenericCharacter character, IGenericDescription description) {
     return "SocialCombat"; //$NON-NLS-1$
   }
 
-  public void encode(PdfContentByte directContent, IGenericCharacter character, Bounds bounds) throws DocumentException {
+  public void encode(PdfContentByte directContent, IGenericCharacter character, IGenericDescription description, Bounds bounds) throws DocumentException {
+	IEquipmentModifiers equipment = character.getEquipmentModifiers();
     float valueWidth = bounds.width;
     Bounds valueBounds = new Bounds(bounds.x, bounds.y, valueWidth, bounds.height);
-    float valueHeight = encodeValues(directContent, valueBounds, character.getTraitCollection());
+    float valueHeight = encodeValues(directContent, valueBounds, character.getTraitCollection(), equipment);
     Bounds attackTableBounds = new Bounds(bounds.x, bounds.y, valueWidth, bounds.height - valueHeight);
 
     IPdfTableEncoder tableEncoder = new SocialCombatStatsTableEncoder(resources, baseFont);
@@ -136,15 +137,20 @@ public class SecondEditionSocialCombatStatsEncoder implements IPdfContentBoxEnco
     return cell;
   }
 
-  private float encodeValues(PdfContentByte directContent, Bounds bounds, IGenericTraitCollection traitCollection) {
+  private float encodeValues(PdfContentByte directContent, Bounds bounds, IGenericTraitCollection traitCollection, IEquipmentModifiers equipment) {
     String joinLabel = resources.getString("Sheet.SocialCombat.JoinDebateBattle"); //$NON-NLS-1$
     String dodgeLabel = resources.getString("Sheet.SocialCombat.DodgeMDV"); //$NON-NLS-1$
-    int joinDebate = CharacterUtilties.getTotalValue(traitCollection, AttributeType.Wits, AbilityType.Awareness);
-    int dodgeMDV = CharacterUtilties.getDodgeMdv(traitCollection);
+    int joinDebate = CharacterUtilties.getJoinDebate(traitCollection, equipment);
+    int dodgeMDV = CharacterUtilties.getDodgeMdv(traitCollection, equipment);
     Position upperLeftCorner = new Position(bounds.x, bounds.getMaxY());
     LabelledValueEncoder encoder = new LabelledValueEncoder(baseFont, 2, upperLeftCorner, bounds.width, 3);
     encoder.addLabelledValue(directContent, 0, joinLabel, joinDebate);
     encoder.addLabelledValue(directContent, 1, dodgeLabel, dodgeMDV);
     return encoder.getHeight() + 1;
+  }
+  
+  public boolean hasContent(IGenericCharacter character)
+  {
+	  return true;
   }
 }

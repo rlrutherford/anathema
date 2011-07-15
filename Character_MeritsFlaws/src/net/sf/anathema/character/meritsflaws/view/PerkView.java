@@ -48,7 +48,7 @@ public class PerkView implements IPerkView, IView {
   private final ActionAddableListView<IQualitySelection<IPerk>> selectedPerksView;
   private final IMeritsFlawsViewProperties properties;
 
-  @SuppressWarnings({ "rawtypes", "unchecked" })
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   public PerkView(IMeritsFlawsViewProperties properties) {
     this.properties = properties;
     perkList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -113,6 +113,8 @@ public class PerkView implements IPerkView, IView {
     JPanel selectedPanel = new JPanel(new GridDialogLayout(1, false));
     selectedPanel.setBorder(new TitledBorder(properties.getSelectedString()));
     removeAction = new SmartAction(properties.getRemoveIcon()) {
+      private static final long serialVersionUID = -6114441098476696098L;
+
       @Override
       protected void execute(Component parentComponent) {
         control.forAllDo(new IClosure<IPerkListener>() {

@@ -821,6 +821,20 @@
     </cost>
     <duration duration="Permanent"/>
     <charmtype type="Permanent"/>
+    <oxbody trait="Endurance">
+		<pick name="Category.-0">
+			<ZeroHealthLevel/>
+		</pick>
+		<pick name="Category.-1x2">
+			<OneHealthLevel/>
+			<OneHealthLevel/>
+		</pick>
+		<pick name="Category.-1-2x2">
+			<OneHealthLevel/>
+			<TwoHealthLevel/>
+			<TwoHealthLevel/>
+		</pick>
+	</oxbody>
     <source source="FirstEdition" page="170"/>
   </charm>
   <charm id="Solar.ArmoredScout'sInvigoration" exalt="Solar" group="Endurance">
@@ -3685,6 +3699,12 @@
     </cost>
     <duration duration="Permanent"/>
     <charmtype type="Permanent"/>
+    <multiEffects>
+    	<effect name="Wind"/>
+    	<effect name="Cold"/>
+    	<effect name="Heat"/>
+    	<effect name="Acid"/>
+    </multiEffects>
     <source source="CBZenith" page="72"/>
   </charm>  
   <charm id="Solar.Alcohol-ResistingPrana" exalt="Solar" group="Resistance">

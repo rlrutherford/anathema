@@ -46,10 +46,13 @@ public class ComboConfigurationView implements IComboConfigurationView {
   private final JPanel namePanel = new JPanel(new GridDialogLayout(1, false));
   private JButton clearButton;
   private JButton finalizeButton;
+  private JButton finalizeXPButton;
   private int learnedListModelSize;
   private boolean isNameEntered;
   private boolean isDescriptionEntered;
   private final JTaskPane comboPane = new JTaskPane() {
+    private static final long serialVersionUID = 289110425410988048L;
+
     @Override
     public Dimension getPreferredScrollableViewportSize() {
       return new Dimension(0, 0);
@@ -63,6 +66,8 @@ public class ComboConfigurationView implements IComboConfigurationView {
     magicLearnView.init(viewProperties);
     finalizeButton = createFinalizeComboButton(viewProperties.getFinalizeButtonIcon());
     finalizeButton.setToolTipText(viewProperties.getFinalizeButtonToolTip());
+    finalizeXPButton = createFinalizeXPComboButton(viewProperties.getFinalizeXPButtonIcon());
+    finalizeXPButton.setToolTipText(viewProperties.getFinalizeXPButtonToolTip());
     clearButton = createClearButton(viewProperties.getClearButtonIcon());
     clearButton.setToolTipText(viewProperties.getClearButtonToolTip());
     final ListModel learnedListModel = magicLearnView.getLearnedListModel();
@@ -70,18 +75,21 @@ public class ComboConfigurationView implements IComboConfigurationView {
       public void intervalAdded(ListDataEvent e) {
         learnedListModelSize = learnedListModel.getSize();
         finalizeButton.setEnabled(learnedListModelSize > 1);
+        finalizeXPButton.setEnabled(viewProperties.canFinalizeWithXP());
         clearButton.setEnabled(isDescriptionEntered || isNameEntered || learnedListModelSize > 0);
       }
 
       public void intervalRemoved(ListDataEvent e) {
         learnedListModelSize = learnedListModel.getSize();
         finalizeButton.setEnabled(learnedListModelSize > 1);
+        finalizeXPButton.setEnabled(viewProperties.canFinalizeWithXP());
         clearButton.setEnabled(isDescriptionEntered || isNameEntered || learnedListModelSize > 0);
       }
 
       public void contentsChanged(ListDataEvent e) {
         learnedListModelSize = learnedListModel.getSize();
         finalizeButton.setEnabled(learnedListModelSize > 1);
+        finalizeXPButton.setEnabled(viewProperties.canFinalizeWithXP());
         clearButton.setEnabled(isDescriptionEntered || isNameEntered || learnedListModelSize > 0);
       }
     });
@@ -107,6 +115,8 @@ public class ComboConfigurationView implements IComboConfigurationView {
 
   private JButton createClearButton(Icon icon) {
     Action smartAction = new SmartAction(icon) {
+      private static final long serialVersionUID = -2774898496141408790L;
+
       @Override
       protected void execute(Component parentComponent) {
         fireComboCleared();
@@ -126,19 +136,37 @@ public class ComboConfigurationView implements IComboConfigurationView {
 
   private JButton createFinalizeComboButton(Icon icon) {
     Action smartAction = new SmartAction(icon) {
+      private static final long serialVersionUID = -3829623791941578824L;
+
       @Override
       protected void execute(Component parentComponent) {
-        fireComboFinalized();
+        fireComboFinalized(false);
       }
     };
     smartAction.setEnabled(false);
     return magicLearnView.addAdditionalAction(smartAction);
   }
+  
+  private JButton createFinalizeXPComboButton(Icon icon) {
+	    Action smartAction = new SmartAction(icon) {
+	      private static final long serialVersionUID = -3829623791941578824L;
 
-  private void fireComboFinalized() {
+	      @Override
+	      protected void execute(Component parentComponent) {
+	        fireComboFinalized(true);
+	      }
+	    };
+	    smartAction.setEnabled(false);
+	    return magicLearnView.addAdditionalAction(smartAction);
+	  }
+
+  private void fireComboFinalized(final boolean XP) {
     comboViewListeners.forAllDo(new IClosure<IComboViewListener>() {
       public void execute(IComboViewListener input) {
-        input.comboFinalized();
+    	  if (XP)
+    		  input.comboFinalizedXP();
+    	  else
+    		  input.comboFinalized();
       }
     });
   }

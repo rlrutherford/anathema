@@ -14,7 +14,7 @@ import net.sf.anathema.lib.gui.wizard.workflow.ICondition;
 public class MultipleEffectCharm implements IMultipleEffectCharm {
 
   private final String charmId;
-  private final String[] effectIds;
+  protected final String[] effectIds;
 
   public MultipleEffectCharm(String charmId, String[] effectIds) {
     this.charmId = charmId;
@@ -44,5 +44,13 @@ public class MultipleEffectCharm implements IMultipleEffectCharm {
         return arbitrator.isLearnable(charm);
       }
     };
+  }
+  
+  public String toString()
+  {
+	  String list = "";
+	  for (String effect : effectIds)
+		  list += effect + (effect == effectIds[effectIds.length - 1] ? "" : ",");
+	  return "[" + getCharmId() + ";" + list + "]";
   }
 }

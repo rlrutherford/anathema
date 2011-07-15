@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import net.sf.anathema.character.equipment.impl.reporting.second.ShieldTableEncoder;
 import net.sf.anathema.character.generic.character.IGenericCharacter;
+import net.sf.anathema.character.generic.character.IGenericDescription;
 import net.sf.anathema.character.reporting.sheet.common.IPdfContentBoxEncoder;
 import net.sf.anathema.character.reporting.sheet.util.IPdfTableEncoder;
 import net.sf.anathema.character.reporting.util.Bounds;
@@ -25,20 +26,20 @@ public class ArmourEncoder implements IPdfContentBoxEncoder {
     this.encoder = encoder;
   }
 
-  public String getHeaderKey() {
+  public String getHeaderKey(IGenericCharacter character, IGenericDescription description) {
     return "ArmourSoak"; //$NON-NLS-1$
   }
 
-  public void encode(PdfContentByte directContent, IGenericCharacter character, Bounds bounds) throws DocumentException {
+  public void encode(PdfContentByte directContent, IGenericCharacter character, IGenericDescription description, Bounds bounds) throws DocumentException {
     float tableHeight = encoder.encodeTable(directContent, character, bounds);
     float remainingHeight = bounds.getHeight() - tableHeight;
-    float delimitingLineYPosition = bounds.getMinY() + remainingHeight - 1;
+    float delimitingLineYPosition = bounds.getMinY() + remainingHeight - 3;
     drawDelimiter(directContent, bounds, delimitingLineYPosition);
     Bounds shieldBounds = new Bounds(
         bounds.getMinX(),
-        delimitingLineYPosition - 12,
+        bounds.getMinY(),
         bounds.getWidth(),
-        remainingHeight - 2);
+        remainingHeight - 6);
     new ShieldTableEncoder(baseFont, resources).encodeTable(directContent, character, shieldBounds);
   }
 
@@ -49,5 +50,10 @@ public class ArmourEncoder implements IPdfContentBoxEncoder {
     directContent.setLineWidth(0.75f);
     directContent.stroke();
     directContent.setColorStroke(Color.BLACK);
+  }
+  
+  public boolean hasContent(IGenericCharacter character)
+  {
+	  return true;
   }
 }

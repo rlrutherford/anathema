@@ -1,6 +1,8 @@
 package net.sf.anathema.character.reporting.sheet.common;
 
 import net.sf.anathema.character.generic.character.IGenericCharacter;
+import net.sf.anathema.character.generic.character.IGenericDescription;
+import net.sf.anathema.character.generic.template.magic.FavoringTraitType;
 import net.sf.anathema.character.generic.traits.groups.IIdentifiedTraitTypeGroup;
 import net.sf.anathema.character.generic.traits.types.AbilityType;
 import net.sf.anathema.character.reporting.sheet.util.PdfTraitEncoder;
@@ -9,6 +11,16 @@ import net.sf.anathema.lib.resources.IResources;
 import com.lowagie.text.pdf.BaseFont;
 
 public class PdfAbilitiesEncoder extends FavorableTraitEncoder {
+
+  public static PdfAbilitiesEncoder createWithCraftsOnly(
+      BaseFont baseFont,
+      IResources resources,
+      int essenceMax) {
+    PdfAbilitiesEncoder pdfAbilitiesEncoder = new PdfAbilitiesEncoder(baseFont, resources, essenceMax);
+    PdfTraitEncoder traitEncoder = pdfAbilitiesEncoder.getTraitEncoder();
+    pdfAbilitiesEncoder.addNamedTraitEncoder(new CraftEncoder(resources, baseFont, traitEncoder, essenceMax));
+    return pdfAbilitiesEncoder;
+  }
 
   public static PdfAbilitiesEncoder createWithSpecialtiesOnly(
       BaseFont baseFont,
@@ -24,11 +36,12 @@ public class PdfAbilitiesEncoder extends FavorableTraitEncoder {
   public static PdfAbilitiesEncoder createWithCraftsAndSpecialties(
       BaseFont baseFont,
       IResources resources,
-      int essenceMax) {
+      int essenceMax,
+      int specialtyCount) {
     PdfAbilitiesEncoder pdfAbilitiesEncoder = new PdfAbilitiesEncoder(baseFont, resources, essenceMax);
     PdfTraitEncoder traitEncoder = pdfAbilitiesEncoder.getTraitEncoder();
     pdfAbilitiesEncoder.addNamedTraitEncoder(new CraftEncoder(resources, baseFont, traitEncoder, essenceMax));
-    pdfAbilitiesEncoder.addNamedTraitEncoder(new SpecialtiesEncoder(resources, baseFont, traitEncoder, 9));
+    pdfAbilitiesEncoder.addNamedTraitEncoder(new SpecialtiesEncoder(resources, baseFont, traitEncoder, specialtyCount));
     return pdfAbilitiesEncoder;
   }
 
@@ -45,7 +58,7 @@ public class PdfAbilitiesEncoder extends FavorableTraitEncoder {
 
   }
 
-  public String getHeaderKey() {
+  public String getHeaderKey(IGenericCharacter character, IGenericDescription description) {
     return "Abilities"; //$NON-NLS-1$
   }
 
@@ -62,5 +75,15 @@ public class PdfAbilitiesEncoder extends FavorableTraitEncoder {
   @Override
   protected String getMarkerCommentKey() {
     return "Sheet.Comment.AbilityMobility"; //$NON-NLS-1$
+  }
+
+  @Override
+  protected String getExcellencyCommentKey() {
+    return "Sheet.Comment.AbilityExcellency"; //$NON-NLS-1$
+  }
+  
+  @Override
+  protected boolean shouldShowExcellencies(IGenericCharacter character) {
+    return character.getTemplate().getMagicTemplate().getFavoringTraitType() == FavoringTraitType.AbilityType;
   }
 }

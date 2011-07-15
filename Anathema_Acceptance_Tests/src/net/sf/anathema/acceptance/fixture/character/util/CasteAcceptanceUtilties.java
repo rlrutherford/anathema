@@ -10,6 +10,7 @@ import net.sf.anathema.character.generic.template.ICharacterTemplate;
 import net.sf.anathema.character.generic.type.AbstractSupportedCharacterTypeVisitor;
 import net.sf.anathema.character.generic.type.ICharacterType;
 import net.sf.anathema.character.lunar.caste.LunarCaste;
+import net.sf.anathema.character.infernal.caste.InfernalCaste;
 import net.sf.anathema.character.sidereal.caste.SiderealCaste;
 import net.sf.anathema.character.solar.caste.SolarCaste;
 import net.sf.anathema.character.alchemical.caste.AlchemicalCaste;
@@ -36,12 +37,25 @@ public class CasteAcceptanceUtilties {
         casteType.add(SiderealCaste.valueOf(caste));
       }
       
+      public void visitInfernal(ICharacterType visitedType) {
+          casteType.add(InfernalCaste.valueOf(caste));
+        }
+      
       public void visitAlchemical(ICharacterType visitedType) {
           casteType.add(AlchemicalCaste.valueOf(caste));
         }
 
       public void visitMortal(ICharacterType visitedType) {
         throw new IllegalArgumentException("Mortals have no caste"); //$NON-NLS-1$
+      }
+      
+      public void visitSpirit(ICharacterType visitedType) {
+          throw new IllegalArgumentException("Spirits have no caste"); //$NON-NLS-1$
+        }
+      
+      public void visitGhost(ICharacterType visitedType)
+      {
+    	  throw new IllegalArgumentException("Ghosts have no caste");
       }
 
       public void visitSolar(ICharacterType visitedType) {

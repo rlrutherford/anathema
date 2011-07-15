@@ -14,6 +14,7 @@ import net.disy.commons.swing.layout.grid.GridAlignment;
 import net.disy.commons.swing.layout.grid.GridDialogLayout;
 import net.disy.commons.swing.layout.grid.GridDialogLayoutData;
 import net.disy.commons.swing.layout.grid.IGridDialogLayoutData;
+import net.sf.anathema.character.impl.view.advantage.BackgroundSelectionView;
 import net.sf.anathema.character.impl.view.advantage.EssencePanelView;
 import net.sf.anathema.character.library.intvalue.IIntValueDisplayFactory;
 import net.sf.anathema.character.library.intvalue.IRemovableTraitView;
@@ -23,8 +24,8 @@ import net.sf.anathema.character.library.trait.view.SimpleTraitView;
 import net.sf.anathema.character.view.IAdvantageViewProperties;
 import net.sf.anathema.character.view.IBasicAdvantageView;
 import net.sf.anathema.framework.presenter.view.AbstractInitializableContentView;
-import net.sf.anathema.framework.presenter.view.ButtonControlledObjectSelectionView;
-import net.sf.anathema.framework.presenter.view.IButtonControlledObjectSelectionView;
+import net.sf.anathema.framework.presenter.view.ButtonControlledComboEditView;
+import net.sf.anathema.framework.presenter.view.IButtonControlledComboEditView;
 import net.sf.anathema.framework.presenter.view.ITextFieldComboBoxEditor;
 import net.sf.anathema.framework.value.IIntValueView;
 import net.sf.anathema.lib.gui.GuiUtilities;
@@ -87,19 +88,19 @@ public class BasicAdvantageView extends AbstractInitializableContentView<IAdvant
     return willpowerView;
   }
 
-  public IButtonControlledObjectSelectionView<Object> addBackgroundSelectionView(
-      String labelText,
-      ITextFieldComboBoxEditor editor,
-      ListCellRenderer renderer,
-      Icon addIcon) {
-    ButtonControlledObjectSelectionView<Object> objectSelectionView = new ButtonControlledObjectSelectionView<Object>(
-        renderer,
-        addIcon,
-        labelText,
-        editor);
-    objectSelectionView.addComponents(backgroundSelectionPanel);
-    return objectSelectionView;
-  }
+  public IButtonControlledComboEditView<Object> addBackgroundSelectionView(
+	      String labelText,
+	      ListCellRenderer backgroundRenderer,
+	      ITextFieldComboBoxEditor backgroundEditor,
+	      Icon addIcon) {
+	    ButtonControlledComboEditView<Object> objectSelectionView = new BackgroundSelectionView<Object>(
+	        addIcon,
+	        labelText,
+	        backgroundRenderer,
+	        backgroundEditor);
+	    backgroundSelectionPanel.add(objectSelectionView.getComponent());
+	    return objectSelectionView;
+	  }
 
   public IRemovableTraitView<SimpleTraitView> addBackgroundView(
       Icon deleteIcon,

@@ -10,6 +10,7 @@ import net.sf.anathema.character.generic.character.ICharacterPoints;
 import net.sf.anathema.character.generic.character.IConcept;
 import net.sf.anathema.character.generic.character.IGenericCharacter;
 import net.sf.anathema.character.generic.character.IGenericTraitCollection;
+import net.sf.anathema.character.generic.equipment.IEquipmentModifiers;
 import net.sf.anathema.character.generic.health.HealthLevelType;
 import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.IGenericCombo;
@@ -40,15 +41,22 @@ import net.sf.anathema.character.model.charm.ICombo;
 import net.sf.anathema.character.model.charm.special.IMultiLearnableCharmConfiguration;
 import net.sf.anathema.character.model.charm.special.IMultipleEffectCharmConfiguration;
 import net.sf.anathema.character.model.charm.special.ISubeffectCharmConfiguration;
+import net.sf.anathema.lib.util.IdentifiedInteger;
 
 public class GenericCharacter implements IGenericCharacter {
 
   private final ICharacterStatistics statistics;
   private final CharacterPoints characterPoints;
+  private final IEquipmentModifiers equipmentModifiers;
 
   public GenericCharacter(ICharacterStatistics statistics, IExperiencePointManagement experiencePointManagement) {
+	    this(statistics, experiencePointManagement, null);
+	  }
+  
+  public GenericCharacter(ICharacterStatistics statistics, IExperiencePointManagement experiencePointManagement, IEquipmentModifiers stats) {
     this.statistics = statistics;
     this.characterPoints = new CharacterPoints(statistics, experiencePointManagement);
+    this.equipmentModifiers = stats;
   }
 
   public IGenericTraitCollection getTraitCollection() {
@@ -56,20 +64,31 @@ public class GenericCharacter implements IGenericCharacter {
   }
 
   public int getLearnCount(IMultiLearnableCharm charm) {
+    return getLearnCount(charm.getCharmId());
+  }
+  
+  public int getLearnCount(String charmName)
+  {
     ICharmConfiguration charms = statistics.getCharms();
     try {
-      IMultiLearnableCharmConfiguration configuration = (IMultiLearnableCharmConfiguration) charms.getSpecialCharmConfiguration(charm.getCharmId());
+      IMultiLearnableCharmConfiguration configuration = (IMultiLearnableCharmConfiguration) charms.getSpecialCharmConfiguration(charmName);
       return configuration.getCurrentLearnCount();
     }
     catch (IllegalArgumentException e) {
       return 0;
     }
   }
-
-  public void setLearnCount(IMultiLearnableCharm multiLearnableCharm, int newValue) {
-    ICharmConfiguration charms = statistics.getCharms();
-    IMultiLearnableCharmConfiguration configuration = (IMultiLearnableCharmConfiguration) charms.getSpecialCharmConfiguration(multiLearnableCharm.getCharmId());
-    configuration.setCurrentLearnCount(newValue);
+  
+  public void setLearnCount(IMultiLearnableCharm multiLearnableCharm, int newValue)
+  {
+	  setLearnCount(multiLearnableCharm.getCharmId(), newValue);
+  }
+  
+  public void setLearnCount(String charmName, int newValue)
+  {
+	  ICharmConfiguration charms = statistics.getCharms();
+	  IMultiLearnableCharmConfiguration configuration = (IMultiLearnableCharmConfiguration) charms.getSpecialCharmConfiguration(charmName);
+	  configuration.setCurrentLearnCount(newValue);
   }
 
   public boolean isLearned(IMagic magic) {
@@ -135,17 +154,40 @@ public class GenericCharacter implements IGenericCharacter {
   public String getPeripheralPool() {
     return getTemplate().getEssenceTemplate().isEssenceUser() ? statistics.getEssencePool().getPeripheralPool() : null;
   }
+  
+  public int getPeripheralPoolValue() {
+    return getTemplate().getEssenceTemplate().isEssenceUser() ? statistics.getEssencePool().getPeripheralPoolValue() : 0;
+  }
 
   public String getPersonalPool() {
     return getTemplate().getEssenceTemplate().isEssenceUser() ? statistics.getEssencePool().getPersonalPool() : null;
+  }
+  
+  public int getPersonalPoolValue() {
+    return getTemplate().getEssenceTemplate().isEssenceUser() ? statistics.getEssencePool().getPersonalPoolValue() : 0;
+  }
+
+  @Override
+  public IdentifiedInteger[] getComplexPools() {
+    if (getTemplate().getEssenceTemplate().isEssenceUser()) {
+      return statistics.getEssencePool().getComplexPools();
+    }
+    else {
+      return new IdentifiedInteger[0];
+    }
   }
 
   public IGenericTrait[] getBackgrounds() {
     return statistics.getTraitConfiguration().getBackgrounds().getBackgrounds();
   }
-
+  
   public IAdditionalModel getAdditionalModel(String id) {
     return statistics.getExtendedConfiguration().getAdditionalModel(id);
+  }
+  
+  public IEquipmentModifiers getEquipmentModifiers()
+  {
+	  return equipmentModifiers;
   }
 
   public IConcept getConcept() {
@@ -214,6 +256,11 @@ public class GenericCharacter implements IGenericCharacter {
   public IIdentifiedTraitTypeGroup[] getAttributeTypeGroups()
   {
 	  return statistics.getTraitConfiguration().getAttributeTypeGroups();
+  }
+  
+  public IIdentifiedTraitTypeGroup[] getYoziTypeGroups()
+  {
+	  return statistics.getTraitConfiguration().getYoziTypeGroups();
   }
 
   public int getSpentExperiencePoints() {

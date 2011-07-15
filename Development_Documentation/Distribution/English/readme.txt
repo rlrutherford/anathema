@@ -1,11 +1,12 @@
 ===------------------------------------------------------------------------------===
-	    ANATHEMA v2.0.1 "CALIBRATION"
+	    ANATHEMA v3.0.0 "MALFEAS"
 ===------------------------------------------------------------------------------===
 
 Anathema Read Me
 (C) 2004-2008 by Sandra Sieroux and Urs Reupke
 (C) 2010-2011 by Urs Reupke, Sandra Sieroux, Paul Adams, Eric Astor,
-                 Douglas Fotheringham, Sean Mattox, Scott Olson, and Rob Rutherford
+                 Douglas Fotheringham, Sean Mattox, Scott Olson, Rob Rutherford,
+                 and Erin Martell.
 Exalted (C) 2001-2011 by White Wolf Publishing, Inc.
 http://anathema.sf.net
 
@@ -70,8 +71,8 @@ You can always get the most up to date version at "http//java.sun.com".
 ===------------------------------------------------------------------------------===
 
 + Generate and maintain all 5 core exalt types (1E)
-+ Generate and maintain Solar, Lunar, Sidereal, Dragon-Blooded, and Abyssal exalt
-  types (2E)
++ Generate and maintain Solar, Lunar, Sidereal, Dragon-Blooded, Infernal, and Abyssal
+  exalt types (2E)
 + Generate character descriptions (currently disabled)
 + Print character sheets and descriptions to PDF
 + Organize your series' plot

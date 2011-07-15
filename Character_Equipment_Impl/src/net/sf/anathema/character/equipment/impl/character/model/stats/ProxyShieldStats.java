@@ -7,7 +7,7 @@ import net.sf.anathema.character.generic.rules.IExaltedRuleSet;
 import net.sf.anathema.character.generic.util.IProxy;
 import net.sf.anathema.lib.util.IIdentificate;
 
-public class ProxyShieldStats implements IShieldStats, IProxy<IShieldStats> {
+public class ProxyShieldStats extends AbstractStats implements IShieldStats, IProxy<IShieldStats> {
 
   private final IShieldStats delegate;
   private final MagicalMaterial material;
@@ -62,5 +62,11 @@ public class ProxyShieldStats implements IShieldStats, IProxy<IShieldStats> {
   @Override
   public String getId() {
     return getName().getId();
+  }
+  
+  @Override
+  public Object[] getApplicableMaterials()
+  {
+	  return delegate.getApplicableMaterials();
   }
 }

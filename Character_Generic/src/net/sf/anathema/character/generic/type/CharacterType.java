@@ -45,17 +45,40 @@ public enum CharacterType implements ICharacterType {
       visitor.visitSidereal(this);
     }
   },
-  ALCHEMICAL("Alchemical") {//$NON-NLS-1$
+  INFERNAL("Infernal") {//$NON-NLS-1$
 	    @Override
 	    public void accept(ICharacterTypeVisitor visitor) {
-	      visitor.visitAlchemical(this);
+	      visitor.visitInfernal(this);
 	    }
 	    
 	    @Override
 	    public FavoringTraitType getFavoringTraitType() {
-	      return FavoringTraitType.AttributeType;
+	      return FavoringTraitType.YoziType;
 	    }
 	  },
+  ALCHEMICAL("Alchemical") {//$NON-NLS-1$
+		    @Override
+		    public void accept(ICharacterTypeVisitor visitor) {
+		      visitor.visitAlchemical(this);
+		    }
+		    
+		    @Override
+		    public FavoringTraitType getFavoringTraitType() {
+		      return FavoringTraitType.AttributeType;
+		    }
+		  },
+  SPIRIT("Spirit") {//$NON-NLS-1$
+	    @Override
+	    public void accept(ICharacterTypeVisitor visitor) {
+	      visitor.visitSpirit(this);
+	    }
+	  },
+  GHOST("Ghost") {//$NON-NLS-1$
+		    @Override
+		    public void accept(ICharacterTypeVisitor visitor) {
+		      visitor.visitGhost(this);
+		    }
+		  },
   MORTAL("Mortal") {//$NON-NLS-1$
     @Override
     public void accept(ICharacterTypeVisitor visitor) {

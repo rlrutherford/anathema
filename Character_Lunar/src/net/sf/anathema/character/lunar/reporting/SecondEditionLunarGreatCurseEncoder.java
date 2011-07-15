@@ -2,6 +2,7 @@ package net.sf.anathema.character.lunar.reporting;
 
 import net.disy.commons.core.util.StringUtilities;
 import net.sf.anathema.character.generic.character.IGenericCharacter;
+import net.sf.anathema.character.generic.character.IGenericDescription;
 import net.sf.anathema.character.lunar.virtueflaw.LunarVirtueFlawTemplate;
 import net.sf.anathema.character.lunar.virtueflaw.model.ILunarVirtueFlaw;
 import net.sf.anathema.character.lunar.virtueflaw.presenter.ILunarVirtueFlawModel;
@@ -34,12 +35,12 @@ public class SecondEditionLunarGreatCurseEncoder implements IPdfContentBoxEncode
     this.traitEncoder = new VirtueFlawBoxEncoder(baseFont);
   }
 
-  public String getHeaderKey() {
+  public String getHeaderKey(IGenericCharacter character, IGenericDescription description) {
     return "GreatCurse.Lunar"; //$NON-NLS-1$
   }
 
-  public void encode(PdfContentByte directContent, IGenericCharacter character, Bounds bounds) throws DocumentException {
-    int leading = IVoidStateFormatConstants.LINE_HEIGHT - 2;
+  public void encode(PdfContentByte directContent, IGenericCharacter character, IGenericDescription description, Bounds bounds) throws DocumentException {
+    float leading = IVoidStateFormatConstants.LINE_HEIGHT - 2;
     ILunarVirtueFlaw virtueFlaw = ((ILunarVirtueFlawModel) character.getAdditionalModel(LunarVirtueFlawTemplate.TEMPLATE_ID)).getVirtueFlaw();
     Bounds textBounds = traitEncoder.encode(directContent, bounds, virtueFlaw.getLimitTrait().getCurrentValue());
     String name = virtueFlaw.getName().getText();
@@ -74,7 +75,7 @@ public class SecondEditionLunarGreatCurseEncoder implements IPdfContentBoxEncode
     }
   }
 
-  private void encodeLines(PdfContentByte directContent, Bounds bounds, int leading, float yPosition) {
+  private void encodeLines(PdfContentByte directContent, Bounds bounds, float leading, float yPosition) {
     yPosition -= leading;
     while (yPosition > bounds.getMinY()) {
       Line.createHorizontalByCoordinate(new Position(bounds.x, yPosition), bounds.getMaxX()).encode(directContent);
@@ -90,5 +91,10 @@ public class SecondEditionLunarGreatCurseEncoder implements IPdfContentBoxEncode
 
   private Font createFont(BaseFont baseFont) {
     return TableEncodingUtilities.createFont(baseFont);
+  }
+  
+  public boolean hasContent(IGenericCharacter character)
+  {
+	  return true;
   }
 }

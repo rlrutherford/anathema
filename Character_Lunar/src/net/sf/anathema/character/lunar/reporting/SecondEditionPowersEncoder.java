@@ -1,6 +1,8 @@
 package net.sf.anathema.character.lunar.reporting;
 
 import net.sf.anathema.character.generic.character.IGenericCharacter;
+import net.sf.anathema.character.generic.character.IGenericDescription;
+import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.template.TemplateType;
 import net.sf.anathema.character.generic.type.CharacterType;
 import net.sf.anathema.character.reporting.sheet.common.IPdfContentBoxEncoder;
@@ -19,12 +21,14 @@ import com.lowagie.text.pdf.PdfContentByte;
 
 public class SecondEditionPowersEncoder implements IPdfContentBoxEncoder
 {
+  private static final String TERRIFYING_BEASTMAN_ALTERATION = "Lunar.TerrifyingBeastmanAlteration";
   private Font font;
-  private int lineHeight = IVoidStateFormatConstants.LINE_HEIGHT - 2;
+  private float lineHeight = IVoidStateFormatConstants.LINE_HEIGHT - 2;
   private final String powerBase = "Sheet.Lunar.Powers.";
   private final IResources resources;
   private final BaseFont baseFont;
   private final boolean isHorizontal;
+  private int tellMDV;
   
   private static final TemplateType castelessType = new TemplateType(CharacterType.LUNAR, new Identificate(
   "Casteless")); //$NON-NLS-1$
@@ -35,8 +39,10 @@ public class SecondEditionPowersEncoder implements IPdfContentBoxEncoder
     this.isHorizontal = isHorizontal;
   }
 
-  public void encode(PdfContentByte directContent, IGenericCharacter character, Bounds bounds)
+  public void encode(PdfContentByte directContent, IGenericCharacter character, IGenericDescription description, Bounds bounds)
   {
+	  tellMDV = hasTBA(character) ? 8 : 12;
+	  
 	  int offsetX = 0, offsetY = isHorizontal ? 0 : 5;
 	  font = TableEncodingUtilities.createFont(baseFont);
 	  
@@ -68,6 +74,14 @@ public class SecondEditionPowersEncoder implements IPdfContentBoxEncoder
 	  catch (DocumentException e) { }
   }
   
+  private boolean hasTBA(IGenericCharacter character)
+	{
+		for (ICharm charm : character.getLearnedCharms())
+			if (charm.getId().equals(TERRIFYING_BEASTMAN_ALTERATION))
+				return true;
+		return false;
+	}
+  
   private int writePowerNotes(PdfContentByte directContent,
 		  String power,
 		  Bounds bounds,
@@ -90,6 +104,7 @@ public class SecondEditionPowersEncoder implements IPdfContentBoxEncoder
 		  totalHeight += PdfTextEncodingUtilities.encodeText(directContent, phrase,
 				  newBounds, lineHeight).getLinesWritten() * lineHeight;
 		  text = resources.getString(powerBase + power + (++index));
+		  text = text.replace("TELLMDV", "" + tellMDV);
 		  phrase = new Phrase(text, font);
 	  }
 	  if (!isHorizontal)
@@ -106,7 +121,12 @@ public class SecondEditionPowersEncoder implements IPdfContentBoxEncoder
   }
 
 	@Override
-	public String getHeaderKey() {
+	public String getHeaderKey(IGenericCharacter character, IGenericDescription description) {
 		return "Lunar.Powers";
 	}
+	
+	public boolean hasContent(IGenericCharacter character)
+	  {
+		  return true;
+	  }
 }

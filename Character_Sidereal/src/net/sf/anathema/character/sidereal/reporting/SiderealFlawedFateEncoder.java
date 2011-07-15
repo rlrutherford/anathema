@@ -1,6 +1,7 @@
 package net.sf.anathema.character.sidereal.reporting;
 
 import net.sf.anathema.character.generic.character.IGenericCharacter;
+import net.sf.anathema.character.generic.character.IGenericDescription;
 import net.sf.anathema.character.library.virtueflaw.model.IVirtueFlaw;
 import net.sf.anathema.character.library.virtueflaw.presenter.IVirtueFlawModel;
 import net.sf.anathema.character.reporting.sheet.common.IPdfContentBoxEncoder;
@@ -40,7 +41,7 @@ public class SiderealFlawedFateEncoder extends AbstractPdfEncoder implements IPd
     return baseFont;
   }
 
-  public void encode(PdfContentByte directContent, IGenericCharacter character, Bounds bounds) throws DocumentException {
+  public void encode(PdfContentByte directContent, IGenericCharacter character, IGenericDescription description, Bounds bounds) throws DocumentException {
 	IVirtueFlaw virtueFlaw = ((IVirtueFlawModel) character.getAdditionalModel(SiderealFlawedFateTemplate.ID)).getVirtueFlaw();
     Bounds textBounds = traitEncoder.encode(directContent, bounds, virtueFlaw.getLimitTrait().getCurrentValue());
     //float lineHeight = (textBounds.height - TEXT_PADDING) / 2;
@@ -57,11 +58,16 @@ public class SiderealFlawedFateEncoder extends AbstractPdfEncoder implements IPd
     phrase.add(new Chunk(resources.getString("Sheet.GreatCurse.Sidereal.LimitBreak") + ": ", boldFont)); //$NON-NLS-1$
     String fateString = resources.getString("Sheet.GreatCurse.Sidereal.FlawedFate." + character.getCasteType().getId()) + "\n";
     if (fateString.startsWith("#")) fateString = "\n";
-    phrase.add(fateString); //$NON-NLS-1$
+    phrase.add(fateString); 
     PdfTextEncodingUtilities.encodeText(directContent, phrase, textBounds, IVoidStateFormatConstants.LINE_HEIGHT - 2);
   }
 
-  public String getHeaderKey() {
+  public String getHeaderKey(IGenericCharacter character, IGenericDescription description) {
     return "FlawedFate"; //$NON-NLS-1$
+  }
+  
+  public boolean hasContent(IGenericCharacter character)
+  {
+	  return true;
   }
 }

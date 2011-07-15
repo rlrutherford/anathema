@@ -11,6 +11,7 @@ import net.sf.anathema.character.generic.caste.ICasteType;
 import net.sf.anathema.character.generic.character.ICharacterPoints;
 import net.sf.anathema.character.generic.character.IGenericCharacter;
 import net.sf.anathema.character.generic.character.IGenericTraitCollection;
+import net.sf.anathema.character.generic.equipment.IEquipmentModifiers;
 import net.sf.anathema.character.generic.health.HealthLevelType;
 import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.IGenericCombo;
@@ -34,6 +35,7 @@ import net.sf.anathema.dummy.character.additional.DemoIntimaciesModel;
 import net.sf.anathema.dummy.character.trait.DummyFavorableGenericTrait;
 import net.sf.anathema.dummy.character.trait.DummyGenericTrait;
 import net.sf.anathema.lib.exception.NotYetImplementedException;
+import net.sf.anathema.lib.util.IdentifiedInteger;
 
 public class DemoGenericCharacter implements IGenericCharacter {
 
@@ -113,7 +115,8 @@ public class DemoGenericCharacter implements IGenericCharacter {
     allCombos.add(combo);
   }
   
-  public int getEssenceCap(boolean modified)
+  @Override
+public int getEssenceCap(boolean modified)
   {
 	  return 0;
   }
@@ -151,10 +154,25 @@ public class DemoGenericCharacter implements IGenericCharacter {
   public String getPeripheralPool() {
     return "25"; //$NON-NLS-1$
   }
+  
+  @Override
+  public int getPeripheralPoolValue() {
+    return 25;
+  }
 
   @Override
   public String getPersonalPool() {
     return "10"; //$NON-NLS-1$
+  }
+  
+  @Override
+  public int getPersonalPoolValue() {
+    return 10;
+  }
+
+  @Override
+  public IdentifiedInteger[] getComplexPools() {
+    return new IdentifiedInteger[0];
   }
 
   @Override
@@ -271,7 +289,14 @@ public class DemoGenericCharacter implements IGenericCharacter {
             AbilityType.Socialize }, SolarCaste.Eclipse) };
   }
   
+  @Override
   public IIdentifiedTraitTypeGroup[] getAttributeTypeGroups()
+  {
+	  return null;
+  }
+  
+  @Override
+  public IIdentifiedTraitTypeGroup[] getYoziTypeGroups()
   {
 	  return null;
   }
@@ -330,4 +355,21 @@ public class DemoGenericCharacter implements IGenericCharacter {
   public ICharm[] getLearnedCharms() {
     return new ICharm[0];
   }
+
+	@Override
+	public int getLearnCount(String charmName) {
+		return 0;
+	}
+
+	@Override
+	public IEquipmentModifiers getEquipmentModifiers() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setLearnCount(String charmName, int newValue) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -1,5 +1,6 @@
 package net.sf.anathema.character.solar;
 
+import net.sf.anathema.character.generic.backgrounds.IBackgroundTemplate;
 import net.sf.anathema.character.generic.framework.ICharacterGenerics;
 import net.sf.anathema.character.generic.framework.additionaltemplate.IAdditionalViewFactory;
 import net.sf.anathema.character.generic.framework.additionaltemplate.model.IAdditionalModelFactory;
@@ -8,17 +9,13 @@ import net.sf.anathema.character.generic.framework.magic.FirstExcellency;
 import net.sf.anathema.character.generic.framework.magic.SecondExcellency;
 import net.sf.anathema.character.generic.framework.magic.ThirdExcellency;
 import net.sf.anathema.character.generic.framework.module.NullObjectCharacterModuleAdapter;
+import net.sf.anathema.character.generic.impl.backgrounds.EditionSpecificTemplateTypeBackgroundTemplate;
 import net.sf.anathema.character.generic.impl.caste.CasteCollection;
-import net.sf.anathema.character.generic.impl.magic.charm.special.PrerequisiteModifyingCharm;
 import net.sf.anathema.character.generic.impl.rules.ExaltedEdition;
 import net.sf.anathema.character.generic.impl.rules.ExaltedSourceBook;
 import net.sf.anathema.character.generic.impl.traits.EssenceTemplate;
 import net.sf.anathema.character.generic.magic.IMagicStats;
-import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharm;
-import net.sf.anathema.character.generic.rules.IExaltedEdition;
 import net.sf.anathema.character.generic.template.TemplateType;
-import net.sf.anathema.character.generic.traits.ITraitType;
-import net.sf.anathema.character.generic.traits.types.AbilityType;
 import net.sf.anathema.character.generic.type.CharacterType;
 import net.sf.anathema.character.reporting.CharacterReportingModule;
 import net.sf.anathema.character.reporting.CharacterReportingModuleObject;
@@ -31,11 +28,11 @@ import net.sf.anathema.character.solar.generic.SupremePerfectionOf;
 import net.sf.anathema.character.solar.generic.DivineTranscendenceOf;
 import net.sf.anathema.character.solar.reporting.FirstEditionSolarPartEncoder;
 import net.sf.anathema.character.solar.reporting.SecondEditionSolarPartEncoder;
-import net.sf.anathema.character.solar.template.ISolarSpecialCharms;
 import net.sf.anathema.character.solar.virtueflaw.SolarVirtueFlawModelFactory;
 import net.sf.anathema.character.solar.virtueflaw.SolarVirtueFlawPersisterFactory;
 import net.sf.anathema.character.solar.virtueflaw.SolarVirtueFlawTemplate;
 import net.sf.anathema.character.solar.virtueflaw.SolarVirtueFlawViewFactory;
+import net.sf.anathema.lib.registry.IIdentificateRegistry;
 import net.sf.anathema.lib.registry.IRegistry;
 import net.sf.anathema.lib.resources.IResources;
 import net.sf.anathema.lib.util.Identificate;
@@ -51,6 +48,25 @@ public class SolarCharacterModule extends NullObjectCharacterModuleAdapter {
   private static final TemplateType solarRevisedTemplateType = new TemplateType(CharacterType.SOLAR, new Identificate(
       "RevisedSolarSubtype")); //$NON-NLS-1$
   
+  private static final TemplateType dreamsSolarTemplateType = new TemplateType(CharacterType.SOLAR, new Identificate(
+  	"Dreams")); //$NON-NLS-1$
+  private static final TemplateType dreamsSolarRevisedTemplateType = new TemplateType(CharacterType.SOLAR, new Identificate(
+  	"DreamsRevised")); //$NON-NLS-1$
+  
+  private static final TemplateType[] dreams = { dreamsSolarTemplateType, dreamsSolarRevisedTemplateType };
+  
+  public static final String BACKGROUND_ID_ARSENAL = "SolarDreamsArsenal"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_COMMAND = "SolarDreamsCommand"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_CONNECTIONS = "SolarDreamsConnections"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_HENCHMEN = "SolarDreamsHenchmen"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_PANOPLY = "SolarDreamsPanoply"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_REPUTATION = "SolarDreamsReputation"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_RETAINERS = "SolarDreamsRetainers"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_SALARY = "SolarDreamsSalary"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_SAVANT = "SolarDreamsSavant"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_SIFU = "SolarDreamsSifu"; //$NON-NLS-1$
+  public static final String BACKGROUND_ID_WEALTH = "SolarDreamsWealth"; //$NON-NLS-1$
+  
   @Override
   public void registerCommonData(ICharacterGenerics characterGenerics) {
     characterGenerics.getGenericCharmStatsRegistry().register(
@@ -62,54 +78,13 @@ public class SolarCharacterModule extends NullObjectCharacterModuleAdapter {
             new EssenceFlow(),
             new DivineTranscendenceOf(),
             new SupremePerfectionOf()});
-    characterGenerics.getCharmProvider().setSpecialCharms(
-        CharacterType.SOLAR,
-        ExaltedEdition.FirstEdition,
-        ISolarSpecialCharms.OX_BODY_TECHNIQUE,
-        ISolarSpecialCharms.ENVIRONMENTAL_HAZARD_RESISTING_MEDITATION);
     
-    characterGenerics.getCharmProvider().setSpecialCharms(
-        CharacterType.SOLAR,
-        ExaltedEdition.SecondEdition,
-        getSpecialCharmArray(ExaltedEdition.SecondEdition));
     characterGenerics.getAdditionalTemplateParserRegistry().register(
         SolarVirtueFlawTemplate.ID,
         new SolarVirtueFlawParser());
     characterGenerics.getCasteCollectionRegistry().register(
         CharacterType.SOLAR,
         new CasteCollection(SolarCaste.values()));
-  }
-  
-  private ISpecialCharm[] getSpecialCharmArray(IExaltedEdition edition)
-  {
-	  if (edition == ExaltedEdition.SecondEdition)
-	  {
-		  ISpecialCharm baseSet[] = new ISpecialCharm[] {
-		    ISolarSpecialCharms.OX_BODY_TECHNIQUE_SECOND_EDITION,
-		    ISolarSpecialCharms.GLORY_TO_THE_MOST_HIGH,
-	        ISolarSpecialCharms.GLORIOUS_SOLAR_SABER,
-	        ISolarSpecialCharms.CITY_MOVING_SECRETS,
-	        ISolarSpecialCharms.IMMANENT_SOLAR_GLORY,
-	        ISolarSpecialCharms.INVINCIBLE_ESSENCE_REINFORCEMENT,
-	        ISolarSpecialCharms.RIGHTEOUS_LION_DEFENSE,
-	        ISolarSpecialCharms.WONDER_FORGING_GENIUS,
-	        ISolarSpecialCharms.ESSENCE_ARROW_ATTACK,
-	        ISolarSpecialCharms.MASTER_HORSEMANS_TECHNIQUES,
-	        ISolarSpecialCharms.PHOENIX_RENEWAL_TACTIC };
-		  
-		  int abilityCount = AbilityType.getAbilityTypes(edition).length;
-		  ISpecialCharm[] masterSet = new ISpecialCharm[baseSet.length + abilityCount];
-		  for (int i = 0; i != baseSet.length; i++) masterSet[i] = baseSet[i];
-		  
-		  for (int i = 0; i != abilityCount; i++)
-		  {
-			  ITraitType type = AbilityType.getAbilityTypes(edition)[i];
-			  masterSet[baseSet.length + i] = new PrerequisiteModifyingCharm("Solar.DivineTranscendenceOf."
-					  + type.getId(), type, -1);
-		  }
-		  return masterSet;		  
-	  }
-	  return null;
   }
 
   @Override
@@ -129,6 +104,22 @@ public class SolarCharacterModule extends NullObjectCharacterModuleAdapter {
     registerParsedTemplate(characterGenerics, "template/Solar2ndRevised.template"); //$NON-NLS-1$
     registerParsedTemplate(characterGenerics, "template/Solar2ndDreams.template"); //$NON-NLS-1$
     registerParsedTemplate(characterGenerics, "template/Solar2ndDreamsRevised.template"); //$NON-NLS-1$
+  }
+  
+  @Override
+  public void addBackgroundTemplates(ICharacterGenerics generics) {
+      IIdentificateRegistry<IBackgroundTemplate> backgroundRegistry = generics.getBackgroundRegistry();
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_ARSENAL, dreams, ExaltedEdition.SecondEdition));
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_COMMAND, dreams, ExaltedEdition.SecondEdition));
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_CONNECTIONS, dreams, ExaltedEdition.SecondEdition));
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_HENCHMEN, dreams, ExaltedEdition.SecondEdition));
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_PANOPLY, dreams, ExaltedEdition.SecondEdition));
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_REPUTATION, dreams, ExaltedEdition.SecondEdition));
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_RETAINERS, dreams, ExaltedEdition.SecondEdition));
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_SALARY, dreams, ExaltedEdition.SecondEdition));
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_SAVANT, dreams, ExaltedEdition.SecondEdition));
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_SIFU, dreams, ExaltedEdition.SecondEdition));
+      backgroundRegistry.add(new EditionSpecificTemplateTypeBackgroundTemplate(BACKGROUND_ID_WEALTH, dreams, ExaltedEdition.SecondEdition));
   }
 
   @Override

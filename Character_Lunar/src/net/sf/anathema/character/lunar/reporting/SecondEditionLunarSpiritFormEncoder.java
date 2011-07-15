@@ -1,7 +1,9 @@
 package net.sf.anathema.character.lunar.reporting;
 
 import net.sf.anathema.character.generic.character.IGenericCharacter;
+import net.sf.anathema.character.generic.character.IGenericDescription;
 import net.sf.anathema.character.generic.character.IGenericTraitCollection;
+import net.sf.anathema.character.generic.impl.traits.EssenceTemplate;
 import net.sf.anathema.character.generic.template.abilities.IGroupedTraitType;
 import net.sf.anathema.character.generic.traits.ITraitType;
 import net.sf.anathema.character.generic.traits.types.AttributeGroupType;
@@ -25,7 +27,6 @@ import com.lowagie.text.pdf.PdfContentByte;
 
 public class SecondEditionLunarSpiritFormEncoder implements IPdfContentBoxEncoder {
 
-  private final static int PHYSICAL_MAX = 7;
   private final IResources resources;
   private final PdfTraitEncoder smallTraitEncoder;
   private final BaseFont baseFont;
@@ -36,11 +37,11 @@ public class SecondEditionLunarSpiritFormEncoder implements IPdfContentBoxEncode
     this.baseFont = baseFont;
   }
 
-  public String getHeaderKey() {
+  public String getHeaderKey(IGenericCharacter character, IGenericDescription description) {
     return "Lunar.SpiritForm"; //$NON-NLS-1$
   }
 
-  public void encode(PdfContentByte directContent, IGenericCharacter character, Bounds bounds) {
+  public void encode(PdfContentByte directContent, IGenericCharacter character, IGenericDescription description, Bounds bounds) {
     IGroupedTraitType[] attributeGroups = character.getTemplate().getAttributeGroups();
     SecondEditionBeastformModel additionalModel = (SecondEditionBeastformModel)
     	character.getAdditionalModel(BeastformTemplate.TEMPLATE_ID);
@@ -74,7 +75,7 @@ public class SecondEditionLunarSpiritFormEncoder implements IPdfContentBoxEncode
       IGenericTraitCollection traitCollection) {
     float groupSpacing = smallTraitEncoder.getTraitHeight() / 2;
     float y = contentBounds.getMaxY() - 2 * groupSpacing;
-    int maximum = PHYSICAL_MAX;
+    int maximum = EssenceTemplate.SYSTEM_ESSENCE_MAX;
     float width = contentBounds.getWidth();
     for (IGroupedTraitType groupedTraitType : attributeGroups)
     {
@@ -94,5 +95,10 @@ public class SecondEditionLunarSpiritFormEncoder implements IPdfContentBoxEncode
           value,
           maximum);
     }
+  }
+  
+  public boolean hasContent(IGenericCharacter character)
+  {
+	  return true;
   }
 }

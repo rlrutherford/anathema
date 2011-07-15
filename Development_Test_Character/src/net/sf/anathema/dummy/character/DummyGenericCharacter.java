@@ -11,6 +11,7 @@ import net.sf.anathema.character.generic.character.ICharacterPoints;
 import net.sf.anathema.character.generic.character.IConcept;
 import net.sf.anathema.character.generic.character.IGenericCharacter;
 import net.sf.anathema.character.generic.character.IGenericTraitCollection;
+import net.sf.anathema.character.generic.equipment.IEquipmentModifiers;
 import net.sf.anathema.character.generic.equipment.weapon.IArmourStats;
 import net.sf.anathema.character.generic.equipment.weapon.IWeaponStats;
 import net.sf.anathema.character.generic.health.HealthLevelType;
@@ -30,6 +31,7 @@ import net.sf.anathema.character.generic.traits.ITraitType;
 import net.sf.anathema.character.generic.traits.groups.IIdentifiedTraitTypeGroup;
 import net.sf.anathema.lib.exception.NotYetImplementedException;
 import net.sf.anathema.lib.resources.IResources;
+import net.sf.anathema.lib.util.IdentifiedInteger;
 
 public class DummyGenericCharacter implements IGenericCharacter {
 
@@ -122,8 +124,20 @@ public class DummyGenericCharacter implements IGenericCharacter {
     return null;
   }
 
+  public int getPeripheralPoolValue() {
+    return 0;
+  }
+
   public String getPersonalPool() {
     return null;
+  }
+
+  public int getPersonalPoolValue() {
+    return 0;
+  }
+
+  public IdentifiedInteger[] getComplexPools() {
+    return new IdentifiedInteger[0];
   }
 
   public IGenericTrait[] getBackgrounds() {
@@ -232,4 +246,26 @@ public class DummyGenericCharacter implements IGenericCharacter {
   public ICharm[] getLearnedCharms() {
     return new ICharm[0];
   }
+  
+  public IIdentifiedTraitTypeGroup[] getYoziTypeGroups()
+  {
+	  return null;
+  }
+
+	@Override
+	public int getLearnCount(String charmName) {
+		return 0;
+	}
+
+	@Override
+	public IEquipmentModifiers getEquipmentModifiers() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setLearnCount(String charmName, int newValue) {
+		// TODO Auto-generated method stub
+		
+	}
 }

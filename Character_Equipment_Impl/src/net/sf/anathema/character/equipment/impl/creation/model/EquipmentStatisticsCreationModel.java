@@ -1,11 +1,14 @@
 package net.sf.anathema.character.equipment.impl.creation.model;
 
 import net.disy.commons.core.util.ArrayUtilities;
+import net.sf.anathema.character.equipment.creation.model.stats.IApplicableMaterialsModel;
 import net.sf.anathema.character.equipment.creation.model.stats.IArmourStatisticsModel;
+import net.sf.anathema.character.equipment.creation.model.stats.IArtifactStatisticsModel;
 import net.sf.anathema.character.equipment.creation.model.stats.ICloseCombatStatsticsModel;
 import net.sf.anathema.character.equipment.creation.model.stats.IEquipmentStatisticsCreationModel;
 import net.sf.anathema.character.equipment.creation.model.stats.IRangedCombatStatisticsModel;
 import net.sf.anathema.character.equipment.creation.model.stats.IShieldStatisticsModel;
+import net.sf.anathema.character.equipment.creation.model.stats.ITraitModifyingStatisticsModel;
 import net.sf.anathema.character.equipment.creation.model.stats.IWeaponTagsModel;
 import net.sf.anathema.character.equipment.item.model.EquipmentStatisticsType;
 import net.sf.anathema.character.generic.rules.IExaltedRuleSet;
@@ -22,6 +25,9 @@ public class EquipmentStatisticsCreationModel implements IEquipmentStatisticsCre
   private final IRangedCombatStatisticsModel rangedWeaponStatisticsModel;
   private final IShieldStatisticsModel shieldStatisticsModel = new ShieldStatisticsModel();
   private final IArmourStatisticsModel armourStatisticsModel = new ArmourStatsticsModel();
+  private final IArtifactStatisticsModel artifactStatisticsModel = new ArtifactStatisticsModel();
+  private final ITraitModifyingStatisticsModel traitModifyingStatisticsModel = new TraitModifyingStatisticsModel();
+  private final IApplicableMaterialsModel applicableMaterialsModel = new ApplicableMaterialsModel();
   private final ChangeControl equpimentTypeChangeControl = new ChangeControl();
   private final IWeaponTagsModel weaponTagsModel = new WeaponTagsModel();
   private EquipmentStatisticsType statisticsType;
@@ -91,6 +97,19 @@ public class EquipmentStatisticsCreationModel implements IEquipmentStatisticsCre
 
   public IArmourStatisticsModel getArmourStatisticsModel() {
     return armourStatisticsModel;
+  }
+  
+  public IArtifactStatisticsModel getArtifactStatisticsModel() {
+	    return artifactStatisticsModel;
+	  }
+  
+  public ITraitModifyingStatisticsModel getTraitModifyingStatisticsModel() {
+	    return traitModifyingStatisticsModel;
+	  }
+  
+  public IApplicableMaterialsModel getApplicableMaterialsModel()
+  {
+	  return applicableMaterialsModel;
   }
 
   public EquipmentStatisticsType getEquipmentType() {

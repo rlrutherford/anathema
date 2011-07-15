@@ -116,7 +116,8 @@ public class DefaultTrait extends AbstractFavorableTrait implements IFavorableDe
   }
 
   public final void resetExperiencedValue() {
-    setExperiencedValue(Math.max(getCreationValue(), getExperiencedValue()));
+	if (getExperiencedValue() != ITraitRules.UNEXPERIENCED)
+		setExperiencedValue(Math.max(getCreationValue(), getExperiencedValue()));
   }
 
   public final void addRangeListener(IChangeListener listener) {
@@ -192,5 +193,10 @@ public class DefaultTrait extends AbstractFavorableTrait implements IFavorableDe
 
   public final int getMinimalValue() {
     return getTraitValueStrategy().getMinimalValue(this);
+  }
+  
+  public final int getCalculationMinValue()
+  {
+	return getTraitRules().getCalculationMinValue();
   }
 }

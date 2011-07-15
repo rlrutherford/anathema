@@ -2,10 +2,10 @@ package net.sf.anathema.character.alchemical.slots.view;
 
 import javax.swing.Icon;
 
-import net.sf.anathema.lib.resources.AbstractUI;
+import net.sf.anathema.framework.presenter.resources.BasicUi;
 import net.sf.anathema.lib.resources.IResources;
 
-public class CharmSlotsViewProperties extends AbstractUI implements ICharmSlotsViewProperties
+public class CharmSlotsViewProperties extends BasicUi implements ICharmSlotsViewProperties
 {
 	public CharmSlotsViewProperties(IResources resources)
 	{

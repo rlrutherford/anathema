@@ -13,6 +13,7 @@ import net.sf.anathema.character.alchemical.caste.AlchemicalCaste;
 import net.sf.anathema.character.alchemical.slots.CharmSlotsTemplate;
 import net.sf.anathema.character.alchemical.slots.CharmSlotsTemplateParser;
 import net.sf.anathema.character.alchemical.slots.model.CharmSlotsModelFactory;
+import net.sf.anathema.character.alchemical.slots.persistence.CharmSlotsPersisterFactory;
 import net.sf.anathema.character.alchemical.slots.view.CharmSlotsViewFactory;
 import net.sf.anathema.lib.registry.IIdentificateRegistry;
 import net.sf.anathema.lib.registry.IRegistry;
@@ -69,7 +70,7 @@ public class AlchemicalCharacterModule extends NullObjectCharacterModuleAdapter 
 	    String templateId = CharmSlotsTemplate.TEMPLATE_ID;
 	    additionalModelFactoryRegistry.register(templateId, new CharmSlotsModelFactory());
 	    additionalViewFactoryRegistry.register(templateId, new CharmSlotsViewFactory());
-	    //persisterFactory.register(templateId, new BeastformPersisterFactory());
+	    persisterFactory.register(templateId, new CharmSlotsPersisterFactory());
 	  }
   
   /*@Override

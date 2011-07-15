@@ -11,4 +11,6 @@ public interface ICharmSlotsViewProperties
 	public Icon getNewGenericSlotIcon();
 	
 	public Icon getNewDedicatedSlotIcon();
+	
+	public Icon getRemoveIcon();
 }

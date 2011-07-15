@@ -1,8 +1,6 @@
 package net.sf.anathema.character.alchemical.slots.view;
 
 import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -22,8 +20,7 @@ public class CharmSlotsView implements ICharmSlotsView
 {
 	private final ICharmSlotsViewProperties properties;
 	private final JPanel mainPanel = new JPanel(new GridDialogLayout(1, false));
-	private final JPanel entryPanel = new JPanel(new GridDialogLayout(2, false));
-	private List<ISlotView> views = new ArrayList<ISlotView>();
+	private final JPanel entryPanel = new JPanel(new GridDialogLayout(3, false));
 	private JPanel addSlotsPanel = new JPanel(new GridDialogLayout(2, false));
 	
 	public CharmSlotsView(ICharmSlotsViewProperties properties)
@@ -36,14 +33,28 @@ public class CharmSlotsView implements ICharmSlotsView
 	}
 	
 	@Override
-	public ISlotView addCharmSlotView(int index, CharmSlot slot, ListCellRenderer renderer)
+	public ISlotView addCharmSlotView(int index, CharmSlot slot, ListCellRenderer renderer,
+			SmartAction toggleAction, SmartAction removeAction,
+			boolean canRemove)
 	{
-		Icon icon = slot.isGeneric() ? properties.getGenericSlotIcon() : properties.getDedicatedSlotIcon();
-		ISlotView view = new SlotView(renderer, icon);
+		Icon icon = getIconForSlot(slot);
+		ISlotView view = new SlotView(renderer, icon, toggleAction,
+				properties.getRemoveIcon(), removeAction, canRemove);
 		view.addContent(entryPanel, index);
 		entryPanel.revalidate();
 		entryPanel.repaint();
 		return view;
+	}
+	
+	public void updateSlotView(ISlotView view, CharmSlot slot)
+	{
+		Icon icon = getIconForSlot(slot);
+		view.setIcon(icon);
+	}
+	
+	private Icon getIconForSlot(CharmSlot slot)
+	{
+		return slot.isGeneric() ? properties.getGenericSlotIcon() : properties.getDedicatedSlotIcon();
 	}
 	
 	public void createAddSlotsPanel(SmartAction newGenericAction, SmartAction newDedicatedAction)

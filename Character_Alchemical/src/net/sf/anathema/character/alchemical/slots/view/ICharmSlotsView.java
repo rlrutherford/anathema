@@ -8,7 +8,9 @@ import net.sf.anathema.lib.gui.IView;
 
 public interface ICharmSlotsView extends IView
 {
-	public ISlotView addCharmSlotView(int index, CharmSlot slot, ListCellRenderer renderer);
+	public ISlotView addCharmSlotView(int index, CharmSlot slot, ListCellRenderer renderer, SmartAction toggleAction, SmartAction removeAction, boolean canRemove);
 	
 	public void createAddSlotsPanel(SmartAction newGenericAction, SmartAction newDedicatedAction);
+	
+	public void updateSlotView(ISlotView view, CharmSlot slot); 
 }

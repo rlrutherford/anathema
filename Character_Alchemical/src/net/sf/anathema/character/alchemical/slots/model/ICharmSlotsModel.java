@@ -9,6 +9,8 @@ public interface ICharmSlotsModel
 	
 	public CharmSlot addNewCharmSlot(boolean generic);
 	
+	public void restoreSlot(CharmSlot slot);
+	
 	public CharmSlot[] getCharmSlots();
 	
 	public void validateSlots();
@@ -18,4 +20,18 @@ public interface ICharmSlotsModel
 	public int getDedicatedSlotCount();
 	
 	public ICharm[] getValidCharms(CharmSlot slot);
+	
+	public ICharm getCharmByName(String name);
+	
+	public boolean allowToggle(CharmSlot slot);
+	
+	public boolean allowRemoval(CharmSlot slot);
+	
+	public void toggleSlot(CharmSlot slot);
+	
+	public void removeSlot(CharmSlot slot);
+	
+	public void clearSlots();
+	
+	public void fireChange();
 }

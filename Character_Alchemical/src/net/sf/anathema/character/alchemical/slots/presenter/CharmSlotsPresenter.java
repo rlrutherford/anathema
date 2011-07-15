@@ -45,11 +45,13 @@ public class CharmSlotsPresenter implements IPresenter
 			@Override
 			public void characterChanged() {
 				model.validateSlots();
-				updateSlots();
+				updateAllSlotViews();
 			}
 
 			@Override
-			public void experiencedChanged(boolean experienced) {
+			public void experiencedChanged(boolean experienced)
+			{
+				updateAllSlotViews();
 			}
 
 			@Override
@@ -75,7 +77,8 @@ public class CharmSlotsPresenter implements IPresenter
 			{
 				CharmSlot newSlot = model.addNewCharmSlot(true);
 				addCharmSlotView(newSlot, Math.max(0, model.getGenericSlotCount() - 1));
-				updateSlots();
+				updateAllSlotViews();
+				model.fireChange();
 			}
 		};
 		SmartAction newDedicatedAction = new SmartAction()
@@ -87,13 +90,14 @@ public class CharmSlotsPresenter implements IPresenter
 				CharmSlot newSlot = model.addNewCharmSlot(false);
 				addCharmSlotView(newSlot, 
 						Math.max(0, model.getGenericSlotCount() + model.getDedicatedSlotCount() - 1));
-				updateSlots();
+				updateAllSlotViews();
+				model.fireChange();
 			}
 		};
 		
 		view.createAddSlotsPanel(newGenericAction, newDedicatedAction);
 		
-		updateSlots();
+		updateAllSlotViews();
 	}
 	
 	private void addCharmSlotView(final CharmSlot slot, int index)
@@ -106,33 +110,69 @@ public class CharmSlotsPresenter implements IPresenter
 				return resources.getString(value.getId());
 			}
         };
-        final ISlotView newView = view.addCharmSlotView(index, slot, renderer);
-		newView.addObjectValueChangedListener(new IObjectValueChangedListener<ICharm>()
-		{
+        SmartAction toggleAction = new SmartAction()
+        {
+			private static final long serialVersionUID = 1L;
+
 			@Override
-			public void valueChanged(ICharm newValue)
+			protected void execute(Component parentComponent)
 			{
-				ICharm cur = newView.getSelectionValue();
-				if (slot.setCharm(cur))
-					updateSlots(slot);
+				model.toggleSlot(slot);
+				view.updateSlotView(slotViews.get(slot), slot);
+				updateAllSlotViews();
+				model.fireChange();
 			}
-		});
+        };
+        SmartAction removeAction = new SmartAction()
+        {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void execute(Component parentComponent)
+			{
+				model.removeSlot(slot);
+				slotViews.get(slot).remove();
+				model.fireChange();
+			}
+        };
+        boolean canRemove = model.allowRemoval(slot);
+        final ISlotView newView = view.addCharmSlotView(index, slot, renderer, toggleAction, removeAction, canRemove);
 		slotViews.put(slot, newView);
+		updateSlotView(slot);
+		newView.setSelectionValue(slot.getCharm());
+		newView.addObjectValueChangedListener(new IObjectValueChangedListener<ICharm>()
+				{
+					@Override
+					public void valueChanged(ICharm newValue)
+					{
+						ICharm cur = newView.getSelectionValue();
+						if (slot.setCharm(cur))
+							updateAllSlotViewsExcept(slot);
+					}
+				});
 	}
 	
-	private void updateSlots()
+	private void updateAllSlotViews()
 	{
-		updateSlots(null);
+		updateAllSlotViewsExcept(null);
 	}
 	
-	private void updateSlots(CharmSlot exception)
+	private void updateAllSlotViewsExcept(CharmSlot exception)
 	{
 		for (CharmSlot slot : model.getCharmSlots())
 		{
 			if (slot == exception) continue;
-			ICharm[] validCharms = model.getValidCharms(slot);
-			ISlotView view = slotViews.get(slot);
-			view.setCharms(validCharms);
+			updateSlotView(slot);
 		}
+	}
+	
+	private void updateSlotView(CharmSlot slot)
+	{
+		ICharm[] validCharms = model.getValidCharms(slot);
+		ISlotView view = slotViews.get(slot);
+		view.setCharms(validCharms);
+		
+		view.setToggleEnabled(model.allowToggle(slot));
+		view.setRemoveEnabled(model.allowRemoval(slot));
 	}
 }

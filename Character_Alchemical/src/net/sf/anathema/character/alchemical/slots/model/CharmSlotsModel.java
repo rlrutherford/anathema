@@ -4,16 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.anathema.character.alchemical.slots.CharmSlotsTemplate;
-import net.sf.anathema.character.generic.additionaltemplate.AbstractAdditionalModelAdapter;
 import net.sf.anathema.character.generic.additionaltemplate.AdditionalModelType;
+import net.sf.anathema.character.generic.additionaltemplate.IAdditionalModel;
+import net.sf.anathema.character.generic.additionaltemplate.IAdditionalModelBonusPointCalculator;
+import net.sf.anathema.character.generic.additionaltemplate.IAdditionalModelExperienceCalculator;
 import net.sf.anathema.character.generic.framework.additionaltemplate.listening.ICharacterChangeListener;
 import net.sf.anathema.character.generic.framework.additionaltemplate.model.ICharacterModelContext;
 import net.sf.anathema.character.generic.magic.ICharm;
+import net.sf.anathema.lib.control.change.ChangeControl;
 import net.sf.anathema.lib.control.change.IChangeListener;
 
-public class CharmSlotsModel extends AbstractAdditionalModelAdapter implements ICharmSlotsModel
+public class CharmSlotsModel implements ICharmSlotsModel, IAdditionalModel
 {
-	private final CharmSlotsTemplate template;
+	private final ChangeControl control = new ChangeControl();
 	private final ICharacterModelContext context;
 	private final List<CharmSlot> slots = new ArrayList<CharmSlot>();
 	private int numGeneric = 0;
@@ -23,11 +26,13 @@ public class CharmSlotsModel extends AbstractAdditionalModelAdapter implements I
 			CharmSlotsTemplate template,
 			ICharacterModelContext context)
 	{
-		this.template = template;
 		this.context = context;
 		
 		for (int i = 0; i != template.getGeneric() + template.getDedicated(); i++)
-			slots.add(new CharmSlot(null, i < template.getGeneric(), true));
+		{
+			SlotState state = i < template.getGeneric() ? SlotState.Generic : SlotState.Dedicated;
+			slots.add(new CharmSlot(null, state, state, true));
+		}
 		
 		numGeneric = template.getGeneric();
 		numDedicated = template.getDedicated();
@@ -35,8 +40,7 @@ public class CharmSlotsModel extends AbstractAdditionalModelAdapter implements I
 
 	@Override
 	public void addChangeListener(IChangeListener listener) {
-		// TODO Auto-generated method stub
-		
+		control.addChangeListener(listener);
 	}
 	
 	public void addCharacterChangeListener(ICharacterChangeListener listener)
@@ -44,16 +48,41 @@ public class CharmSlotsModel extends AbstractAdditionalModelAdapter implements I
 		context.getCharacterListening().addChangeListener(listener);
 	}
 	
+	public void fireChange()
+	{
+		control.fireChangedEvent();
+	}
+	
+	public void clearSlots()
+	{
+		slots.clear();
+		numGeneric = 0;
+		numDedicated = 0;
+	}
+	
 	public CharmSlot addNewCharmSlot(boolean generic)
 	{
-		CharmSlot newSlot = new CharmSlot(null, generic,
-				context.getBasicCharacterContext().isExperienced());
+		boolean experienced = context.getBasicCharacterContext().isExperienced();
+		SlotState creationState = experienced ? SlotState.Absent :
+			(generic ? SlotState.Generic : SlotState.Dedicated);
+		SlotState experiencedState = experienced ? (generic ? SlotState.Generic : SlotState.Dedicated) :
+			SlotState.Absent;
+		CharmSlot newSlot = new CharmSlot(null, creationState, experiencedState, false);
 		if (generic)
 			slots.add(numGeneric++ - 1, newSlot);
 		else
 			slots.add(numGeneric + numDedicated++ - 1, newSlot);
 		
 		return newSlot;
+	}
+	
+	public void restoreSlot(CharmSlot slot)
+	{
+		slots.add(slot);
+		if (slot.isGeneric())
+			numGeneric++;
+		else
+			numDedicated++;
 	}
 
 	@Override
@@ -90,6 +119,22 @@ public class CharmSlotsModel extends AbstractAdditionalModelAdapter implements I
 				slot.setCharm(null);
 	}
 	
+	public boolean allowToggle(CharmSlot slot)
+	{
+		if (context.getBasicCharacterContext().isExperienced())
+		{
+			return slot.getCreationState() != SlotState.Generic;
+		}
+		return !slot.isFixed();			
+	}
+	
+	public boolean allowRemoval(CharmSlot slot)
+	{
+		if (context.getBasicCharacterContext().isExperienced())
+			return !slot.isFixed() && slot.getCreationState() == SlotState.Absent;
+		return !slot.isFixed();
+	}
+	
 	private boolean isLearned(ICharm charm)
 	{
 		if (charm == null)
@@ -98,6 +143,35 @@ public class CharmSlotsModel extends AbstractAdditionalModelAdapter implements I
 			if (otherCharm == charm)
 				return true;
 		return false;
+	}
+	
+	public void toggleSlot(CharmSlot slot)
+	{
+		if (slot.isGeneric())
+		{
+			numGeneric--;
+			numDedicated++;
+		}
+		else
+		{
+			numGeneric++;
+			numDedicated--;
+		}
+		
+		if (context.getBasicCharacterContext().isExperienced())
+			slot.setExperiencedState(slot.getExperiencedState() == SlotState.Dedicated ?
+						SlotState.Generic : SlotState.Dedicated);
+		else
+			slot.setCreationState(slot.isGeneric() ? SlotState.Dedicated : SlotState.Generic);
+		
+	}
+	
+	public ICharm getCharmByName(String name)
+	{
+		for (ICharm charm : context.getCharmContext().getCharmConfiguration().getLearnedCharms())
+			if (charm.getId().equals(name))
+				return charm;
+		return null;
 	}
 	
 	public ICharm[] getValidCharms(CharmSlot slot)
@@ -120,6 +194,27 @@ public class CharmSlotsModel extends AbstractAdditionalModelAdapter implements I
 		ICharm[] array = new ICharm[charms.size()];
 		charms.toArray(array);
 		return array;
+	}
+
+	@Override
+	public IAdditionalModelBonusPointCalculator getBonusPointCalculator() {
+		return new CharmSlotBonusPointCalculator(this);
+	}
+
+	@Override
+	public IAdditionalModelExperienceCalculator getExperienceCalculator() {
+		return new CharmSlotExperiencePointCalculator(this);
+	}
+
+	@Override
+	public void removeSlot(CharmSlot slot)
+	{
+		if (slot.isGeneric())
+			numGeneric--;
+		else
+			numDedicated--;
+		
+		slots.remove(slot);
 	}
 
 }

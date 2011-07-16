@@ -11,6 +11,7 @@
     	<template id="Alchemical.CharmSlots" dedicated="4" generic="4"/>
     </additionalTemplates>
     <healthTemplate>
+      <usesBaseProvider path="net.sf.anathema.character.alchemical.template.AlchemicalHealthLevelProvider"/>
       <toughnessControllingTrait type="Stamina"/>
     </healthTemplate>
   </general>

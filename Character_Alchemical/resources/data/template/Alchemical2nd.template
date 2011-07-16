@@ -27,6 +27,6 @@
     </creationPoints>
   </creation>
   <experience>
-    <experiencePointCost uses="experience/DefaultExperienceCost.template" />
+    <experiencePointCost uses="template/AlchemicalExperienceCost.template" />
   </experience>
 </exaltedCharacterTemplate>

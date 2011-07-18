@@ -29,4 +29,6 @@ public interface ICharm extends ICharmData, IMagic {
   public boolean hasAttribute(IIdentificate attribute);
 
   public boolean hasChildren();
+  
+  public int getAttunementCost();
 }

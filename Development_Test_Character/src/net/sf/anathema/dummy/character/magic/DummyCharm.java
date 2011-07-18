@@ -243,6 +243,11 @@ public class DummyCharm extends Identificate implements ICharm {
   public void addKeyword(CharmAttribute attribute) {
     this.attributes.add(attribute);
   }
+  
+  public int getAttunementCost()
+  {
+	  return 0;
+  }
 
   public boolean hasChildren() {
     return false;

@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
@@ -22,6 +23,7 @@ public class CharmSlotsView implements ICharmSlotsView
 	private final JPanel mainPanel = new JPanel(new GridDialogLayout(1, false));
 	private final JPanel entryPanel = new JPanel(new GridDialogLayout(3, false));
 	private JPanel addSlotsPanel = new JPanel(new GridDialogLayout(2, false));
+	private JLabel statusLabel = new JLabel();
 	
 	public CharmSlotsView(ICharmSlotsViewProperties properties)
 	{
@@ -29,6 +31,7 @@ public class CharmSlotsView implements ICharmSlotsView
 	    GridDialogLayoutData entryData = GridDialogLayoutDataUtilities.createHorizontalFillNoGrab();
 	    entryData.setVerticalAlignment(GridAlignment.FILL);
 	    entryData.setGrabExcessVerticalSpace(true);
+	    mainPanel.add(statusLabel);
 	    mainPanel.add(new JScrollPane(entryPanel), entryData);
 	}
 	
@@ -75,6 +78,12 @@ public class CharmSlotsView implements ICharmSlotsView
 	public JComponent getComponent() {
 		mainPanel.add(addSlotsPanel);
 		return mainPanel;
+	}
+
+	@Override
+	public void updateAttunementString(int attuned, String personal) {
+		statusLabel.setText(properties.getAttunementString() + ": " + attuned
+				+ "   " + properties.getPersonalString() + ": " + personal);
 	}
 
 }

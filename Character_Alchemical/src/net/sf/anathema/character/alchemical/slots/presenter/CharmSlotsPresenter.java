@@ -165,6 +165,7 @@ public class CharmSlotsPresenter implements IPresenter
 			if (slot == exception) continue;
 			updateSlotView(slot);
 		}
+		view.updateAttunementString(model.getAttunedMotes(), model.getMaxPersonalMotes());
 	}
 	
 	private void updateSlotView(CharmSlot slot)

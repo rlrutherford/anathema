@@ -239,6 +239,19 @@ public class CharmSlotsModel implements ICharmSlotsModel, IAdditionalModel
 	public IAdditionalModelExperienceCalculator getExperienceCalculator() {
 		return new CharmSlotExperiencePointCalculator(this);
 	}
+	
+	public int getAttunedMotes()
+	{
+		int total = 0;
+		for (CharmSlot slot : slots)
+			total += slot.getCharm() != null ? slot.getCharm().getAttunementCost() : 0;
+		return total;
+	}
+	
+	public String getMaxPersonalMotes()
+	{
+		return context.getPersonalPool();
+	}
 
 	@Override
 	public void removeSlot(CharmSlot slot)

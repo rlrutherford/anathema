@@ -83,6 +83,16 @@ public class DummyCharacterModelContext implements ICharacterModelContext {
   {
 	  return null;
   }
+  
+  public String getPersonalPool()
+  {
+	  return getCharacter().getPersonalPool();
+  }
+  
+  public String getPeripheralPool()
+  {
+	  return getCharacter().getPeripheralPool();
+  }
 
   public IBasicCharacterData getBasicCharacterContext() {
     return new BasicCharacterContext(getCharacter());

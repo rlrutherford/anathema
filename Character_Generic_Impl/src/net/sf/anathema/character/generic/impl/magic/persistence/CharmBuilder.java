@@ -10,6 +10,7 @@ import java.util.List;
 import net.sf.anathema.character.generic.impl.magic.Charm;
 import net.sf.anathema.character.generic.impl.magic.ICharmXMLConstants;
 import net.sf.anathema.character.generic.impl.magic.persistence.builder.CharmAttributeBuilder;
+import net.sf.anathema.character.generic.impl.magic.persistence.builder.CharmAttunementBuilder;
 import net.sf.anathema.character.generic.impl.magic.persistence.builder.CharmTypeBuilder;
 import net.sf.anathema.character.generic.impl.magic.persistence.builder.CostListBuilder;
 import net.sf.anathema.character.generic.impl.magic.persistence.builder.DurationBuilder;
@@ -49,6 +50,7 @@ public class CharmBuilder implements ICharmBuilder {
   private final GroupStringBuilder groupBuilder = new GroupStringBuilder();
   private final SourceBuilder sourceBuilder = new SourceBuilder();
   private final CharmAttributeBuilder attributeBuilder = new CharmAttributeBuilder();
+  private final CharmAttunementBuilder attunementBuilder = new CharmAttunementBuilder();
   private final SpecialCharmBuilder specialCharmBuilder = new SpecialCharmBuilder();
   private final IIdStringBuilder idBuilder;
   private final ITraitPrerequisitesBuilder traitsBuilder;
@@ -91,6 +93,7 @@ public class CharmBuilder implements ICharmBuilder {
       IExaltedSourceBook[] sources = sourceBuilder.buildSourceList(charmElement);
       CharmPrerequisiteList prerequisiteList = getPrerequisites(charmElement);
       IGenericTrait[] prerequisites = prerequisiteList.getPrerequisites();
+      Integer attunementCost = attunementBuilder.getAttunementCost(charmElement);
       final IGenericTrait primaryPrerequisite = prerequisites.length != 0 ? prerequisites[0] : null;
       String group = groupBuilder.build(charmElement, primaryPrerequisite);
       Charm charm = new Charm(
@@ -102,6 +105,7 @@ public class CharmBuilder implements ICharmBuilder {
           comboRules,
           duration,
           charmTypeModel,
+          attunementCost,
           sources);
       for (ICharmAttribute attribute : attributeBuilder.buildCharmAttributes(charmElement, primaryPrerequisite)) {
         charm.addCharmAttribute(attribute);

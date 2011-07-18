@@ -30,4 +30,8 @@ public interface ICharacterModelContext {
   public boolean isFullyLoaded();
   
   public void setFullyLoaded(boolean loaded);
+  
+  public String getPersonalPool();
+  
+  public String getPeripheralPool();
 }

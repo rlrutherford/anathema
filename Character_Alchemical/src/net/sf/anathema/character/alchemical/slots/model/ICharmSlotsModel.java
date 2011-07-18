@@ -33,5 +33,9 @@ public interface ICharmSlotsModel
 	
 	public void clearSlots();
 	
+	public int getAttunedMotes();
+	
+	public String getMaxPersonalMotes();
+	
 	public void fireChange();
 }

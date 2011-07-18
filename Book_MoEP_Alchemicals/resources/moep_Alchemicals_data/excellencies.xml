@@ -30,7 +30,7 @@
                <essence value="1" />
           </prerequisite>
           <cost>
-               <essence cost="1" text="per die" />
+               <essence cost="1" text="per die [1m]" />
           </cost>
           <duration duration="Instant" />
           <charmtype type="Reflexive">
@@ -41,6 +41,7 @@
                     <genericCharmReference id="Alchemical.3rdExcellency" />
                </restrictions>
           </combo>
+          <attunement essence="1"/>
           <genericCharmAttribute attribute="Excellency" />
           <charmAttribute attribute="Mortal" />
           <charmAttribute attribute="Combo-OK" visualize="true" />
@@ -52,7 +53,7 @@
                <essence value="1" />
           </prerequisite>
           <cost>
-               <essence cost="2" text="per success" />
+               <essence cost="2" text="per success [1m]" />
           </cost>
           <duration duration="Instant" />
           <charmtype type="Reflexive">
@@ -63,6 +64,7 @@
                     <genericCharmReference id="Alchemical.3rdAugmentation" />
                </restrictions>
           </combo>
+          <attunement essence="1"/>
           <genericCharmAttribute attribute="Excellency" />
           <charmAttribute attribute="Mortal" />
           <charmAttribute attribute="Combo-OK" visualize="true" />
@@ -74,27 +76,32 @@
                <essence value="1" />
           </prerequisite>
           <cost>
-               <essence cost="1" text=" (0-5m)"/>
+               <essence cost="" text="0-5m [1m]"/>
           </cost>
           <duration duration="Instant" />
           <charmtype type="Reflexive">
                <special primaryStep="4" secondaryStep="6" />
           </charmtype>
+          <attunement essence="1"/>
           <genericCharmAttribute attribute="Excellency" />
           <charmAttribute attribute="Mortal" />
           <charmAttribute attribute="Combo-OK" visualize="true" />
           <source source="Alchemicals2nd" page="120" />
      </genericCharm>
+     
+     
+     <!-- Unique Alchemical Excellencies -->
      <genericCharm id="Alchemical.4thAugmentation" exalt="Alchemical">
           <prerequisite>
                <trait value="1" />
                <essence value="1" />
           </prerequisite>
           <cost>
-               <essence cost="-" text=" (1m first only)" />
+               <essence cost="-" text=" [1m first only]" />
           </cost>
           <duration duration="Instant" />
           <charmtype type="Permanent"/>
+          <attunement essence="1"/>
           <genericCharmAttribute attribute="Excellency" />
           <charmAttribute attribute="Mortal" />
           <charmAttribute attribute="Stackable" visualize="true" />
@@ -110,6 +117,7 @@
           </cost>
           <duration duration="Instant" />
           <charmtype type="Permanent"/>
+          <attunement essence="1"/>
           <genericCharmAttribute attribute="Excellency" />
           <charmAttribute attribute="Mortal" />
           <charmAttribute attribute="Stackable" visualize="true" />
@@ -122,18 +130,16 @@
                <essence value="1" />
           </prerequisite>
           <cost>
-               <essence cost="3m" text=" (1m)" />
+               <essence cost="3m" text=" [1m]" />
           </cost>
           <duration amount="1" unit="scene" />
           <charmtype type="Simple"/>
+          <attunement essence="1"/>
           <genericCharmAttribute attribute="Excellency" />
           <charmAttribute attribute="Mortal" />
           <charmAttribute attribute="Internal" visualize="true" />
           <source source="Alchemicals2nd" page="121" />
      </genericCharm>
-     
-     
-     <!-- Unique Alchemical Excellencies -->
      <genericCharm id="Alchemical.TranspuissantUpgrade" exalt="Alchemical">
           <prerequisite>
                <trait value="5" />
@@ -141,12 +147,13 @@
                <genericCharmAttributeRequirement attribute="Excellency" />
           </prerequisite>
           <cost>
-               <essence cost="0" text=" (1m)" />
+               <essence cost="0" text=" [1m]" />
           </cost>
           <duration duration="Instant" />
           <charmtype type="Reflexive">
                <special primaryStep="1" secondaryStep="2" />
           </charmtype>
+          <attunement essence="1"/>
           <charmAttribute attribute="Combo-OK" visualize="true" />
           <source source="Alchemicals2nd" />
      </genericCharm>
@@ -163,20 +170,8 @@
           <charmtype type="Reflexive">
                <special primaryStep="1" secondaryStep="2" />
           </charmtype>
+          <attunement essence="1"/>
           <charmAttribute attribute="Exemplar1" visualize="true" />
-          <source source="Alchemicals2nd" />
-     </genericCharm>
-     <genericCharm id="Alchemical.ClarityEngineOf" exalt="Alchemical">
-          <prerequisite>
-               <trait value="4" />
-               <essence value="3" />
-          </prerequisite>
-          <cost>
-               <essence cost="2" text=" (1m)" />
-               <willpower cost="1"/>
-          </cost>
-          <duration amount="1" unit="scene" />
-          <charmtype type="Simple"/>
           <source source="Alchemicals2nd" />
      </genericCharm>
 </charmlist>

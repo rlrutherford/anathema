@@ -52,6 +52,7 @@ public class Charm extends Identificate implements ICharm {
 
   private final IExaltedSourceBook[] sources;
   private final ICostList temporaryCost;
+  private final Integer attunementCost;
 
   private final List<Set<ICharm>> alternatives = new ArrayList<Set<ICharm>>();
   private final List<Set<ICharm>> merges = new ArrayList<Set<ICharm>>();
@@ -73,6 +74,7 @@ public class Charm extends Identificate implements ICharm {
       IComboRestrictions comboRules,
       IDuration duration,
       ICharmTypeModel charmTypeModel,
+      Integer attunementCost,
       IExaltedSourceBook[] sources) {
     super(id);
     Ensure.ensureNotNull("Argument must not be null.", prerequisiteList); //$NON-NLS-1$
@@ -92,6 +94,7 @@ public class Charm extends Identificate implements ICharm {
     this.duration = duration;
     this.typeModel = charmTypeModel;
     this.sources = sources;
+    this.attunementCost = attunementCost;
     for (SelectiveCharmGroupTemplate template : prerequisiteList.getSelectiveCharmGroups()) {
       selectiveCharmGroups.add(new SelectiveCharmGroup(template));
     }
@@ -113,6 +116,7 @@ public class Charm extends Identificate implements ICharm {
         new ICharmAttributeRequirement[0]);
     parentCharms.addAll(charmData.getParentCharms());
     this.typeModel = charmData.getCharmTypeModel();
+    this.attunementCost = 0;
   }
 
   public void addCharmAttribute(ICharmAttribute attribute) {
@@ -386,6 +390,11 @@ public class Charm extends Identificate implements ICharm {
     IGenericTrait trait = traitCollection.getTrait(primaryTraitType);
     return trait instanceof IFavorableGenericTrait && ((IFavorableGenericTrait) trait).isCasteOrFavored();
   }
+  
+  public int getAttunementCost()
+  {
+	  return attunementCost;
+  }
 
   public ITraitType getPrimaryTraitType() {
     return getPrerequisites().length == 0 ? OtherTraitType.Essence : getPrerequisites()[0].getType();
@@ -414,6 +423,7 @@ public class Charm extends Identificate implements ICharm {
         getComboRules(),
         getDuration(),
         getCharmTypeModel(),
+        getAttunementCost(),
         this.sources);
     for (ICharmAttribute attribute : getAttributes()) {
       clone.addCharmAttribute(attribute);

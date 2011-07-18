@@ -12,5 +12,7 @@ public interface ICharmSlotsView extends IView
 	
 	public void createAddSlotsPanel(SmartAction newGenericAction, SmartAction newDedicatedAction);
 	
-	public void updateSlotView(ISlotView view, CharmSlot slot); 
+	public void updateSlotView(ISlotView view, CharmSlot slot);
+	
+	public void updateAttunementString(int attuned, String personal);
 }

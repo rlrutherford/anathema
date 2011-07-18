@@ -38,6 +38,7 @@ public class CharmTest extends TestCase {
           new ComboRestrictions(),
           SimpleDuration.getDuration("Duration"), //$NON-NLS-1$
           model,
+          0,
           null);
       fail();
     }

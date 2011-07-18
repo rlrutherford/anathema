@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.sf.anathema.character.alchemical.slots.CharmSlotsTemplate;
+import net.sf.anathema.character.alchemical.slots.model.ICharmSlotsModel;
 import net.sf.anathema.character.equipment.IEquipmentAdditionalModelTemplate;
 import net.sf.anathema.character.equipment.character.model.IEquipmentAdditionalModel;
 import net.sf.anathema.character.generic.additionalrules.IAdditionalEssencePool;
@@ -81,7 +83,8 @@ public class EssencePoolStrategy implements IEssencePoolStrategy {
     int personal = getUnmodifiedPersonalPool();
     return personal
            - Math.max(0, getAttunementExpenditures()
-                         - getUnmodifiedPeripheralPool());
+                         - getUnmodifiedPeripheralPool())
+           - getCharmAttunementExpenditures();
   }
 
   public int getUnmodifiedPersonalPool() {
@@ -142,6 +145,12 @@ public class EssencePoolStrategy implements IEssencePoolStrategy {
   public int getAttunementExpenditures() {
     equipmentModel = (IEquipmentAdditionalModel) context.getAdditionalModel(IEquipmentAdditionalModelTemplate.ID);
     return equipmentModel == null ? 0 : equipmentModel.getTotalAttunementCost();
+  }
+  
+  public int getCharmAttunementExpenditures()
+  {
+	ICharmSlotsModel model = (ICharmSlotsModel) context.getAdditionalModel(CharmSlotsTemplate.TEMPLATE_ID);
+	return model == null ? 0 : model.getAttunedMotes();
   }
 
   private IGenericTrait[] getVirtues() {

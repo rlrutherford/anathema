@@ -126,6 +126,16 @@ public class CharacterModelContext implements ICharacterModelContext, ICharmCont
     return character;
   }
   
+  public String getPersonalPool()
+  {
+	  return character.getPersonalPool();
+  }
+  
+  public String getPeripheralPool()
+  {
+	  return character.getPeripheralPool();
+  }
+  
   public boolean isFullyLoaded() { return isFullyLoaded; }
   
   public void setFullyLoaded(boolean loaded) { isFullyLoaded = loaded; }

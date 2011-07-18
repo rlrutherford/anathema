@@ -20,6 +20,7 @@ public class SlotView implements ISlotView
 	private final JButton removeButton;
 	private final JLabel dummy = new JLabel();
 	private boolean canRemove;
+	private boolean isChanging = false;
 	private JPanel contentPanel;
 	
 	public SlotView(ListCellRenderer renderer,
@@ -102,7 +103,14 @@ public class SlotView implements ISlotView
 	
 	public void setCharms(ICharm[] charms)
 	{
+		isChanging = true;
 		selection.setObjects(charms);
+		isChanging = false;
+	}
+	
+	public boolean isNull()
+	{
+		return getSelectionValue() == null && !isChanging;
 	}
 	
 	public void addObjectValueChangedListener(IObjectValueChangedListener<ICharm> listener)

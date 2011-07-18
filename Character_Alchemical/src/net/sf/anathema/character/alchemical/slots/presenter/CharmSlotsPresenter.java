@@ -145,8 +145,9 @@ public class CharmSlotsPresenter implements IPresenter
 					@Override
 					public void valueChanged(ICharm newValue)
 					{
-						ICharm cur = newView.getSelectionValue();
-						if (slot.setCharm(cur))
+						if (newView.isNull())
+							newValue = null;
+						if (slot.setCharm(newValue))
 							updateAllSlotViewsExcept(slot);
 					}
 				});

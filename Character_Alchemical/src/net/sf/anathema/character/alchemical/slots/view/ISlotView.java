@@ -25,4 +25,6 @@ public interface ISlotView
 	public void setIcon(Icon icon);
 	
 	public void remove();
+	
+	public boolean isNull();
 }

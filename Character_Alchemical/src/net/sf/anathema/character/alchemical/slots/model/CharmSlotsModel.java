@@ -11,6 +11,7 @@ import net.sf.anathema.character.generic.additionaltemplate.IAdditionalModelExpe
 import net.sf.anathema.character.generic.framework.additionaltemplate.listening.ICharacterChangeListener;
 import net.sf.anathema.character.generic.framework.additionaltemplate.model.ICharacterModelContext;
 import net.sf.anathema.character.generic.magic.ICharm;
+import net.sf.anathema.character.generic.magic.charms.ICharmAttributeRequirement;
 import net.sf.anathema.lib.control.change.ChangeControl;
 import net.sf.anathema.lib.control.change.IChangeListener;
 
@@ -115,7 +116,7 @@ public class CharmSlotsModel implements ICharmSlotsModel, IAdditionalModel
 	public void validateSlots()
 	{
 		for (CharmSlot slot : slots)
-			if (!isLearned(slot.getCharm()))
+			if (!canSlot(slot.getCharm(), slot))
 				slot.setCharm(null);
 	}
 	
@@ -189,11 +190,44 @@ public class CharmSlotsModel implements ICharmSlotsModel, IAdditionalModel
 				}
 			if (!isValid)
 				continue;
-			charms.add(charm);
+			if (canSlot(charm, slot))
+				charms.add(charm);
 		}
 		ICharm[] array = new ICharm[charms.size()];
 		charms.toArray(array);
 		return array;
+	}
+	
+	public boolean canSlot(ICharm charm, CharmSlot slot)
+	{
+		if (!isLearned(charm))
+			return false;
+		for (ICharm prereq : charm.getParentCharms())
+			if (!isSlotted(prereq))
+				return false;
+		for (ICharmAttributeRequirement prereq : charm.getAttributeRequirements())
+			if (!isSlotted(prereq))
+				return false;
+		return true;
+	}
+	
+	public boolean isSlotted(ICharm charm)
+	{
+		for (CharmSlot slot : slots)
+			if (slot.getCharm() == charm)
+				return true;
+		return false;
+	}
+	
+	public boolean isSlotted(ICharmAttributeRequirement charmRequirement)
+	{
+		List<ICharm> slottedCharms = new ArrayList<ICharm>();
+		for (CharmSlot slot : slots)
+			if (slot.getCharm() != null)
+				slottedCharms.add(slot.getCharm());
+		ICharm[] charmArray = new ICharm[slottedCharms.size()];
+		slottedCharms.toArray(charmArray);
+		return charmRequirement.isFulfilled(charmArray);
 	}
 
 	@Override

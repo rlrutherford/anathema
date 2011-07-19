@@ -252,4 +252,10 @@ public class DummyCharm extends Identificate implements ICharm {
   public boolean hasChildren() {
     return false;
   }
+
+@Override
+public String getAttributeValue(IIdentificate attribute) {
+	// TODO Auto-generated method stub
+	return null;
+}
 }

@@ -251,4 +251,10 @@ public class DummyCharm extends Identificate implements ICharm {
   public boolean hasChildren() {
     return false;
   }
+
+@Override
+public int getAttunementCost() {
+	// TODO Auto-generated method stub
+	return 0;
+}
 }

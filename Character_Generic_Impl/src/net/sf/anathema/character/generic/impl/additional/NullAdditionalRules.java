@@ -32,6 +32,11 @@ public class NullAdditionalRules implements IAdditionalRules, IAdditionalTraitRu
   public boolean isWillpowerVirtueBased() {
     return true;
   }
+  
+  public boolean isUseArrayRules()
+  {
+	return false;
+  }
 
   public IAdditionalEssencePool[] getAdditionalEssencePools() {
     return new IAdditionalEssencePool[0];

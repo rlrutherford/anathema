@@ -14,6 +14,8 @@ public interface IAdditionalRules {
   public boolean isRejected(IBackgroundTemplate backgroundTemplate);
   
   public boolean isRevisedIntimacies();
+  
+  public boolean isUseArrayRules();
 
   public ITraitCostModifier getCostModifier(ITraitType type);
 

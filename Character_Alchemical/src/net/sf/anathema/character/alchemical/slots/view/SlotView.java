@@ -9,13 +9,14 @@ import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
 import net.disy.commons.swing.action.SmartAction;
+import net.sf.anathema.character.alchemical.slots.model.CharmPick;
 import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.lib.control.objectvalue.IObjectValueChangedListener;
 import net.sf.anathema.lib.gui.selection.ObjectSelectionView;
 
 public class SlotView implements ISlotView
 {
-	private final ObjectSelectionView<ICharm> selection;
+	private final ObjectSelectionView<CharmPick> selection;
 	private final JButton typeButton;
 	private final JButton removeButton;
 	private final JLabel dummy = new JLabel();
@@ -30,8 +31,8 @@ public class SlotView implements ISlotView
 			SmartAction removeAction,
 			boolean canRemove)
 	{
-		selection = new ObjectSelectionView<ICharm>("", renderer);
-		selection.getComboBox().setPreferredSize(new Dimension(200, 20));
+		selection = new ObjectSelectionView<CharmPick>("", renderer);
+		selection.getComboBox().setPreferredSize(new Dimension(400, 20));
 		this.typeButton = new JButton();
 		this.typeButton.setPreferredSize(new Dimension(24, 24));
 		this.typeButton.setAction(toggleAction);
@@ -91,29 +92,34 @@ public class SlotView implements ISlotView
 		typeButton.setEnabled(enabled);
 	}
 	
-	public ICharm getSelectionValue()
+	public CharmPick getSelectionValue()
 	{
 		return selection.getSelectedObject();
 	}
 	
-	public void setSelectionValue(ICharm charm)
+	public void setSelectionValue(CharmPick pick)
 	{
-		selection.setSelectedObject(charm);
+		selection.setSelectedObject(pick);
 	}
 	
-	public void setCharms(ICharm[] charms)
+	public void setPicks(CharmPick[] picks)
 	{
 		isChanging = true;
-		selection.setObjects(charms);
+		selection.setObjects(picks);
 		isChanging = false;
 	}
 	
 	public boolean isNull()
 	{
-		return getSelectionValue() == null && !isChanging;
+		return (getSelectionValue() == null) && !isChanging;
 	}
 	
-	public void addObjectValueChangedListener(IObjectValueChangedListener<ICharm> listener)
+	public boolean isChanging()
+	{
+		return isChanging;
+	}
+	
+	public void addObjectValueChangedListener(IObjectValueChangedListener<CharmPick> listener)
 	{
 		selection.addObjectSelectionChangedListener(listener);
 	}

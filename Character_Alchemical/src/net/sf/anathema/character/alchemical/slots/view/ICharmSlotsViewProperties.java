@@ -14,6 +14,8 @@ public interface ICharmSlotsViewProperties
 	
 	public Icon getRemoveIcon();
 	
+	public Icon getAddIcon();
+	
 	public String getAttunementString();
 	
 	public String getPersonalString();

@@ -42,13 +42,15 @@ public class ComboConfigurationPresenter implements IContentPresenter {
   private final ICharacterStatistics statistics;
   private final IResources resources;
   private final IComboConfigurationView view;
+  private final boolean useArrayRules;
 
-  public ComboConfigurationPresenter(IResources resources, ICharacterStatistics statistics, IMagicViewFactory factory) {
+  public ComboConfigurationPresenter(IResources resources, ICharacterStatistics statistics, IMagicViewFactory factory, boolean useArrayRules) {
     this.resources = resources;
     this.statistics = statistics;
     this.charmConfiguration = statistics.getCharms();
     this.comboConfiguration = statistics.getCombos();
     this.view = factory.createCharmComboView();
+    this.useArrayRules = useArrayRules;
   }
 
   public void initPresentation() {
@@ -80,7 +82,8 @@ public class ComboConfigurationPresenter implements IContentPresenter {
   }
 
   public IViewContent getTabContent() {
-    String header = resources.getString("CardView.CharmConfiguration.ComboCreation.Title"); //$NON-NLS-1$
+    String header = resources.getString("CardView.CharmConfiguration.ComboCreation.Title"
+    		+ (useArrayRules ? "Array" : "")); //$NON-NLS-1$
     return new SimpleViewContent(new ContentProperties(header), view);
   }
 

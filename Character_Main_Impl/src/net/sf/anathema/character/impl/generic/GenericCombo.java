@@ -19,4 +19,11 @@ public class GenericCombo implements IGenericCombo {
   public ICharm[] getCharms() {
     return combo.getCharms();
   }
+  
+  public boolean equals(Object obj)
+  {
+	  if (obj instanceof GenericCombo)
+		  return combo == ((GenericCombo)obj).combo;
+	  return false;
+  }
 }

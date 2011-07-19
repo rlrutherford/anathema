@@ -66,6 +66,7 @@ public class AdditionalRulesTemplateParser extends AbstractXmlTemplateParser<Gen
   private static final String ATTRIB_FIXED_COST = "fixedCost";
   private static final String TAG_REVISED_INTIMACIES = "revisedIntimacies";
   private static final String TAG_WILLPOWER_VIRTUE_BASED = "willpowerVirtueBased";
+  private static final String TAG_USE_ARRAY_RULES = "useArrayComboRules";
   private final ISpecialCharm[] charms;
   private final IIdentificateRegistry<IBackgroundTemplate> backgroundRegistry;
 
@@ -92,6 +93,7 @@ public class AdditionalRulesTemplateParser extends AbstractXmlTemplateParser<Gen
     setForbiddenBackgrounds(element, basicTemplate);
     setRevisedIntimacies(element, basicTemplate);
     setWillpowerVirtueBased(element, basicTemplate);
+    setArrayRules(element, basicTemplate);
     return basicTemplate;
   }
 
@@ -311,4 +313,12 @@ public class AdditionalRulesTemplateParser extends AbstractXmlTemplateParser<Gen
     }
     basicTemplate.setWillpowerVirtueBased(ElementUtilities.getBooleanAttribute(willpowerRulesElement, ATTRIB_VALUE, true));
   }
+  
+  private void setArrayRules(Element element, GenericAdditionalRules basicTemplate) throws PersistenceException {
+	    Element arrayRulesElement = element.element(TAG_USE_ARRAY_RULES);
+	    if (arrayRulesElement == null) {
+	      return;
+	    }
+	    basicTemplate.setUseArrayRules(ElementUtilities.getBooleanAttribute(arrayRulesElement, ATTRIB_VALUE, true));
+	  }
 }

@@ -27,7 +27,7 @@ public class MagicPresenter implements IContentPresenter {
     ICharmTemplate charmTemplate = characterTemplate.getMagicTemplate().getCharmTemplate();
     if (charmTemplate.knowsCharms(statistics.getRules())) {
       subPresenters.add(new CharacterCharmSelectionPresenter(statistics, resources, templateRegistry, factory));
-      subPresenters.add(new ComboConfigurationPresenter(resources, statistics, factory));
+      subPresenters.add(new ComboConfigurationPresenter(resources, statistics, factory, statistics.getCharacterContext().getAdditionalRules().isUseArrayRules()));
     }
     ISpellMagicTemplate spellMagic = statistics.getCharacterTemplate().getMagicTemplate().getSpellMagic();
     if (spellMagic.knowsSorcery()) {

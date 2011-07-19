@@ -18,6 +18,7 @@ public class GenericAdditionalRules extends NullAdditionalRules implements IClon
 
   private boolean revisedIntimacies = false;
   private boolean willpowerVirtueBased = true;
+  private boolean useArrayRules = false;
   private String[] compulsiveCharmIds = new String[0];
   private String[] rejectedBackgroundIds = new String[0];
   private IAdditionalEssencePool[] essencePools = new IAdditionalEssencePool[0];
@@ -75,6 +76,16 @@ public class GenericAdditionalRules extends NullAdditionalRules implements IClon
   
   public void addRejectedBackgrounds(String[] backgroundIds) {
     this.rejectedBackgroundIds = ArrayUtilities.concat(this.rejectedBackgroundIds, rejectedBackgroundIds);
+  }
+  
+  public void setUseArrayRules(boolean useRules)
+  {
+	this.useArrayRules = useRules;
+  }
+  
+  public boolean isUseArrayRules()
+  {
+	return useArrayRules;
   }
   
   @Override

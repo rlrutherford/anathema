@@ -41,6 +41,11 @@ public class DefaultAdditionalRules implements IAdditionalRules {
   public boolean isRevisedIntimacies() {
     return false;
   }
+  
+  public boolean isUseArrayRules()
+  {
+	return false;
+  }
 
   public IAdditionalMagicLearnPool[] getAdditionalMagicLearnPools() {
     return additonalMagicLearnPools.toArray(new IAdditionalMagicLearnPool[additonalMagicLearnPools.size()]);

@@ -10,6 +10,9 @@
     <additionalTemplates>
     	<template id="Alchemical.CharmSlots" dedicated="4" generic="4"/>
     </additionalTemplates>
+    <additionalRules>
+    	<useArrayComboRules value="true"/>
+    </additionalRules>
     <healthTemplate>
       <usesBaseProvider path="net.sf.anathema.character.alchemical.AlchemicalHealthLevelProvider"/>
       <toughnessControllingTrait type="Stamina"/>

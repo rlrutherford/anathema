@@ -11,6 +11,7 @@ import net.sf.anathema.character.generic.framework.additionaltemplate.model.ICha
 import net.sf.anathema.character.generic.framework.additionaltemplate.model.ICharmContext;
 import net.sf.anathema.character.generic.framework.additionaltemplate.model.ITraitContext;
 import net.sf.anathema.character.generic.framework.additionaltemplate.model.ITraitValueStrategy;
+import net.sf.anathema.character.generic.magic.IGenericCombo;
 import net.sf.anathema.character.generic.template.ICharacterTemplate;
 import net.sf.anathema.character.generic.template.presentation.IPresentationProperties;
 import net.sf.anathema.character.impl.model.context.BasicCharacterContext;
@@ -108,5 +109,10 @@ public class DummyCharacterModelContext implements ICharacterModelContext {
 	public void setFullyLoaded(boolean loaded) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public IGenericCombo[] getCombos()
+	{
+		return null;
 	}
 }

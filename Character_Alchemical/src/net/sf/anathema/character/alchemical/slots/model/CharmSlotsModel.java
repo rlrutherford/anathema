@@ -11,7 +11,9 @@ import net.sf.anathema.character.generic.additionaltemplate.IAdditionalModelExpe
 import net.sf.anathema.character.generic.framework.additionaltemplate.listening.ICharacterChangeListener;
 import net.sf.anathema.character.generic.framework.additionaltemplate.model.ICharacterModelContext;
 import net.sf.anathema.character.generic.magic.ICharm;
+import net.sf.anathema.character.generic.magic.IGenericCombo;
 import net.sf.anathema.character.generic.magic.charms.ICharmAttributeRequirement;
+import net.sf.anathema.character.generic.traits.IFavorableGenericTrait;
 import net.sf.anathema.lib.control.change.ChangeControl;
 import net.sf.anathema.lib.control.change.IChangeListener;
 
@@ -20,8 +22,18 @@ public class CharmSlotsModel implements ICharmSlotsModel, IAdditionalModel
 	private final ChangeControl control = new ChangeControl();
 	private final ICharacterModelContext context;
 	private final List<CharmSlot> slots = new ArrayList<CharmSlot>();
+	private final List<IGenericCombo> installedCombos = new ArrayList<IGenericCombo>();
 	private int numGeneric = 0;
 	private int numDedicated = 0;
+	
+	private IComboSlotChangeListener changeListener =
+		new IComboSlotChangeListener()
+		{
+			@Override
+			public void comboSlotChange(IGenericCombo combo) {
+				removeCombo(combo);
+			}
+		};
 	
 	public CharmSlotsModel(
 			CharmSlotsTemplate template,
@@ -175,25 +187,28 @@ public class CharmSlotsModel implements ICharmSlotsModel, IAdditionalModel
 		return null;
 	}
 	
-	public ICharm[] getValidCharms(CharmSlot slot)
+	public CharmPick[] getValidPicks(CharmSlot slot)
 	{
-		List<ICharm> charms = new ArrayList<ICharm>();
+		List<CharmPick> charms = new ArrayList<CharmPick>();
 		charms.add(null);
+		if (slot.getCombo() != null && meetsComboPrereqs(slot.getCombo()))
+			charms.add(slot.getPick());
 		for (ICharm charm : context.getCharmContext().getCharmConfiguration().getLearnedCharms())
 		{
 			boolean isValid = true;
-			for (CharmSlot otherSlots : slots)
-				if (otherSlots != slot && charm == otherSlots.getCharm())
-				{
-					isValid = false;
-					break;
-				}
+			if (slot.getCombo() == null)
+				for (CharmSlot otherSlots : slots)
+					if (otherSlots != slot && charm == otherSlots.getCharm() && otherSlots.getCombo() == null)
+					{
+						isValid = false;
+						break;
+					}
 			if (!isValid)
 				continue;
 			if (canSlot(charm, slot))
-				charms.add(charm);
+				charms.add(new CharmPick(charm, null));
 		}
-		ICharm[] array = new ICharm[charms.size()];
+		CharmPick[] array = new CharmPick[charms.size()];
 		charms.toArray(array);
 		return array;
 	}
@@ -244,7 +259,15 @@ public class CharmSlotsModel implements ICharmSlotsModel, IAdditionalModel
 	{
 		int total = 0;
 		for (CharmSlot slot : slots)
-			total += slot.getCharm() != null ? slot.getCharm().getAttunementCost() : 0;
+			total += slot.getCharm() != null  && slot.getCombo() == null
+				? slot.getCharm().getAttunementCost() : 0;
+		for (IGenericCombo combo : installedCombos)
+		{
+			int totalCombo = 0;
+			for (ICharm charm : combo.getCharms())
+				totalCombo += charm.getAttunementCost();
+			total += Math.ceil(.75 * totalCombo);
+		}
 		return total;
 	}
 	
@@ -263,5 +286,114 @@ public class CharmSlotsModel implements ICharmSlotsModel, IAdditionalModel
 		
 		slots.remove(slot);
 	}
+	
+	private CharmSlot getFreeGeneralSlot()
+	{
+		for (CharmSlot slot : slots)
+			if (slot.isGeneric() && slot.getCharm() == null)
+				return slot;
+		return null;
+	}
+	
+	private CharmSlot getFreeDedicatedSlot()
+	{
+		for (CharmSlot slot : slots)
+			if (!slot.isGeneric() && slot.getCharm() == null)
+				return slot;
+		return null;
+	}
+	
+	public IGenericCombo[] getAvaliableCombos()
+	{
+		List<IGenericCombo> combos = new ArrayList<IGenericCombo>();
+		for (IGenericCombo combo : context.getCombos())
+			if (hasSlotsForCombo(combo) && meetsComboPrereqs(combo))
+				combos.add(combo);
+		combos.removeAll(installedCombos);
+		IGenericCombo[] comboArray = new IGenericCombo[combos.size()];
+		combos.toArray(comboArray);
+		return comboArray;
+	}
+	
+	private boolean meetsComboPrereqs(IGenericCombo combo)
+	{
+		for (ICharm charm : combo.getCharms())
+		{
+			for (ICharm prereq : charm.getParentCharms())
+				if (!isSlotted(prereq))
+					return false;
+			for (ICharmAttributeRequirement prereq : charm.getAttributeRequirements())
+				if (!isSlotted(prereq))
+					return false;
+		}
+		return true;
+	}
+	
+	private boolean hasSlotsForCombo(IGenericCombo combo)
+	{
+		int generalNeeded = 0;
+		int dedicatedNeeded = 0;
+		int generalAvaliable = 0;
+		int dedicatedAvaliable = 0;
+		
+		for (CharmSlot slot : slots)
+			if (slot.getCharm() == null)
+			{
+				if (slot.isGeneric())
+					generalAvaliable++;
+				else
+					dedicatedAvaliable = 0;
+			}
+		
+		for (ICharm charm : combo.getCharms())
+		{
+			if (context.getTraitCollection().getFavorableTrait(
+					charm.getPrimaryTraitType()).isCasteOrFavored())
+			{
+				if (dedicatedNeeded == dedicatedAvaliable)
+					generalNeeded++;
+				else
+					dedicatedNeeded++;
+			}
+			else
+				generalNeeded++;
+			
+			if (generalNeeded > generalAvaliable)
+				return false;
+		}
+		return true;
+				
+	}
 
+	public void installCombo(IGenericCombo combo)
+	{
+		for (ICharm charm : combo.getCharms())
+		{
+			IFavorableGenericTrait trait = context.getTraitCollection().getFavorableTrait(charm.getPrimaryTraitType());
+			CharmSlot slot = null;
+			if (trait.isCasteOrFavored())
+			{
+				slot = getFreeDedicatedSlot();
+				slot = slot == null ? getFreeGeneralSlot() : slot;
+			}
+			else
+				slot = getFreeGeneralSlot();
+			slot.setCharm(charm);
+			slot.setCombo(combo, changeListener);
+		}
+		installedCombos.add(combo);
+	}
+	
+	public void removeCombo(IGenericCombo combo)
+	{
+		for (CharmSlot slot : slots)
+			if (slot.getCombo() == combo)
+			{
+				slot.setCombo(null, null);
+				slot.setCharm(null);
+			}
+		installedCombos.remove(combo);
+		fireChange();
+	}
+	
 }

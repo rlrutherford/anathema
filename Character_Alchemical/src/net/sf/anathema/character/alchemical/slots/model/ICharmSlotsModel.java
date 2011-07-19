@@ -2,6 +2,7 @@ package net.sf.anathema.character.alchemical.slots.model;
 
 import net.sf.anathema.character.generic.framework.additionaltemplate.listening.ICharacterChangeListener;
 import net.sf.anathema.character.generic.magic.ICharm;
+import net.sf.anathema.character.generic.magic.IGenericCombo;
 
 public interface ICharmSlotsModel
 {
@@ -19,7 +20,7 @@ public interface ICharmSlotsModel
 	
 	public int getDedicatedSlotCount();
 	
-	public ICharm[] getValidCharms(CharmSlot slot);
+	public CharmPick[] getValidPicks(CharmSlot slot);
 	
 	public ICharm getCharmByName(String name);
 	
@@ -36,6 +37,10 @@ public interface ICharmSlotsModel
 	public int getAttunedMotes();
 	
 	public String getMaxPersonalMotes();
+	
+	public IGenericCombo[] getAvaliableCombos();
+	
+	public void installCombo(IGenericCombo combo);
 	
 	public void fireChange();
 }

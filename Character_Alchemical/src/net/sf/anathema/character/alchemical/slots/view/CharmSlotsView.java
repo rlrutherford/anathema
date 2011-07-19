@@ -16,13 +16,16 @@ import net.disy.commons.swing.layout.grid.GridAlignment;
 import net.disy.commons.swing.layout.grid.GridDialogLayout;
 import net.disy.commons.swing.layout.grid.GridDialogLayoutData;
 import net.sf.anathema.character.alchemical.slots.model.CharmSlot;
+import net.sf.anathema.character.generic.magic.IGenericCombo;
+import net.sf.anathema.lib.gui.selection.ObjectSelectionView;
 
 public class CharmSlotsView implements ICharmSlotsView
 {
 	private final ICharmSlotsViewProperties properties;
 	private final JPanel mainPanel = new JPanel(new GridDialogLayout(1, false));
 	private final JPanel entryPanel = new JPanel(new GridDialogLayout(3, false));
-	private JPanel addSlotsPanel = new JPanel(new GridDialogLayout(2, false));
+	private ObjectSelectionView<IGenericCombo> comboSelection;
+	private JPanel controlPanel = new JPanel(new GridDialogLayout(4, false));
 	private JLabel statusLabel = new JLabel();
 	
 	public CharmSlotsView(ICharmSlotsViewProperties properties)
@@ -60,23 +63,34 @@ public class CharmSlotsView implements ICharmSlotsView
 		return slot.isGeneric() ? properties.getGenericSlotIcon() : properties.getDedicatedSlotIcon();
 	}
 	
-	public void createAddSlotsPanel(SmartAction newGenericAction, SmartAction newDedicatedAction)
+	public void createControlPanel(
+			SmartAction newGenericAction,
+			SmartAction newDedicatedAction,
+			ObjectSelectionView<IGenericCombo> comboSelection,
+			SmartAction addComboAction)
 	{
 		JButton genericButton = new JButton();
 		JButton dedicatedButton = new JButton();
+		JButton comboButton = new JButton();
 		genericButton.setAction(newGenericAction);
 		dedicatedButton.setAction(newDedicatedAction);
+		comboButton.setAction(addComboAction);
 		genericButton.setIcon(properties.getNewGenericSlotIcon());
 		dedicatedButton.setIcon(properties.getNewDedicatedSlotIcon());
+		comboButton.setIcon(properties.getAddIcon());
 		genericButton.setPreferredSize(new Dimension(24, 24));
 		dedicatedButton.setPreferredSize(new Dimension(24, 24));
-		addSlotsPanel.add(genericButton);
-		addSlotsPanel.add(dedicatedButton);		
+		comboButton.setPreferredSize(new Dimension(24, 24));
+		comboSelection.getComboBox().setPreferredSize(new Dimension(200, 20));
+		controlPanel.add(genericButton);
+		controlPanel.add(dedicatedButton);
+		controlPanel.add(comboSelection.getComboBox());
+		controlPanel.add(comboButton);
 	}
 
 	@Override
 	public JComponent getComponent() {
-		mainPanel.add(addSlotsPanel);
+		mainPanel.add(controlPanel);
 		return mainPanel;
 	}
 
@@ -84,6 +98,11 @@ public class CharmSlotsView implements ICharmSlotsView
 	public void updateAttunementString(int attuned, String personal) {
 		statusLabel.setText(properties.getAttunementString() + ": " + attuned
 				+ "   " + properties.getPersonalString() + ": " + personal);
+	}
+	
+	public void setComboChoices(IGenericCombo[] combos)
+	{
+		comboSelection.setObjects(combos);
 	}
 
 }

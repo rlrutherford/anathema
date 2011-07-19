@@ -41,6 +41,11 @@ public final class DummyAdditionalRules implements IAdditionalRules, IAdditional
   public boolean isAllowedTraitValue(IGenericTrait trait, IGenericTraitCollection collection) {
     return true;
   }
+  
+  public boolean isUseArrayRules()
+  {
+	return false;
+  }
 
   public ITraitCostModifier getCostModifier(ITraitType type) {
     return new DefaultTraitCostModifier();

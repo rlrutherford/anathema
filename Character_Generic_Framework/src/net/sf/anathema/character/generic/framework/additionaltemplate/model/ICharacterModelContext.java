@@ -5,6 +5,7 @@ import net.sf.anathema.character.generic.additionalrules.IAdditionalRules;
 import net.sf.anathema.character.generic.additionaltemplate.IAdditionalModel;
 import net.sf.anathema.character.generic.character.IMagicCollection;
 import net.sf.anathema.character.generic.character.IGenericTraitCollection;
+import net.sf.anathema.character.generic.magic.IGenericCombo;
 import net.sf.anathema.character.generic.template.presentation.IPresentationProperties;
 
 public interface ICharacterModelContext {
@@ -34,4 +35,6 @@ public interface ICharacterModelContext {
   public String getPersonalPool();
   
   public String getPeripheralPool();
+  
+  public IGenericCombo[] getCombos();
 }

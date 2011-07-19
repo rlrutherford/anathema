@@ -194,7 +194,10 @@ public class CharmSlotsPresenter implements IPresenter
 						if (newView.isNull())
 							newValue = null;
 						if (slot.setPick(newValue))
+						{
 							updateAllSlotViewsExcept(slot);
+							updateSlotView(slot);
+						}
 					}
 				});
 	}
@@ -231,6 +234,7 @@ public class CharmSlotsPresenter implements IPresenter
 		
 		view.setToggleEnabled(model.allowToggle(slot));
 		view.setRemoveEnabled(model.allowRemoval(slot));
+		view.setChangeEnabled(model.allowChange(slot));
 	}
 	
 	private boolean checkValidPick(CharmPick[] validPicks, CharmPick pick)

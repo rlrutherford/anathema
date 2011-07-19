@@ -12,6 +12,7 @@ import net.sf.anathema.character.generic.framework.additionaltemplate.listening.
 import net.sf.anathema.character.generic.framework.additionaltemplate.model.ICharacterModelContext;
 import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.IGenericCombo;
+import net.sf.anathema.character.generic.magic.charms.ICharmAttribute;
 import net.sf.anathema.character.generic.magic.charms.ICharmAttributeRequirement;
 import net.sf.anathema.character.generic.traits.IFavorableGenericTrait;
 import net.sf.anathema.lib.control.change.ChangeControl;
@@ -19,6 +20,7 @@ import net.sf.anathema.lib.control.change.IChangeListener;
 
 public class CharmSlotsModel implements ICharmSlotsModel, IAdditionalModel
 {
+	private final static String NO_REMOVAL = "NoRemoval";
 	private final ChangeControl control = new ChangeControl();
 	private final ICharacterModelContext context;
 	private final List<CharmSlot> slots = new ArrayList<CharmSlot>();
@@ -146,6 +148,17 @@ public class CharmSlotsModel implements ICharmSlotsModel, IAdditionalModel
 		if (context.getBasicCharacterContext().isExperienced())
 			return !slot.isFixed() && slot.getCreationState() == SlotState.Absent;
 		return !slot.isFixed();
+	}
+	
+	public boolean allowChange(CharmSlot slot)
+	{
+		if (slot.getCharm() == null)
+			return true;
+		
+		for (ICharmAttribute attribute : slot.getCharm().getAttributes())
+			if (attribute.getId().equals(NO_REMOVAL))
+				return false;
+		return true;
 	}
 	
 	private boolean isLearned(ICharm charm)

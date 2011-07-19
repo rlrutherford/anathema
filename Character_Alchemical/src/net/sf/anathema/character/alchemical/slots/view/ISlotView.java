@@ -22,6 +22,8 @@ public interface ISlotView
 	
 	public void setRemoveEnabled(boolean enabled);
 	
+	public void setChangeEnabled(boolean enabled);
+	
 	public void setIcon(Icon icon);
 	
 	public boolean isChanging();

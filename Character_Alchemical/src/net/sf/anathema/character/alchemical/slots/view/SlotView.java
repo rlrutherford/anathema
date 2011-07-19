@@ -91,6 +91,11 @@ public class SlotView implements ISlotView
 		typeButton.setEnabled(enabled);
 	}
 	
+	public void setChangeEnabled(boolean enabled)
+	{
+		selection.setEnabled(enabled);
+	}
+	
 	public CharmPick getSelectionValue()
 	{
 		return selection.getSelectedObject();

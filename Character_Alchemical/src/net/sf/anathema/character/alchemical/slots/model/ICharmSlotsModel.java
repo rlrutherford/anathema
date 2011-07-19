@@ -28,6 +28,8 @@ public interface ICharmSlotsModel
 	
 	public boolean allowRemoval(CharmSlot slot);
 	
+	public boolean allowChange(CharmSlot slot);
+	
 	public void toggleSlot(CharmSlot slot);
 	
 	public void removeSlot(CharmSlot slot);

@@ -463,11 +463,12 @@ public class CharmConfiguration implements ICharmConfiguration {
         return false;
       }
     }
-    for (ICharmAttributeRequirement requirement : charm.getAttributeRequirements()) {
-      if (!requirement.isFulfilled(getLearnedCharms(true))) {
-        return false;
-      }
-    }
+    if (!context.getAdditionalRules().isUseArrayRules())
+	    for (ICharmAttributeRequirement requirement : charm.getAttributeRequirements()) {
+	      if (!requirement.isFulfilled(getLearnedCharms(true))) {
+	        return false;
+	      }
+	    }
     for (IGenericTrait prerequisite : charm.getPrerequisites()) {
       IGenericTrait prerequisiteTrait = context.getTraitCollection().getTrait(prerequisite.getType());
       int prereq = prerequisite.getCurrentValue();
@@ -487,11 +488,12 @@ public class CharmConfiguration implements ICharmConfiguration {
     if (essencePrereq > essenceTrait.getCurrentValue()) {
       return false;
     }
-    for (ICharm parentCharm : charm.getLearnPrerequisitesCharms(this)) {
-      if (!isLearnable(parentCharm)) {
-        return false;
-      }
-    }
+    if (!context.getAdditionalRules().isUseArrayRules())
+	    for (ICharm parentCharm : charm.getLearnPrerequisitesCharms(this)) {
+	      if (!isLearnable(parentCharm)) {
+	        return false;
+	      }
+	    }
     return true;
   }
 

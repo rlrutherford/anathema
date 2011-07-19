@@ -4,7 +4,6 @@ import javax.swing.Icon;
 import javax.swing.JPanel;
 
 import net.sf.anathema.character.alchemical.slots.model.CharmPick;
-import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.lib.control.objectvalue.IObjectValueChangedListener;
 
 public interface ISlotView

@@ -10,7 +10,6 @@ import javax.swing.ListCellRenderer;
 
 import net.disy.commons.swing.action.SmartAction;
 import net.sf.anathema.character.alchemical.slots.model.CharmPick;
-import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.lib.control.objectvalue.IObjectValueChangedListener;
 import net.sf.anathema.lib.gui.selection.ObjectSelectionView;
 

@@ -27,7 +27,7 @@ public class ComboTest extends BasicTestCase {
 
   protected final void addCharm(ICharm charm) {
     if (comboRules.canBeAddedToCombo(combo, charm)) {
-      combo.addCharm(charm);
+      combo.addCharm(charm, false);
     }
     else {
       throw new IllegalArgumentException("The charm " + charm.getId() + " is illegal in this combo."); //$NON-NLS-1$ //$NON-NLS-2$

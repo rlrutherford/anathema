@@ -22,6 +22,7 @@ import net.sf.anathema.character.impl.model.creation.bonus.IAdditionalMagicLearn
 import net.sf.anathema.character.impl.model.creation.bonus.additional.IAdditionalBonusPointManagment;
 import net.sf.anathema.character.model.ISpellConfiguration;
 import net.sf.anathema.character.model.charm.ICharmConfiguration;
+import net.sf.anathema.character.model.charm.IComboConfiguration;
 import net.sf.anathema.character.model.charm.special.ISubeffectCharmConfiguration;
 import net.sf.anathema.character.model.charm.special.IUpgradableCharmConfiguration;
 
@@ -40,12 +41,14 @@ public class MagicCostCalculator {
   protected int bonusPointsSpentForSpells;
   private final IAdditionalMagicLearnPointManagement magicPools;
   private final IMagicTemplate magicTemplate;
-  private final IUniqueRequiredCharmType uniqueType; 
+  private final IUniqueRequiredCharmType uniqueType;
+  private final IComboConfiguration combos;
 
   public MagicCostCalculator(
       IMagicTemplate magicTemplate,
       ICharmConfiguration charms,
       ISpellConfiguration spells,
+      IComboConfiguration combos,
       int favoredCreationCharmCount,
       int defaultCreationCharmCount,
       IBonusPointCosts costs,
@@ -63,6 +66,7 @@ public class MagicCostCalculator {
     this.magicPools = magicPools;
     this.analyzer = new CostAnalyzer(basicCharacter, traitCollection);
     this.uniqueType = magicTemplate.getCharmTemplate().getUniqueRequiredCharmType();
+    this.combos = combos;
   }
 
   public void calculateMagicCosts() {
@@ -144,6 +148,7 @@ public class MagicCostCalculator {
     List<IMagic> completeList = new ArrayList<IMagic>();
     completeList.addAll(Arrays.asList(charms.getCreationLearnedCharms()));
     completeList.addAll(Arrays.asList(spells.getLearnedSpells(false)));
+    completeList.addAll(Arrays.asList(combos.getCreationCharmPicks()));
     return completeList;
   }
 

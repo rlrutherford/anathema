@@ -215,13 +215,13 @@ public class CharmSlotsModel implements ICharmSlotsModel, IAdditionalModel
 	
 	public boolean canSlot(ICharm charm, CharmSlot slot)
 	{
-		if (!isLearned(charm))
+		if (!isLearned(charm) && slot.getCombo() == null)
 			return false;
 		for (ICharm prereq : charm.getParentCharms())
 			if (!isSlotted(prereq))
 				return false;
 		for (ICharmAttributeRequirement prereq : charm.getAttributeRequirements())
-			if (!isSlotted(prereq))
+			if (!isSlotted(prereq, slot.getCombo()))
 				return false;
 		return true;
 	}
@@ -234,12 +234,15 @@ public class CharmSlotsModel implements ICharmSlotsModel, IAdditionalModel
 		return false;
 	}
 	
-	public boolean isSlotted(ICharmAttributeRequirement charmRequirement)
+	public boolean isSlotted(ICharmAttributeRequirement charmRequirement, IGenericCombo combo)
 	{
 		List<ICharm> slottedCharms = new ArrayList<ICharm>();
 		for (CharmSlot slot : slots)
 			if (slot.getCharm() != null)
 				slottedCharms.add(slot.getCharm());
+		if (combo != null)
+			for (ICharm charm : combo.getCharms())
+				slottedCharms.add(charm);
 		ICharm[] charmArray = new ICharm[slottedCharms.size()];
 		slottedCharms.toArray(charmArray);
 		return charmRequirement.isFulfilled(charmArray);
@@ -323,7 +326,7 @@ public class CharmSlotsModel implements ICharmSlotsModel, IAdditionalModel
 				if (!isSlotted(prereq))
 					return false;
 			for (ICharmAttributeRequirement prereq : charm.getAttributeRequirements())
-				if (!isSlotted(prereq))
+				if (!isSlotted(prereq, combo))
 					return false;
 		}
 		return true;

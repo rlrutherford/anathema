@@ -36,6 +36,7 @@ public class CharmCostCalculatorTest extends AbstractBonusPointTestCase {
         genericCharacter.getTemplate().getMagicTemplate(),
         charms,
         spells,
+        null,
         2,
         3,
         cost,

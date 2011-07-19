@@ -42,25 +42,36 @@ public class CharmExperienceModel extends AbstractIntegerValueModel {
     ICharmConfiguration charmConfiguration = statistics.getCharms();
     Set<ICharm> charmsCalculated = new HashSet<ICharm>();
     for (ICharm charm : charmConfiguration.getLearnedCharms(true)) {
-      int charmCosts = calculateCharmCost(charmConfiguration, charm, charmsCalculated);
+      int charmCosts = calculateCharmCost(charmConfiguration, charm, charmsCalculated, true);
       if (charmConfiguration.isAlienCharm(charm)) {
         charmCosts *= 2;
       }
       experienceCosts += charmCosts;
       charmsCalculated.add(charm);
     }
+    for (ICharm charm : statistics.getCombos().getExperiencedCharmPicks()) {
+        int charmCosts = calculateCharmCost(charmConfiguration, charm, charmsCalculated, false);
+        if (charmConfiguration.isAlienCharm(charm)) {
+          charmCosts *= 2;
+        }
+        experienceCosts += charmCosts;
+        charmsCalculated.add(charm);
+      }
     for (ISpecialCharm specialCharm : charmConfiguration.getSpecialCharms())
     	if (specialCharm instanceof IUpgradableCharm)
     	{
     		ICharm charm = charmConfiguration.getCharmIdMap().getCharmById(specialCharm.getCharmId());
     		if (!charmsCalculated.contains(charm))
-    			experienceCosts += calculateCharmCost(charmConfiguration, charm, charmsCalculated);
+    			experienceCosts += calculateCharmCost(charmConfiguration, charm, charmsCalculated, true);
     	}
     			
     return experienceCosts;
   }
 
-  private int calculateCharmCost(ICharmConfiguration charmConfiguration, ICharm charm, Set<ICharm> charmsCalculated) {
+  private int calculateCharmCost(ICharmConfiguration charmConfiguration,
+		  ICharm charm,
+		  Set<ICharm> charmsCalculated,
+		  boolean requireLearning) {
     ISpecialCharmConfiguration specialCharm = charmConfiguration.getSpecialCharmConfiguration(charm);
     int charmCost = calculator.getCharmCosts(
         charm,
@@ -68,10 +79,11 @@ public class CharmExperienceModel extends AbstractIntegerValueModel {
         traitConfiguration,
         statistics.getCharacterTemplate().getMagicTemplate().getFavoringTraitType());
     if (specialCharm != null) {
-      int timesLearnedWithExperience = specialCharm.getCurrentLearnCount() - specialCharm.getCreationLearnCount();
+      int timesLearnedWithExperience = requireLearning ? (specialCharm.getCurrentLearnCount() - specialCharm.getCreationLearnCount())
+    		  : 1;
       final int specialCharmCost = timesLearnedWithExperience * charmCost;
       if (specialCharm instanceof IUpgradableCharmConfiguration)
-    	  return (charmConfiguration.getGroup(charm).isLearned(charm, true) ? charmCost : 0) +
+    	  return (charmConfiguration.getGroup(charm).isLearned(charm, true) || !requireLearning ? charmCost : 0) +
     	  		+ ((IUpgradableCharmConfiguration)specialCharm).getUpgradeXPCost();
       if (!(specialCharm instanceof ISubeffectCharmConfiguration)) {
         return specialCharmCost;
@@ -85,7 +97,7 @@ public class CharmExperienceModel extends AbstractIntegerValueModel {
       int subeffectCost = (int) Math.ceil(count * subeffectCharmConfiguration.getPointCostPerEffect() * 2);
       return subeffectCost + specialCharmCost;
     }
-    else if (charmConfiguration.getGroup(charm).isLearned(charm, true)) {
+    else if (charmConfiguration.getGroup(charm).isLearned(charm, true) || !requireLearning) {
       for (ICharm mergedCharm : charm.getMergedCharms()) {
         if (charmsCalculated.contains(mergedCharm) && !isSpecialCharm(charm)) {
           return 0;

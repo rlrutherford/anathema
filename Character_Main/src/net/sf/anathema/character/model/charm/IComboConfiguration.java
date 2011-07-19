@@ -42,4 +42,8 @@ public interface IComboConfiguration {
   public boolean isAllowedToRemove(ICharm charm);
   
   public boolean canFinalizeWithXP();
+  
+  public ICharm[] getCreationCharmPicks();
+  
+  public ICharm[] getExperiencedCharmPicks();
 }

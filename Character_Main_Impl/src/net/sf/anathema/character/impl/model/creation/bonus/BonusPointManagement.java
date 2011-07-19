@@ -101,6 +101,7 @@ public class BonusPointManagement implements IBonusPointManagement {
         characterTemplate.getMagicTemplate(),
         statistics.getCharms(),
         statistics.getSpells(),
+        statistics.getCombos(),
         creationPoints.getFavoredCreationCharmCount(),
         creationPoints.getDefaultCreationCharmCount(),
         cost,

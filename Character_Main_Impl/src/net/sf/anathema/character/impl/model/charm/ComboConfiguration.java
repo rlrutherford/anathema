@@ -3,6 +3,7 @@ package net.sf.anathema.character.impl.model.charm;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.anathema.character.generic.framework.additionaltemplate.model.ICharacterModelContext;
 import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.rules.IEditionVisitor;
 import net.sf.anathema.character.generic.rules.IExaltedEdition;
@@ -31,19 +32,24 @@ public class ComboConfiguration implements IComboConfiguration {
   private final ICharmConfiguration charmConfiguration;
   private final ComboIdProvider idProvider = new ComboIdProvider();
   private final IComboLearnStrategy learnStrategy;
+  private final ICharacterModelContext context;
+  private final boolean useArrayRules;
   private ICombo originalCombo;
 
   public ComboConfiguration(
       ICharmConfiguration charmConfiguration,
       IComboLearnStrategy learnStrategy,
       IExaltedEdition edition,
-      IExperiencePointConfiguration experiencePoints) {
+      IExperiencePointConfiguration experiencePoints,
+      ICharacterModelContext context,
+      final boolean useArrayRules) {
     this.charmConfiguration = charmConfiguration;
     this.learnStrategy = learnStrategy;
     this.charmConfiguration.addCharmLearnListener(new CharmLearnAdapter() {
       @Override
       public void charmForgotten(ICharm charm) {
-        checkCombos(charm);
+    	  if (!useArrayRules)
+    		  checkCombos(charm);
       }
     });
     final IComboArbitrator[] editionRules = new IComboArbitrator[1];
@@ -58,6 +64,8 @@ public class ComboConfiguration implements IComboConfiguration {
     });
     this.rules = editionRules[0];
     this.experiencePoints = experiencePoints;
+    this.context = context;
+    this.useArrayRules = useArrayRules;
   }
 
   public void setCrossPrerequisiteTypeComboAllowed(boolean allowed) {
@@ -85,7 +93,7 @@ public class ComboConfiguration implements IComboConfiguration {
 
   public void addCharmToCombo(ICharm charm) {
     if (rules.canBeAddedToCombo(getEditCombo(), charm)) {
-      getEditCombo().addCharm(charm);
+      getEditCombo().addCharm(charm, context.getBasicCharacterContext().isExperienced());
     }
     else {
       throw new IllegalArgumentException("The charm " + charm.getId() + " is illegal in this combo."); //$NON-NLS-1$ //$NON-NLS-2$
@@ -128,6 +136,8 @@ public class ComboConfiguration implements IComboConfiguration {
       fireComboChanged(editedCombo);
       fireEndEditEvent();
     }
+    if (useArrayRules)
+    	removeArrayCharms();
     editCombo.clear();
   }
 
@@ -241,10 +251,57 @@ public class ComboConfiguration implements IComboConfiguration {
   
   public boolean canFinalizeWithXP()
   {
-	  if (originalCombo == null || experiencePoints.getTotalExperiencePoints() == 0) return false;
+	  if (originalCombo == null || !context.getBasicCharacterContext().isExperienced()) return false;
 	  ICombo testCombo = new Combo();
 	  testCombo.getValuesFrom(editCombo);
 	  testCombo.removeCharms(originalCombo.getCharms());
 	  return testCombo.getCharms().length > 0;
+  }
+  
+  private void removeArrayCharms()
+  {
+	  for (ICharm charm : editCombo.getCharms())
+	  {
+		  if (originalCombo == null ||
+			  originalCombo.contains(charm))
+			  charmConfiguration.getGroup(charm).forgetCharm(charm, isExperienceLearned(editCombo, charm));
+	  }
+  }
+  
+  private boolean isExperienceLearned(ICombo combo, ICharm charm)
+  {
+	  for (ICharm otherCharm : combo.getExperiencedLearnedCharms())
+		  if (otherCharm == charm)
+			  return true;
+	  return false;
+  }
+  
+  public ICharm[] getCreationCharmPicks()
+  {
+	  if (!useArrayRules)
+		  return new ICharm[0];
+	  List<ICharm> charms = new ArrayList<ICharm>();
+	  for (ICombo combo : creationComboList)
+		  for (ICharm charm : combo.getCharms())
+			  charms.add(charm);
+	  ICharm[] charmArray = new ICharm[charms.size()];
+	  charms.toArray(charmArray);
+	  return charmArray;
+  }
+  
+  public ICharm[] getExperiencedCharmPicks()
+  {
+	  if (!useArrayRules)
+		  return new ICharm[0];
+	  List<ICharm> charms = new ArrayList<ICharm>();
+	  for (ICombo combo : creationComboList)
+		  for (ICharm charm : combo.getExperiencedLearnedCharms())
+			  charms.add(charm);
+	  for (ICombo combo : experiencedComboList)
+		  for (ICharm charm : combo.getExperiencedLearnedCharms())
+			  charms.add(charm);
+	  ICharm[] charmArray = new ICharm[charms.size()];
+	  charms.toArray(charmArray);
+	  return charmArray;
   }
 }

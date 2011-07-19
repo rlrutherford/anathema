@@ -135,9 +135,17 @@ public class DummyGenericCharacter implements IGenericCharacter {
   public int getPersonalPoolValue() {
     return 0;
   }
+  
+  public int getOverdrivePoolValue() {
+    return 0;
+  }
 
   public IdentifiedInteger[] getComplexPools() {
     return new IdentifiedInteger[0];
+  }
+  
+  public int getAttunedPoolValue() {
+    return 0;
   }
 
   public IGenericTrait[] getBackgrounds() {

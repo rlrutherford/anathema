@@ -174,6 +174,15 @@ public class SpecialCharmManager implements ISpecialCharmManager {
 	        }
 	      }
 	    });
+    else
+    	configuration.addSpecialCharmLearnListener(new ISpecialCharmLearnListener()
+    	{
+			@Override
+			public void learnCountChanged(int newValue) {
+				group.fireRecalculateRequested();
+			}
+    		
+    	});
     group.addCharmLearnListener(new CharmLearnAdapter() {
       @Override
       public void charmForgotten(ICharm forgottenCharm) {

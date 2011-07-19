@@ -5,6 +5,7 @@ import java.util.Set;
 
 import net.sf.anathema.character.generic.IBasicCharacterData;
 import net.sf.anathema.character.generic.magic.ICharm;
+import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharm;
 import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharmConfiguration;
 import net.sf.anathema.character.generic.magic.charms.special.IUpgradableCharm;
 import net.sf.anathema.character.impl.model.advance.IPointCostCalculator;
@@ -48,6 +49,14 @@ public class CharmExperienceModel extends AbstractIntegerValueModel {
       experienceCosts += charmCosts;
       charmsCalculated.add(charm);
     }
+    for (ISpecialCharm specialCharm : charmConfiguration.getSpecialCharms())
+    	if (specialCharm instanceof IUpgradableCharm)
+    	{
+    		ICharm charm = charmConfiguration.getCharmIdMap().getCharmById(specialCharm.getCharmId());
+    		if (!charmsCalculated.contains(charm))
+    			experienceCosts += calculateCharmCost(charmConfiguration, charm, charmsCalculated);
+    	}
+    			
     return experienceCosts;
   }
 
@@ -62,7 +71,8 @@ public class CharmExperienceModel extends AbstractIntegerValueModel {
       int timesLearnedWithExperience = specialCharm.getCurrentLearnCount() - specialCharm.getCreationLearnCount();
       final int specialCharmCost = timesLearnedWithExperience * charmCost;
       if (specialCharm instanceof IUpgradableCharmConfiguration)
-    	  return charmCost + ((IUpgradableCharmConfiguration)specialCharm).getUpgradeXPCost();
+    	  return (charmConfiguration.getGroup(charm).isLearned(charm, true) ? charmCost : 0) +
+    	  		+ ((IUpgradableCharmConfiguration)specialCharm).getUpgradeXPCost();
       if (!(specialCharm instanceof ISubeffectCharmConfiguration)) {
         return specialCharmCost;
       }

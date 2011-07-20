@@ -9,10 +9,14 @@ public interface ISpellMagicTemplate {
   public CircleType[] getNecromancyCircles();
 
   public CircleType[] getSorceryCircles();
+  
+  public CircleType[] getProtocolCircles();
 
   public boolean knowsNecromancy();
 
   public boolean knowsSorcery();
+  
+  public boolean knowsProtocols();
   
   public boolean knowsSpellMagic();
   

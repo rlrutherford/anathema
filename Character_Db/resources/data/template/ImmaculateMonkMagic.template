@@ -12,5 +12,5 @@
 	<charmTemplate charmType="Dragon-Blooded">
 		<martialArts rulesClass="net.sf.anathema.character.db.template.TerrestrialMartialArtsRules" level="Terrestrial" highLevel="true"/>		
 	</charmTemplate>
-	<spellTemplate maximumSorceryCircle="Terrestrial" maximumNecromancyCircle="None"/>
+	<spellTemplate maximumSorceryCircle="Terrestrial" maximumNecromancyCircle="None" maximumProtocolCircle="None"/>
 </magicTemplate>	

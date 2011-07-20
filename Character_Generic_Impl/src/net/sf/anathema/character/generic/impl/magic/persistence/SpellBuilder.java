@@ -45,6 +45,7 @@ public class SpellBuilder {
       List<ISpell> spellList = new ArrayList<ISpell>();
       spellList.addAll(Arrays.asList(readSpells(getSorceryPath())));
       spellList.addAll(Arrays.asList(readSpells(getNecromancyPath())));
+      spellList.addAll(Arrays.asList(readSpells(getProtocolsPath())));
       spells = spellList.toArray(new ISpell[spellList.size()]);
       return spells;
     }
@@ -62,6 +63,10 @@ public class SpellBuilder {
 
   private String getNecromancyPath() {
     return "data/Spells_Necromancy.xml"; //$NON-NLS-1$
+  }
+  
+  private String getProtocolsPath() {
+	return "data/Spells_Protocol.xml"; //$NON-NLS-1$
   }
 
   private ISpell[] readSpells(String path) throws DocumentException, PersistenceException {

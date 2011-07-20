@@ -11,12 +11,14 @@ public class SpellMagicTemplate implements ISpellMagicTemplate {
 
   private final CircleType[] sorceryCircles;
   private final CircleType[] necromancyCircles;
+  private final CircleType[] protocolCircles;
   private final ICharacterTemplate template;
 
-  public SpellMagicTemplate(CircleType[] sorceryCircles, CircleType[] necromancyCircles,
+  public SpellMagicTemplate(CircleType[] sorceryCircles, CircleType[] necromancyCircles, CircleType[] protocolCircles,
 		  ICharacterTemplate template) {
     this.sorceryCircles = sorceryCircles;
     this.necromancyCircles = necromancyCircles;
+    this.protocolCircles = protocolCircles;
     this.template = template;
   }
 
@@ -27,6 +29,11 @@ public class SpellMagicTemplate implements ISpellMagicTemplate {
   public boolean knowsNecromancy() {
     return getNecromancyCircles() != null && getNecromancyCircles().length != 0;
   }
+  
+  public boolean knowsProtocols()
+  {
+	return getProtocolCircles() != null && getProtocolCircles().length != 0;
+  }
 
   public CircleType[] getSorceryCircles() {
     return sorceryCircles;
@@ -34,6 +41,10 @@ public class SpellMagicTemplate implements ISpellMagicTemplate {
 
   public CircleType[] getNecromancyCircles() {
     return necromancyCircles;
+  }
+  
+  public CircleType[] getProtocolCircles() {
+	return protocolCircles;
   }
 
   public boolean knowsSpellMagic() {
@@ -67,6 +78,16 @@ public class SpellMagicTemplate implements ISpellMagicTemplate {
 
 	      public void visitVoid(CircleType type) {
 	    	circleCharmName[0] = template.getTemplateType().getCharacterType().getId() + ".VoidCircleNecromancy"; //$NON-NLS-1$        
+	      }
+	      
+	      public void visitManMachine(CircleType type)
+	      {
+	    	circleCharmName[0] = "Alchemical.Man-MachineWeavingEngine";
+	      }
+	      
+	      public void visitGodMachine(CircleType type)
+	      {
+	    	circleCharmName[0] = "Alchemical.God-MachineWeavingEngine";
 	      }
 	    });
 	  for (ICharm charm : knownCharms)

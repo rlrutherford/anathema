@@ -44,6 +44,7 @@ public class GenericMagicTemplateParser extends AbstractXmlTemplateParser<Generi
   private static final String ATTRIB_MAXIMUM_SORCERY_CIRCLE = "maximumSorceryCircle"; //$NON-NLS-1$
   private static final String TAG_FAVORING_TRAIT_TYPE = "favoringTraitType"; //$NON-NLS-1$
   private static final String ATTRIB_MAXIMUM_NECROMANCY_CIRCLE = "maximumNecromancyCircle"; //$NON-NLS-1$
+  private static final String ATTRIB_MAXIMUM_PROTOCOL_CIRCLE = "maximumProtocolCircle"; //$NON-NLS-1$
   private static final String TAG_CASTE = "caste"; //$NON-NLS-1$
   private static final String TAG_ALIEN_CHARMS = "alienCharms"; //$NON-NLS-1$
   private static final String TAG_MARTIAL_ARTS = "martialArts"; //$NON-NLS-1$
@@ -104,6 +105,13 @@ public class GenericMagicTemplateParser extends AbstractXmlTemplateParser<Generi
     if (!maximumNecromancyCircleId.equals(VALUE_NONE)) {
       maximumNecromancyCircle = CircleType.valueOf(maximumNecromancyCircleId);
     }
+    String maximumProtocolCircleId = ElementUtilities.getRequiredAttrib(
+            spellTemplateElement,
+            ATTRIB_MAXIMUM_PROTOCOL_CIRCLE);
+    CircleType maximumProtocolCircle = null;
+        if (!maximumProtocolCircleId.equals(VALUE_NONE)) {
+          maximumProtocolCircle = CircleType.valueOf(maximumProtocolCircleId);
+        }
     Class<SpellMagicTemplate> magicTemplateClass = SpellMagicTemplate.class;
     ISpellMagicTemplate template = null;
     String spellMagicSubTemplate = spellTemplateElement.attributeValue(ATTRIB_SUB_TEMPLATE);
@@ -120,6 +128,7 @@ public class GenericMagicTemplateParser extends AbstractXmlTemplateParser<Generi
 		Constructor<SpellMagicTemplate>[] helper = (Constructor<SpellMagicTemplate>[])magicTemplateClass.getConstructors();
 		template = helper[0].newInstance(CircleType.getSorceryCirclesUpTo(maximumSorceryCircle),
 	                CircleType.getNecromancyCirclesUpTo(maximumNecromancyCircle),
+	                CircleType.getProtocolCirclesUpTo(maximumProtocolCircle),
 	                hostTemplate);
 			
 			

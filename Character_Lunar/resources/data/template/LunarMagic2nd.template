@@ -5,5 +5,5 @@
 	    <hasUniqueCharmType name="Lunar.Knacks" type="Knack" canCountAsFavored="false"/>
 		<martialArts level="Terrestrial" highLevel="true" /> 
 	</charmTemplate>
-	<spellTemplate maximumSorceryCircle="Celestial" maximumNecromancyCircle="Shadowlands"/>
+	<spellTemplate maximumSorceryCircle="Celestial" maximumNecromancyCircle="Shadowlands" maximumProtocolCircle="None"/>
 </magicTemplate>		

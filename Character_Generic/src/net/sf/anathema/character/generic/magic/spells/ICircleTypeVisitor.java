@@ -13,4 +13,8 @@ public interface ICircleTypeVisitor {
   public void visitLabyrinth(CircleType type);
 
   public void visitVoid(CircleType type);
+  
+  public void visitManMachine(CircleType type);
+  
+  public void visitGodMachine(CircleType type);
 }

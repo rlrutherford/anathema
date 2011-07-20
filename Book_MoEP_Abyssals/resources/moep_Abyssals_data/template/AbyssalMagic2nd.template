@@ -6,5 +6,5 @@
 			<caste type="Moonshadow"/>
 		</alienCharms>
 	</charmTemplate>
-	<spellTemplate maximumSorceryCircle="Celestial" maximumNecromancyCircle="Void"/>
+	<spellTemplate maximumSorceryCircle="Celestial" maximumNecromancyCircle="Void" maximumProtocolCircle="GodMachine"/>
 </magicTemplate>		

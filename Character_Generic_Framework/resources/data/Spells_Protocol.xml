@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spelllist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Spells.xsd">
+	<spell circle="ManMachine" id="ManMachine.ArmigersOfTheMakersMighty">
+		<cost>
+			<essence cost="10" text="or 30m"/>
+		</cost>
+		<source edition="SecondEdition" source="Alchemicals2nd" page="187"/>
+	</spell>
+	<spell circle="GodMachine" id="GodMachine.AuspiciousReformattingMudra">
+		<cost>
+			<essence cost="" text="10 x rating motes"/>
+		</cost>
+		<source edition="SecondEdition" source="Alchemicals2nd" page="195"/>
+	</spell>
+</spelllist>

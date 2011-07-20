@@ -73,6 +73,28 @@ public enum CircleType implements IIdentificate {
     public CircleType[] getComparableCircles() {
       return getNecromancyCircles();
     }
+  },
+  ManMachine {
+        @Override
+        public void accept(ICircleTypeVisitor visitor) {
+          visitor.visitManMachine(this);
+        }
+
+        @Override
+        public CircleType[] getComparableCircles() {
+          return getProtocolCircles();
+        }
+  },
+  GodMachine {
+        @Override
+        public void accept(ICircleTypeVisitor visitor) {
+          visitor.visitGodMachine(this);
+        }
+
+        @Override
+        public CircleType[] getComparableCircles() {
+           return getProtocolCircles();
+        }   
   };
 
   public String getId() {
@@ -90,6 +112,11 @@ public enum CircleType implements IIdentificate {
   public static CircleType[] getNecromancyCircles() {
     return new CircleType[] { Shadowlands, Labyrinth, Void };
   }
+  
+  public static CircleType[] getProtocolCircles()
+  {
+	return new CircleType[] { ManMachine, GodMachine };
+  }
 
   public static CircleType[] getSorceryCirclesUpTo(CircleType maximumCircle) {
     CircleType[] sorceryCircles = getSorceryCircles();
@@ -100,6 +127,11 @@ public enum CircleType implements IIdentificate {
     CircleType[] necromancyCircles = getNecromancyCircles();
     return getCirclesUpTo(maximumCircle, necromancyCircles);
   }
+  
+  public static CircleType[] getProtocolCirclesUpTo(CircleType maximumCircle) {
+	    CircleType[] protocolCircles = getProtocolCircles();
+	    return getCirclesUpTo(maximumCircle, protocolCircles);
+	  }
 
   private static CircleType[] getCirclesUpTo(CircleType maximumCircle, CircleType[] allCircles) {
     if (maximumCircle == null) {

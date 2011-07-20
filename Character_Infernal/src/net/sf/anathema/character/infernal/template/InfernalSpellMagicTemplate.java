@@ -13,10 +13,10 @@ import net.sf.anathema.character.generic.traits.types.YoziType;
 
 public class InfernalSpellMagicTemplate extends SpellMagicTemplate
 {
-	public InfernalSpellMagicTemplate(CircleType[] sorceryCircles, CircleType[] necromancyCircles,
+	public InfernalSpellMagicTemplate(CircleType[] sorceryCircles, CircleType[] necromancyCircles, CircleType[] protocolCircles,
 			  ICharacterTemplate template)
 	{
-		super(sorceryCircles, necromancyCircles, template);
+		super(sorceryCircles, necromancyCircles, protocolCircles, template);
 	}
 	
 	@Override
@@ -50,10 +50,27 @@ public class InfernalSpellMagicTemplate extends SpellMagicTemplate
 		      public void visitVoid(CircleType type) {
 		    	  canLearn[0] = canLearnNecromancy(spell, knownCharms);        
 		      }
+		      
+		      public void visitManMachine(CircleType type) {
+		    	  canLearn[0] = canLearnProtocols(spell, knownCharms);
+		      }
+		      
+		      public void visitGodMachine(CircleType type) {
+		    	  canLearn[0] = canLearnProtocols(spell, knownCharms);
+		      }
 		    });
 
 		 return canLearn[0];
 	  }
+	
+	private boolean canLearnProtocols(ISpell spell, ICharm[] knownCharms)
+	{
+		if (spell.getCircleType() == CircleType.ManMachine)
+			return knowsCharm("Alchemical.Man-MachineWeavingEngine", knownCharms);
+		if (spell.getCircleType() == CircleType.GodMachine)
+			return knowsCharm("Alchemical.God-MachineWeavingEngine", knownCharms);
+		return false;
+	}
 	
 	private boolean canLearnSorcery(ISpell spell, ICharm[] knownCharms)
 	{
@@ -107,6 +124,16 @@ public class InfernalSpellMagicTemplate extends SpellMagicTemplate
 
 		      public void visitVoid(CircleType type) {
 		    	  names.add("Infernal.SorcerousEnlightenment3." + yozi.getId());        
+		      }
+		      
+		      public void visitManMachine(CircleType type)
+		      {
+		    	  // do nothing
+		      }
+		      
+		      public void visitGodMachine(CircleType type)
+		      {
+		    	  // do nothing
 		      }
 		    });
 		}

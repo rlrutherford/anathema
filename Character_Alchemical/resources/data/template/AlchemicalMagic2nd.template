@@ -4,5 +4,5 @@
 	<charmTemplate charmType="Alchemical">
 		<martialArts rulesClass="net.sf.anathema.character.alchemical.AlchemicalMartialArtsRules" level="Celestial" highLevel="true" /> 
 	</charmTemplate>
-	<spellTemplate maximumSorceryCircle="None" maximumNecromancyCircle="None"/>
+	<spellTemplate maximumSorceryCircle="Celestial" maximumNecromancyCircle="Labyrinth" maximumProtocolCircle="GodMachine"/>
 </magicTemplate>

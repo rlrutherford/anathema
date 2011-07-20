@@ -36,6 +36,9 @@ public class MagicPresenter implements IContentPresenter {
     if (spellMagic.knowsNecromancy()) {
       subPresenters.add(new NecromancyPresenter(statistics, resources, factory));
     }
+    if (spellMagic.knowsProtocols()) {
+        subPresenters.add(new ProtocolPresenter(statistics, resources, factory));
+      }
   }
 
   public void initPresentation() {

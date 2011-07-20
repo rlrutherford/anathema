@@ -7,5 +7,5 @@
 			<caste type="Fiend"/>
 		</alienCharms>
 	</charmTemplate>
-	<spellTemplate maximumSorceryCircle="Solar" maximumNecromancyCircle="Labyrinth" subTemplate="net.sf.anathema.character.infernal.template.InfernalSpellMagicTemplate"/>
+	<spellTemplate maximumSorceryCircle="Solar" maximumNecromancyCircle="Labyrinth" maximumProtocolCircle="GodMachine" subTemplate="net.sf.anathema.character.infernal.template.InfernalSpellMagicTemplate"/>
 </magicTemplate>

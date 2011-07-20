@@ -119,9 +119,9 @@
           <charmtype type="Permanent"/>
           <attunement essence="1"/>
           <genericCharmAttribute attribute="Excellency" />
-          <upgradable requiresBase="false">
+          <upgradeable requiresBase="false">
           	<upgrade name="UnboundEssenceBooster" xpCost="1" essence="5"/>
-          </upgradable>
+          </upgradeable>
           <charmAttribute attribute="Mortal" />
           <charmAttribute attribute="Stackable" visualize="true" />
           <charmAttribute attribute="Obvious" visualize="true" />
@@ -157,9 +157,9 @@
                <special primaryStep="1" secondaryStep="2" />
           </charmtype>
           <attunement essence="1"/>
-          <upgradable requiresBase="false">
+          <upgradeable requiresBase="false">
           	<upgrade name="MachineLogicSubroutines" essence="4" xpCost="6"/>
-          </upgradable>
+          </upgradeable>
           <charmAttribute attribute="Combo-OK" visualize="true" />
           <source source="Alchemicals2nd" />
      </genericCharm>
@@ -177,9 +177,9 @@
                <special primaryStep="1" secondaryStep="2" />
           </charmtype>
           <attunement essence="1"/>
-          <upgradable requiresBase="false">
+          <upgradeable requiresBase="false">
           	<upgrade name="MetaconductiveCircuitry" essence="4" xpCost="6"/>
-          </upgradable>
+          </upgradeable>
           <charmAttribute attribute="Exemplar1" visualize="true" />
           <source source="Alchemicals2nd" />
      </genericCharm>

@@ -10,9 +10,9 @@
 		<cost/>
 		<duration duration="Permanent"/>
 		<charmtype type="Permanent"/>
-		<upgradable requiresBase="false">
+		<upgradeable requiresBase="false">
 			<upgrade name="WeaveShreddingParadoxEngine" xpCost="12"/>
-		</upgradable>
+		</upgradeable>
 		<charmAttribute attribute="NoRemoval"/>
 		<charmAttribute attribute="Obvious" visualize="true"/>
 		<charmAttribute attribute="Exemplar1" visualize="true"/>
@@ -28,10 +28,10 @@
 		<cost/>
 		<duration duration="Permanent"/>
 		<charmtype type="Permanent"/>
-		<upgradable requiresBase="false">
+		<upgradeable requiresBase="false">
 			<upgrade name="WeaveShreddingParadoxEngineSorcery" xpCost="12"/>
 			<upgrade name="WeaveShreddingParadoxEngineNecromancy" xpCost="12"/>
-		</upgradable>
+		</upgradeable>
 		<charmAttribute attribute="NoRemoval"/>
 		<charmAttribute attribute="Obvious" visualize="true"/>
 		<charmAttribute attribute="Exemplar1" visualize="true"/>

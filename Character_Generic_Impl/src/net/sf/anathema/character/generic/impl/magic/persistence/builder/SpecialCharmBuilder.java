@@ -67,7 +67,7 @@ public class SpecialCharmBuilder
 	private static final String TAG_EFFECT = "effect";
 	private static final String ATTRIB_PREREQ_EFFECT = "prereqEffect";
 	
-	private static final String TAG_UPGRADABLE = "upgradable";
+	private static final String TAG_UPGRADEABLE = "upgradeable";
 	private static final String TAG_UPGRADE = "upgrade";
 	private static final String ATTRIB_BP_COST = "bpCost";
 	private static final String ATTRIB_XP_COST = "xpCost";
@@ -273,7 +273,7 @@ public class SpecialCharmBuilder
 	
 	private ISpecialCharm readUpgradableCharm(Element charmElement, String id)
 	{
-		Element upgradableElement = charmElement.element(TAG_UPGRADABLE);
+		Element upgradableElement = charmElement.element(TAG_UPGRADEABLE);
 		if (upgradableElement == null)
 			return null;
 		boolean requiresBase =

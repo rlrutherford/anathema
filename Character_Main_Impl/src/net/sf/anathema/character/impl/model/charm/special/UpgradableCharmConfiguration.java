@@ -16,23 +16,16 @@ public class UpgradableCharmConfiguration extends MultipleEffectCharmConfigurati
 		super(context, charm, visited, arbitrator);
 		upgrade = visited;
 	}
+	
+	@Override
+	public void learn(boolean experienced)
+	{
+	}
 
-	  @Override
-	  public void forget() {
-	    /*for (ISubeffect effect : getEffects()) {
-	      effect.setLearned(false);
-	    }*/
-	  }
-
-	  @Override
-	  public void learn(boolean experienced) {
-	    /*if (experienced && getCurrentLearnCount() == 0) {
-	      subeffects[0].setExperienceLearned(true);
-	    }
-	    else if (!experienced && getCreationLearnCount() == 0) {
-	      subeffects[0].setCreationLearned(true);
-	    }*/
-	  }
+	@Override
+	public void forget()
+	{
+	}
 	  
 	public int getUpgradeBPCost()
 	{
@@ -43,4 +36,20 @@ public class UpgradableCharmConfiguration extends MultipleEffectCharmConfigurati
 	{
 		return upgrade.getUpgradeXPCost();
 	}
+	
+	public int getCreationCharmCount()
+	{
+		return upgrade.getCreationCharmCount();
+	}
+	
+	public int getExperiencedCharmCount()
+	{
+		return upgrade.getExperiencedCharmCount();
+	}
+	
+	public boolean forgetAtZero()
+	  {
+		  return upgrade.getCreationCharmCount() == 0 &&
+		  		 upgrade.getExperiencedCharmCount() == 0;
+	  }
 }

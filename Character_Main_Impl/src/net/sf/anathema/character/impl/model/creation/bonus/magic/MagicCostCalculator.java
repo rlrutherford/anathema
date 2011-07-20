@@ -188,7 +188,7 @@ public class MagicCostCalculator {
     ISpecialCharmConfiguration specialCharmConfiguration = charms.getSpecialCharmConfiguration(charm);
     if (specialCharmConfiguration != null) {
     	if (specialCharmConfiguration instanceof IUpgradableCharmConfiguration)
-    		return 1;
+    		return 1 + ((IUpgradableCharmConfiguration)specialCharmConfiguration).getCreationCharmCount();
       return specialCharmConfiguration.getCreationLearnCount();
     }
     return 1;

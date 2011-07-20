@@ -51,28 +51,28 @@ public class SpecialCharmManager implements ISpecialCharmManager {
 		  ICharm charm, ISpecialCharm specialCharm, ILearningCharmGroup group)
   {
 	  addSpecialCharmConfiguration(charm, group,
-			  new TraitCapModifyingCharmConfiguration(context, config, charm, (ITraitCapModifyingCharm) specialCharm), true, true);
+			  new TraitCapModifyingCharmConfiguration(context, config, charm, (ITraitCapModifyingCharm) specialCharm), true);
   }
   
   private void registerTraitBoostingCharm(ITraitBoostingCharm visited,
 		  ICharm charm, ISpecialCharm specialCharm, ILearningCharmGroup group)
   {
 	  addSpecialCharmConfiguration(charm, group,
-			  new TraitBoostingCharmConfiguration(context, config, charm, (ITraitBoostingCharm) specialCharm, arbitrator), true, true);
+			  new TraitBoostingCharmConfiguration(context, config, charm, (ITraitBoostingCharm) specialCharm, arbitrator), true);
   }
   
   private void registerEffectMultilearnableCharm(IMultipleEffectCharm visited, ICharm charm, ILearningCharmGroup group) {
     addSpecialCharmConfiguration(
         charm,
         group,
-        new MultipleEffectCharmConfiguration(context, charm, visited, arbitrator), true, true);
+        new MultipleEffectCharmConfiguration(context, charm, visited, arbitrator), true);
   }
   
   private void registerUpgradableCharm(IUpgradableCharm visited, ICharm charm, ILearningCharmGroup group) {
 	    addSpecialCharmConfiguration(
 	        charm,
 	        group,
-	        new UpgradableCharmConfiguration(context, charm, visited, arbitrator), visited.requiresBase(), false);
+	        new UpgradableCharmConfiguration(context, charm, visited, arbitrator), visited.requiresBase());
 	  }
 
   private void registerMultiLearnableCharm(IMultiLearnableCharm visitedCharm, ICharm charm, ILearningCharmGroup group) {
@@ -81,7 +81,7 @@ public class SpecialCharmManager implements ISpecialCharmManager {
         config,
         charm,
         visitedCharm,
-        arbitrator), true, true);
+        arbitrator), true);
   }
 
   private void registerOxBodyTechnique(IOxBodyTechniqueCharm visited, ICharm charm, ILearningCharmGroup group) {
@@ -92,7 +92,7 @@ public class SpecialCharmManager implements ISpecialCharmManager {
         visited.getRelevantTraits(),
         health.getOxBodyLearnArbitrator(),
         visited);
-    addSpecialCharmConfiguration(charm, group, oxBodyTechniqueConfiguration, true, true);
+    addSpecialCharmConfiguration(charm, group, oxBodyTechniqueConfiguration, true);
     health.getOxBodyLearnArbitrator().addOxBodyTechniqueConfiguration(oxBodyTechniqueConfiguration);
     health.addHealthLevelProvider(oxBodyTechniqueConfiguration.getHealthLevelProvider());
   }
@@ -157,15 +157,14 @@ public class SpecialCharmManager implements ISpecialCharmManager {
   }
 
   private void registerSubeffectCharm(ISubeffectCharm visited, ICharm charm, ILearningCharmGroup group) {
-    addSpecialCharmConfiguration(charm, group, new SubeffectCharmConfiguration(context, charm, visited, arbitrator), true, true);
+    addSpecialCharmConfiguration(charm, group, new SubeffectCharmConfiguration(context, charm, visited, arbitrator), true);
   }
 
   private void addSpecialCharmConfiguration(
       final ICharm charm,
       final ILearningCharmGroup group,
       final ISpecialCharmConfiguration configuration,
-      final boolean learnListener,
-      final boolean forgetAtZero) {
+      final boolean learnListener) {
     if (specialConfigurationsByCharm.containsKey(charm)) {
       throw new IllegalArgumentException("Special configuration already defined for charm " + charm.getId()); //$NON-NLS-1$
     }
@@ -174,7 +173,7 @@ public class SpecialCharmManager implements ISpecialCharmManager {
 	    configuration.addSpecialCharmLearnListener(new ISpecialCharmLearnListener() {
 	      public void learnCountChanged(int newValue) {
 	        if (newValue == 0) {
-	        	if (forgetAtZero)
+	        	if (configuration.forgetAtZero())
 	        		group.forgetCharm(charm, group.isLearned(charm, true));
 	        	else
 	        		group.fireRecalculateRequested();

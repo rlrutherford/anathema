@@ -67,4 +67,8 @@ public class TraitCapModifyingCharmConfiguration implements ITraitCapModifyingCh
 		return config.isLearned(charm) ? 1 : 0;
 	}
 
+	public boolean forgetAtZero()
+	  {
+		  return true;
+	  }
 }

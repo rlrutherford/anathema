@@ -133,6 +133,11 @@ public class MultiLearnableCharmConfiguration implements IMultiLearnableCharmCon
 	  return dots;
   }
   
+  public boolean forgetAtZero()
+  {
+	  return true;
+  }
+  
   private class MultiLearnableIncrementChecker implements IIncrementChecker
   {
       public boolean isValidIncrement(int increment)

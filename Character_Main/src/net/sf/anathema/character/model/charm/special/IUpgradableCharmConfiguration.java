@@ -5,4 +5,8 @@ public interface IUpgradableCharmConfiguration extends IMultipleEffectCharmConfi
 	public int getUpgradeBPCost();
 	
 	public int getUpgradeXPCost();
+	
+	public int getCreationCharmCount();
+	
+	public int getExperiencedCharmCount();
 }

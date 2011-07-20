@@ -18,6 +18,7 @@ import net.sf.anathema.lib.gui.wizard.workflow.ICondition;
 public class UpgradableCharm extends MultipleEffectCharm implements IUpgradableCharm
 {
 	private final int NO_BP_UPGRADE = -1;
+	private final int NO_XP_UPGRADE = -1;
 	
 	List<Upgrade> upgradeList = new ArrayList<Upgrade>();
 	private final Map<String, Integer> bpCosts;
@@ -58,9 +59,10 @@ public class UpgradableCharm extends MultipleEffectCharm implements IUpgradableC
 	      ITraitType trait = traits.get(id);
 	      upgradeList.add(new Upgrade(id, data,
 	    		  buildLearnCondition(arbitrator, data, traitCollection,
-	    				  charm, bpCost != null,
+	    				  charm, bpCost != null, bpCost == null && xpCost == null,
 	    				  essenceMin, traitMin, trait),
-	    		  bpCost == null ? NO_BP_UPGRADE : bpCost, xpCost));
+	    		  bpCost == null ? NO_BP_UPGRADE : bpCost,
+	    		  xpCost == null ? NO_XP_UPGRADE : xpCost));
 	    }
 	    return upgradeList.toArray(new ISubeffect[upgradeList.size()]);
 	  }
@@ -70,13 +72,14 @@ public class UpgradableCharm extends MultipleEffectCharm implements IUpgradableC
 			  final IGenericTraitCollection traitCollection,
 			  final ICharm charm,
 			  final boolean bpUpgradeAllowed,
+			  final boolean isCharm,
 			  final Integer essenceMin,
 			  final Integer traitMin,
 			  final ITraitType trait) {
 	    return new ICondition() {
 	      public boolean isFullfilled() {
 	        boolean learnable = arbitrator.isLearnable(charm) &&
-	        	(bpUpgradeAllowed || data.isExperienced());
+	        	(isCharm || (bpUpgradeAllowed || data.isExperienced()));
 	        learnable = !learnable ? learnable :
 	        	(essenceMin == null ||
 	        	 traitCollection.getTrait(OtherTraitType.Essence).getCurrentValue() >= essenceMin);
@@ -101,7 +104,26 @@ public class UpgradableCharm extends MultipleEffectCharm implements IUpgradableC
 	  {
 		  int total = 0;
 		  for (Upgrade upgrade : upgradeList)
-			  total += upgrade.isLearned() && !upgrade.isCreationLearned() ? upgrade.getXPCost() : 0;
+			  total += upgrade.isLearned() && !upgrade.isCreationLearned() &&
+			  		   !upgrade.isCharm() ? upgrade.getXPCost() : 0;
+		  return total;
+	  }
+	  
+	  public int getCreationCharmCount()
+	  {
+		  int total = 0;
+		  for (Upgrade upgrade : upgradeList)
+			  total += upgrade.isCharm() && upgrade.isCreationLearned() ?
+					  1 : 0;
+		  return total;
+	  }
+	  
+	  public int getExperiencedCharmCount()
+	  {
+		  int total = 0;
+		  for (Upgrade upgrade : upgradeList)
+			  total += upgrade.isCharm() && upgrade.isLearned() && !upgrade.isCreationLearned() ?
+					  1 : 0;
 		  return total;
 	  }
 	  
@@ -130,6 +152,11 @@ public class UpgradableCharm extends MultipleEffectCharm implements IUpgradableC
 		public int getXPCost()
 		{
 			return xpCost;
+		}
+		
+		public boolean isCharm()
+		{
+			return bpCost == NO_BP_UPGRADE && xpCost == NO_XP_UPGRADE;
 		}
 		  
 	  }

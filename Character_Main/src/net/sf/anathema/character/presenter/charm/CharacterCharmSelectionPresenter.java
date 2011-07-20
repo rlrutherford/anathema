@@ -358,14 +358,22 @@ public class CharacterCharmSelectionPresenter extends AbstractCascadeSelectionPr
       }
 
       public void visitMultipleEffectCharm(final IMultipleEffectCharm visited) {
-        createMultipleEffectCharmView(visited, visited.getCharmId() + ".ControlButton"); //$NON-NLS-1$
+        createMultipleEffectCharmView(visited, degen(visited.getCharmId()) + ".ControlButton"); //$NON-NLS-1$
       }
       
       public void visitUpgradableCharm(final IUpgradableCharm visited)
       {
-    	  createMultipleEffectCharmView(visited, visited.getCharmId() + ".ControlButton"); //$NON-NLS-1$  
+    	  createMultipleEffectCharmView(visited, degen(visited.getCharmId()) + ".ControlButton"); //$NON-NLS-1$  
       }
     });
+  }
+  
+  private String degen(String charmId)
+  {
+	  String[] split = charmId.split("\\.");
+	  if (split.length == 3)
+		  return split[0] + "." + split[1];
+	  return charmId;
   }
 
   private void createMultipleEffectCharmView(final IMultipleEffectCharm visited, final String labelKey) {

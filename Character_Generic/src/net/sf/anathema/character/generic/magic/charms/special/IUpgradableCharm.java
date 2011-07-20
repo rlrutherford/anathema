@@ -6,5 +6,9 @@ public interface IUpgradableCharm extends IMultipleEffectCharm
 	
 	public int getUpgradeXPCost();
 	
+	public int getCreationCharmCount();
+	
+	public int getExperiencedCharmCount();
+	
 	public boolean requiresBase();
 }

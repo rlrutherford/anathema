@@ -14,4 +14,6 @@ public interface ISpecialCharmConfiguration {
   public void forget();
 
   public void learn(boolean experienced);
+  
+  public boolean forgetAtZero();
 }

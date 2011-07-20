@@ -99,4 +99,9 @@ public class MultipleEffectCharmConfiguration implements IMultipleEffectCharmCon
     }
     return sum;
   }
+  
+  public boolean forgetAtZero()
+  {
+	  return true;
+  }
 }

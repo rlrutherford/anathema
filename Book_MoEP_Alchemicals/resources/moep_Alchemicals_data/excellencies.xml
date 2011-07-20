@@ -142,6 +142,36 @@
           <genericCharmAttribute attribute="Excellency" />
           <charmAttribute attribute="Mortal" />
           <charmAttribute attribute="Internal" visualize="true" />
+          <upgradeable>
+          	<effect name="Archery"/>
+          	<effect name="Athletics"/>
+          	<effect name="Awareness"/>
+          	<effect name="Dodge"/>
+          	<effect name="Integrity"/>
+          	<effect name="MartialArts"/>
+          	<effect name="Melee"/>
+          	<effect name="Resistance"/>
+          	<effect name="Thrown"/>
+          	<effect name="War"/>
+          	<effect name="Bureaucracy"/>
+          	<effect name="Investigation"/>
+          	<effect name="Lore"/>
+          	<effect name="Medicine"/>
+          	<effect name="Occult"/>
+          	<effect name="Craft"/>
+          	<effect name="Larceny"/>
+          	<effect name="Linguistics"/>
+          	<effect name="Performance"/>
+          	<effect name="Presence"/>
+          	<effect name="Ride"/>
+          	<effect name="Sail"/>
+          	<effect name="Socialize"/>
+          	<effect name="Stealth"/>
+          	<effect name="Survival"/>
+          	<upgrade name="SyntheticCompetencyUpgrade1" xpCost="1"/>
+          	<upgrade name="SyntheticCompetencyUpgrade2" xpCost="1"/>
+          	<upgrade name="SyntheticCompetencyUpgrade3" xpCost="1"/>
+          </upgradeable>
           <source source="Alchemicals2nd" page="121" />
      </genericCharm>
      <genericCharm id="Alchemical.TranspuissantUpgrade" exalt="Alchemical">

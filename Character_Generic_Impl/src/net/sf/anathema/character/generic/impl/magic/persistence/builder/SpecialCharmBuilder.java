@@ -328,6 +328,12 @@ public class SpecialCharmBuilder
 				
 			} catch (Exception e) { }
 		}
+		for (Object effectObj : upgradableElement.elements(TAG_EFFECT))
+		{
+			Element effect = (Element)effectObj;
+			String name = effect.attributeValue(ATTRIB_NAME);
+			upgrades.add(name);
+		}
 		String[] upgradeArray = new String[upgrades.size()];
 		upgrades.toArray(upgradeArray);
 		return new UpgradableCharm(id, upgradeArray, requiresBase,

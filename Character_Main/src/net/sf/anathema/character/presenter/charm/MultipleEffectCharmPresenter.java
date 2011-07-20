@@ -26,7 +26,7 @@ public class MultipleEffectCharmPresenter implements IPresenter {
 
   public void initPresentation() {
     for (final ISubeffect subeffect : model.getEffects()) {
-      String label = resources.getString(model.getCharm().getId() + ".Subeffects." + subeffect.getId()); //$NON-NLS-1$
+      String label = resources.getString(degen(model.getCharm().getId()) + ".Subeffects." + subeffect.getId()); //$NON-NLS-1$
       final IBooleanValueView display = view.addSubeffect(label);
       subeffect.addChangeListener(new IChangeListener() {
         public void changeOccured() {
@@ -40,5 +40,13 @@ public class MultipleEffectCharmPresenter implements IPresenter {
       });
       display.setSelected(subeffect.isLearned());
     }
+  }
+  
+  private String degen(String charmId)
+  {
+	  String[] split = charmId.split("\\.");
+	  if (split.length == 3)
+		  return split[0] + "." + split[1];
+	  return charmId;
   }
 }

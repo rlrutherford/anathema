@@ -97,6 +97,11 @@ public class OxBodyTechniqueConfiguration implements IOxBodyTechniqueConfigurati
     }
     return sum;
   }
+  
+  public boolean forgetAtZero()
+  {
+	  return true;
+  }
 
   public void addSpecialCharmLearnListener(ISpecialCharmLearnListener listener) {
     control.addListener(listener);

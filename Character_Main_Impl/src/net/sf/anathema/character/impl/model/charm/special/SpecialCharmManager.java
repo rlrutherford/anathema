@@ -15,6 +15,7 @@ import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharmConfi
 import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharmLearnListener;
 import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharmVisitor;
 import net.sf.anathema.character.generic.magic.charms.special.ISubeffectCharm;
+import net.sf.anathema.character.generic.magic.charms.special.ITraitBoostingCharm;
 import net.sf.anathema.character.generic.magic.charms.special.ITraitCapModifyingCharm;
 import net.sf.anathema.character.generic.magic.charms.special.IUpgradableCharm;
 import net.sf.anathema.character.impl.model.charm.ISpecialCharmManager;
@@ -51,6 +52,13 @@ public class SpecialCharmManager implements ISpecialCharmManager {
   {
 	  addSpecialCharmConfiguration(charm, group,
 			  new TraitCapModifyingCharmConfiguration(context, config, charm, (ITraitCapModifyingCharm) specialCharm), true, true);
+  }
+  
+  private void registerTraitBoostingCharm(ITraitBoostingCharm visited,
+		  ICharm charm, ISpecialCharm specialCharm, ILearningCharmGroup group)
+  {
+	  addSpecialCharmConfiguration(charm, group,
+			  new TraitBoostingCharmConfiguration(context, config, charm, (ITraitBoostingCharm) specialCharm, arbitrator), true, true);
   }
   
   private void registerEffectMultilearnableCharm(IMultipleEffectCharm visited, ICharm charm, ILearningCharmGroup group) {
@@ -134,6 +142,11 @@ public class SpecialCharmManager implements ISpecialCharmManager {
       public void visitPrerequisiteModifyingCharm(IPrerequisiteModifyingCharm visitedCharm)
       {
     	// do nothing
+      }
+      
+      public void visitTraitBoostingCharm(ITraitBoostingCharm visitedCharm)
+      {
+    	registerTraitBoostingCharm(visitedCharm, charm, specialCharm, group);
       }
       
       public void visitTraitCapModifyingCharm(ITraitCapModifyingCharm visitedCharm)

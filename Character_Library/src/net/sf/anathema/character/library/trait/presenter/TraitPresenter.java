@@ -50,7 +50,8 @@ public class TraitPresenter implements IPresenter {
       public void visitDefaultTrait(final IDefaultTrait visitedTrait) {
         view.addIntValueChangedListener(new IIntValueChangedListener() {
           public void valueChanged(int newValue) {
-            visitedTrait.setCurrentValue(newValue);
+        	int boost = visitedTrait.getCurrentValue() - visitedTrait.getUnboostedValue();
+        	visitedTrait.setCurrentValue(newValue - boost);
           }
         });
       }

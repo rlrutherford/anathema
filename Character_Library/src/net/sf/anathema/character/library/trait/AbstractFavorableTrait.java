@@ -47,7 +47,7 @@ public abstract class AbstractFavorableTrait implements IFavorableTrait {
     return getTraitRules().getAbsoluteMinimumValue();
   }
 
-  public final int getZeroCalculationValue() {
+  public int getZeroCalculationValue() {
     return getTraitRules().getZeroCalculationCost();
   }
 

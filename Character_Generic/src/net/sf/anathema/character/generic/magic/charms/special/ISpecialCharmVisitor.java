@@ -17,4 +17,6 @@ public interface ISpecialCharmVisitor {
   public void visitPrerequisiteModifyingCharm(IPrerequisiteModifyingCharm charm);
   
   public void visitTraitCapModifyingCharm(ITraitCapModifyingCharm charm);
+  
+  public void visitTraitBoostingCharm(ITraitBoostingCharm charm);
 }

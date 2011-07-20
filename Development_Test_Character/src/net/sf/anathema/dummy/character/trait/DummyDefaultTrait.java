@@ -25,6 +25,16 @@ public class DummyDefaultTrait extends DummyModifiableGenericTrait implements ID
     return 0;
   }
   
+  public void applyBoost(int modifier)
+  {
+	  
+  }
+  
+  public int getUnboostedValue()
+  {
+	  return 0;
+  }
+  
   public void applyCapModifier(int modifier)
   {
 	  // not yet implemented

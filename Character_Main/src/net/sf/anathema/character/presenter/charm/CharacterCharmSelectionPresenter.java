@@ -25,6 +25,7 @@ import net.sf.anathema.character.generic.magic.charms.special.IPrerequisiteModif
 import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharm;
 import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharmVisitor;
 import net.sf.anathema.character.generic.magic.charms.special.ISubeffectCharm;
+import net.sf.anathema.character.generic.magic.charms.special.ITraitBoostingCharm;
 import net.sf.anathema.character.generic.magic.charms.special.ITraitCapModifyingCharm;
 import net.sf.anathema.character.generic.magic.charms.special.IUpgradableCharm;
 import net.sf.anathema.character.generic.template.ITemplateRegistry;
@@ -331,6 +332,11 @@ public class CharacterCharmSelectionPresenter extends AbstractCascadeSelectionPr
         else {
           specialCharmViews.add(oxBodyTechniqueView);
         }
+      }
+      
+      public void visitTraitBoostingCharm(ITraitBoostingCharm charm)
+      {
+    	  visitMultiLearnableCharm(charm);
       }
       
       public void visitPrerequisiteModifyingCharm(final IPrerequisiteModifyingCharm visited)

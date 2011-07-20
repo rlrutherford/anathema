@@ -21,6 +21,7 @@ public class DefaultTrait extends AbstractFavorableTrait implements IFavorableDe
 
   private final ChangeControl rangeControl = new ChangeControl();
   private int capModifier = 0;
+  private int boost = 0;
   private int creationValue;
   private int experiencedValue = ITraitRules.UNEXPERIENCED;
   private final IValueChangeChecker checker;
@@ -65,6 +66,13 @@ public class DefaultTrait extends AbstractFavorableTrait implements IFavorableDe
   {
 	  capModifier += modifier;
 	  getTraitRules().setCapModifier(capModifier);
+  }
+  
+  public void applyBoost(int modifier)
+  {
+	  boost += modifier;
+	  applyCapModifier(modifier);
+	  getCurrentValueControl().fireValueChangedEvent(getCurrentValue());
   }
   
   public int getUnmodifiedMaximalValue()
@@ -130,7 +138,12 @@ public class DefaultTrait extends AbstractFavorableTrait implements IFavorableDe
   }
 
   public int getCurrentValue() {
-    return getTraitValueStrategy().getCurrentValue(this);
+    return getTraitValueStrategy().getCurrentValue(this) + boost;
+  }
+  
+  public int getUnboostedValue()
+  {
+	return getTraitValueStrategy().getCurrentValue(this);
   }
 
   public final int getCalculationValue() {
@@ -150,7 +163,7 @@ public class DefaultTrait extends AbstractFavorableTrait implements IFavorableDe
       resetCurrentValue();
     }
     else {
-      if (value == getCurrentValue()) {
+      if (value == getUnboostedValue()) {
         return;
       }
       getTraitValueStrategy().setValue(this, value);
@@ -192,7 +205,7 @@ public class DefaultTrait extends AbstractFavorableTrait implements IFavorableDe
   }
 
   public final int getMinimalValue() {
-    return getTraitValueStrategy().getMinimalValue(this);
+    return getTraitValueStrategy().getMinimalValue(this) + boost;
   }
   
   public int getMaxFree()
@@ -202,6 +215,14 @@ public class DefaultTrait extends AbstractFavorableTrait implements IFavorableDe
   
   public final int getCalculationMinValue()
   {
-	return getTraitRules().getCalculationMinValue();
+	return getTraitRules().getCalculationMinValue() + boost;
   }
+  
+  public int getAbsoluteMinValue() {
+	    return super.getAbsoluteMinValue() + boost;
+	  }
+
+  public final int getZeroCalculationValue() {
+	    return super.getZeroCalculationValue() + boost;
+	  }
 }

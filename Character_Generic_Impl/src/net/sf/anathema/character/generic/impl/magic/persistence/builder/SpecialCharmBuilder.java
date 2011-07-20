@@ -17,6 +17,7 @@ import net.sf.anathema.character.generic.impl.magic.charm.special.StaticMultiLea
 import net.sf.anathema.character.generic.impl.magic.charm.special.StaticPainToleranceCharm;
 import net.sf.anathema.character.generic.impl.magic.charm.special.SubeffectCharm;
 import net.sf.anathema.character.generic.impl.magic.charm.special.TieredMultiLearnableCharm;
+import net.sf.anathema.character.generic.impl.magic.charm.special.TraitBoostingCharm;
 import net.sf.anathema.character.generic.impl.magic.charm.special.TraitCapModifyingCharm;
 import net.sf.anathema.character.generic.impl.magic.charm.special.TraitDependentMultiLearnableCharm;
 import net.sf.anathema.character.generic.impl.magic.charm.special.UpgradableCharm;
@@ -38,6 +39,7 @@ public class SpecialCharmBuilder
 	private static final String ATTRIB_TRAIT = "trait";
 	private static final String ATTRIB_VALUE = "value";
 	private static final String ATTRIB_ESSENCE = "essence";
+	private static final String ATTRIB_LIMITING_TRAIT = "limitingTrait";
 	
 	private static final String TAG_OXBODY_CHARM = "oxbody";
 	private static final String TAG_OXBODY_PICK = "pick";
@@ -58,10 +60,12 @@ public class SpecialCharmBuilder
 	private static final String TAG_REPURCHASES = "repurchases";
 	private static final String TAG_REPURCHASE = "repurchase";
 	private static final String ATTRIB_ABSOLUTE_MAX = "absoluteMax";
-	private static final String ATTRIB_LIMITING_TRAIT = "limitingTrait";
 	private static final String ATTRIB_LIMIT = "limit";
 	
 	private static final String TAG_ESSENCE_FIXED_REPURCHASES = "essenceFixedRepurchases";
+	
+	private static final String TAG_TRAIT_BOOSTING = "traitBoosting";
+	private static final String ATTRIB_MULTIPLIER = "multiplier";
 	
 	private static final String TAG_MULTI_EFFECT = "multiEffects";
 	private static final String TAG_EFFECT = "effect";
@@ -89,6 +93,7 @@ public class SpecialCharmBuilder
 		specialCharm = specialCharm == null ? readTranscendenceCharm(charmElement, id) : specialCharm;
 		specialCharm = specialCharm == null ? readRepurchaseCharm(charmElement, id) : specialCharm;
 		specialCharm = specialCharm == null ? readEssenceFixedRepurchasesCharm(charmElement, id) : specialCharm;
+		specialCharm = specialCharm == null ? readTraitBoostingCharm(charmElement, id) : specialCharm;
 		specialCharm = specialCharm == null ? readMultiEffectCharm(charmElement, id) : specialCharm;
 		specialCharm = specialCharm == null ? readUpgradableCharm(charmElement, id) : specialCharm;
 		specialCharm = specialCharm == null ? readElementalCharm(charmElement, id) : specialCharm;
@@ -248,6 +253,19 @@ public class SpecialCharmBuilder
 		if (repurchasesElement == null)
 			return null;
 		return new EssenceFixedMultiLearnableCharm(id, EssenceTemplate.SYSTEM_ESSENCE_MAX, OtherTraitType.Essence);
+	}
+	
+	private ISpecialCharm readTraitBoostingCharm(Element charmElement, String id)
+	{
+		Element traitBoostingElement = charmElement.element(TAG_TRAIT_BOOSTING);
+		if (traitBoostingElement == null)
+			return null;
+		String targetTrait = id.split("\\.")[2]; 
+		String limitingTrait = traitBoostingElement.attributeValue(ATTRIB_LIMITING_TRAIT);
+		ITraitType trait = getTrait(targetTrait);
+		ITraitType limit = getTrait(limitingTrait);
+		double multiplier = Double.parseDouble(traitBoostingElement.attributeValue(ATTRIB_MULTIPLIER));
+		return new TraitBoostingCharm(id, trait, limit, (int)(EssenceTemplate.SYSTEM_ESSENCE_MAX * multiplier), multiplier);
 	}
 	
 	private ISpecialCharm readMultiEffectCharm(Element charmElement, String id)

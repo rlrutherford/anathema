@@ -14,6 +14,7 @@ import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharm;
 import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharmConfiguration;
 import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharmVisitor;
 import net.sf.anathema.character.generic.magic.charms.special.ISubeffectCharm;
+import net.sf.anathema.character.generic.magic.charms.special.ITraitBoostingCharm;
 import net.sf.anathema.character.generic.magic.charms.special.ITraitCapModifyingCharm;
 import net.sf.anathema.character.generic.magic.charms.special.IUpgradableCharm;
 import net.sf.anathema.lib.exception.PersistenceException;
@@ -59,6 +60,11 @@ public class SpecialCharmPersister implements ISpecialCharmPersister {
         public void visitTraitCapModifyingCharm(ITraitCapModifyingCharm charm)
         {
           persisterByCharm.put(getCharm(charm.getCharmId(), charmTree), new TraitCapModifyingCharmPersister());
+        }
+        
+        public void visitTraitBoostingCharm(ITraitBoostingCharm charm)
+        {
+        	visitMultiLearnableCharm(charm);
         }
       });
     }

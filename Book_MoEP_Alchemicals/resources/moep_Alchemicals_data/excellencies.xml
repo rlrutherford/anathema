@@ -105,6 +105,7 @@
           <genericCharmAttribute attribute="Excellency" />
           <charmAttribute attribute="Mortal" />
           <charmAttribute attribute="Stackable" visualize="true" />
+          <traitBoosting limitingTrait="Essence" multiplier=".5"/>
           <source source="Alchemicals2nd" page="120" />
      </genericCharm>
      <genericCharm id="Alchemical.5thAugmentation" exalt="Alchemical">

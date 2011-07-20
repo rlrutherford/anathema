@@ -6,6 +6,7 @@ import net.sf.anathema.lib.util.Identificate;
 public interface IExtendedCharmData extends ICharmData {
   public static final IIdentificate COMBO_BASIC_ATTRIBUTE = new Identificate("Combo-Basic"); //$NON-NLS-1$
   public static final IIdentificate COMBO_OK_ATTRIBUTE = new Identificate("Combo-OK"); //$NON-NLS-1$
+  public static final IIdentificate NO_ARRAY_ATTRIBUTE = new Identificate("NoArray"); //$NON-NLS-1$
   public static final IIdentificate COMPULSION_ATTRIBUTE = new Identificate("Compulsion"); //$NON-NLS-1$
   public static final IIdentificate COUNTERATTACK_ATTRIBUTE = new Identificate("Counterattack"); //$NON-NLS-1$
   public static final IIdentificate CRIPPLING_ATTRIBUTE = new Identificate("Crippling"); //$NON-NLS-1$

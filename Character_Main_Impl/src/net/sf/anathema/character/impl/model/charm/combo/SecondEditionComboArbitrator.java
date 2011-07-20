@@ -7,10 +7,11 @@ import net.sf.anathema.character.generic.magic.charms.type.CharmType;
 public class SecondEditionComboArbitrator extends ComboArbitrator {
 
   @Override
-  protected boolean isCharmLegalByRules(ICharm charm) {
+  protected boolean isCharmLegalByRules(ICharm charm, boolean arrayRules) {
     boolean comboBasic = isComboBasic(charm);
     boolean comboOk = charm.hasAttribute(IExtendedCharmData.COMBO_OK_ATTRIBUTE);
-    return comboBasic || comboOk;
+    boolean noArray = charm.hasAttribute(IExtendedCharmData.NO_ARRAY_ATTRIBUTE);
+    return comboBasic || comboOk || (arrayRules && !noArray);
   }
 
   @Override

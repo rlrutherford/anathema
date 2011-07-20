@@ -20,27 +20,42 @@ public abstract class ComboArbitrator implements IComboArbitrator {
     supplementalCharmRules.setCrossPrerequisiteTypeComboAllowed(allowed);
     reflexiveCharmRules.setCrossPrerequisiteTypeComboAllowed(allowed);
   }
+  
+  public boolean isCharmComboLegal(ICharm charm)
+  {
+	return isCharmComboLegal(charm, false);
+  }
 
-  public boolean isCharmComboLegal(ICharm charm) {
-    boolean isLegal = isCharmLegalByRules(charm);
+  public boolean isCharmComboLegal(ICharm charm, boolean arrayRules) {
+    boolean isLegal = isCharmLegalByRules(charm, arrayRules);
     return charm.getComboRules().isComboAllowed(isLegal);
   }
 
-  protected abstract boolean isCharmLegalByRules(ICharm charm);
+  protected abstract boolean isCharmLegalByRules(ICharm charm, boolean arrayRules);
+  
+  public boolean canBeAddedToCombo(ICombo combo, ICharm charm)
+  {
+	  return canBeAddedToCombo(combo, charm, false);
+  }
 
-  public boolean canBeAddedToCombo(ICombo combo, ICharm charm) {
-    boolean legal = isCharmComboLegal(charm);
+  public boolean canBeAddedToCombo(ICombo combo, ICharm charm, boolean arrayRules) {
+    boolean legal = isCharmComboLegal(charm, arrayRules);
     for (ICharm comboCharm : combo.getCharms()) {
       legal = legal && isComboLegal(comboCharm, charm);
     }
     return legal;
   }
+  
+  public boolean isComboLegal(final ICharm charm1, final ICharm charm2)
+  {
+	return isComboLegal(charm1, charm2, false);
+  }
 
-  public boolean isComboLegal(final ICharm charm1, final ICharm charm2) {
+  public boolean isComboLegal(final ICharm charm1, final ICharm charm2, boolean arrayRules) {
     if (charm1 == charm2) {
       return false;
     }
-    if (!isCharmComboLegal(charm1) || !isCharmComboLegal(charm2)) {
+    if (!isCharmComboLegal(charm1, arrayRules) || !isCharmComboLegal(charm2, arrayRules)) {
       return false;
     }
     if (specialRestrictionsApply(charm1, charm2) || specialRestrictionsApply(charm2, charm1)) {

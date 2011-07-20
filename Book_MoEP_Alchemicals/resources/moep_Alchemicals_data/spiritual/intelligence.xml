@@ -13,6 +13,7 @@
 		<upgradeable requiresBase="false">
 			<upgrade name="WeaveShreddingParadoxEngine" xpCost="12"/>
 		</upgradeable>
+		<charmAttribute attribute="NoArray"/>
 		<charmAttribute attribute="NoRemoval"/>
 		<charmAttribute attribute="Obvious" visualize="true"/>
 		<charmAttribute attribute="Exemplar1" visualize="true"/>
@@ -32,6 +33,7 @@
 			<upgrade name="WeaveShreddingParadoxEngineSorcery" xpCost="12"/>
 			<upgrade name="WeaveShreddingParadoxEngineNecromancy" xpCost="12"/>
 		</upgradeable>
+		<charmAttribute attribute="NoArray"/>
 		<charmAttribute attribute="NoRemoval"/>
 		<charmAttribute attribute="Obvious" visualize="true"/>
 		<charmAttribute attribute="Exemplar1" visualize="true"/>

@@ -6,4 +6,6 @@ import net.sf.anathema.character.model.charm.ICombo;
 public interface IComboArbitrator extends IComboRules {
 
   public boolean canBeAddedToCombo(ICombo combo, ICharm charm);
+	
+  public boolean canBeAddedToCombo(ICombo combo, ICharm charm, boolean arrayRules);
 }

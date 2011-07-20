@@ -6,7 +6,7 @@ import net.sf.anathema.character.generic.magic.charms.duration.SimpleDuration;
 public class FirstEditionComboArbitrator extends ComboArbitrator {
 
   @Override
-  protected boolean isCharmLegalByRules(ICharm charm) {
+  protected boolean isCharmLegalByRules(ICharm charm, boolean arrayRules) {
     return charm.getDuration() == SimpleDuration.INSTANT_DURATION;
   }
 }

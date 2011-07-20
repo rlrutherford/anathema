@@ -92,7 +92,7 @@ public class ComboConfiguration implements IComboConfiguration {
   }
 
   public void addCharmToCombo(ICharm charm) {
-    if (rules.canBeAddedToCombo(getEditCombo(), charm)) {
+    if (rules.canBeAddedToCombo(getEditCombo(), charm, useArrayRules)) {
       getEditCombo().addCharm(charm, context.getBasicCharacterContext().isExperienced());
     }
     else {
@@ -211,7 +211,7 @@ public class ComboConfiguration implements IComboConfiguration {
   }
 
   public boolean isComboLegal(ICharm charm) {
-    return rules.canBeAddedToCombo(getEditCombo(), charm);
+    return rules.canBeAddedToCombo(getEditCombo(), charm, useArrayRules);
   }
 
   public void deleteCombo(ICombo combo) {

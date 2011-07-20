@@ -29,4 +29,11 @@ public interface IExtendedCharmData extends ICharmData {
   public static final IIdentificate WAR_ATTRIBUTE = new Identificate("War"); //$NON-NLS-1$
 
   public static final IIdentificate EXCLUSIVE_ATTRIBUTE = new Identificate("Exclusive"); //$NON-NLS-1$
+  
+  public static final IIdentificate EXEMPLAR_1_ATTRIBUTE = new Identificate("Exemplar1");
+  public static final IIdentificate EXEMPLAR_2_ATTRIBUTE = new Identificate("Exemplar2");
+  public static final IIdentificate EXEMPLAR_3_ATTRIBUTE = new Identificate("Exemplar3");
+  public static final IIdentificate EXEMPLAR_4_ATTRIBUTE = new Identificate("Exemplar4");
+  public static final IIdentificate EXEMPLAR_5_ATTRIBUTE = new Identificate("Exemplar5");
+  
 }

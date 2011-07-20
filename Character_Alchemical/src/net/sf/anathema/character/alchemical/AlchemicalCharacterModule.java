@@ -11,6 +11,7 @@ import net.sf.anathema.character.generic.impl.caste.CasteCollection;
 import net.sf.anathema.character.generic.impl.rules.ExaltedEdition;
 import net.sf.anathema.character.generic.impl.traits.EssenceTemplate;
 import net.sf.anathema.character.generic.type.CharacterType;
+import net.sf.anathema.character.library.virtueflaw.persistence.VirtueFlawPersister;
 import net.sf.anathema.character.reporting.CharacterReportingModule;
 import net.sf.anathema.character.reporting.CharacterReportingModuleObject;
 import net.sf.anathema.character.reporting.sheet.PdfEncodingRegistry;
@@ -22,6 +23,10 @@ import net.sf.anathema.character.alchemical.slots.CharmSlotsTemplateParser;
 import net.sf.anathema.character.alchemical.slots.model.CharmSlotsModelFactory;
 import net.sf.anathema.character.alchemical.slots.persistence.CharmSlotsPersisterFactory;
 import net.sf.anathema.character.alchemical.slots.view.CharmSlotsViewFactory;
+import net.sf.anathema.character.alchemical.virtueflaw.AlchemicalVirtueFlawModelFactory;
+import net.sf.anathema.character.alchemical.virtueflaw.AlchemicalVirtueFlawParser;
+import net.sf.anathema.character.alchemical.virtueflaw.AlchemicalVirtueFlawTemplate;
+import net.sf.anathema.character.alchemical.virtueflaw.AlchemicalVirtueFlawViewFactory;
 import net.sf.anathema.lib.registry.IIdentificateRegistry;
 import net.sf.anathema.lib.registry.IRegistry;
 import net.sf.anathema.lib.resources.IResources;
@@ -39,6 +44,9 @@ public class AlchemicalCharacterModule extends NullObjectCharacterModuleAdapter 
 	    characterGenerics.getAdditionalTemplateParserRegistry().register(
 	            CharmSlotsTemplate.TEMPLATE_ID,
 	            new CharmSlotsTemplateParser());
+	    characterGenerics.getAdditionalTemplateParserRegistry().register(
+	            AlchemicalVirtueFlawTemplate.TEMPLATE_ID,
+	            new AlchemicalVirtueFlawParser());
 	    characterGenerics.getCasteCollectionRegistry().register(
 	            CharacterType.ALCHEMICAL,
 	            new CasteCollection(AlchemicalCaste.values()));
@@ -67,8 +75,7 @@ public class AlchemicalCharacterModule extends NullObjectCharacterModuleAdapter 
     IRegistry<String, IAdditionalViewFactory> additionalViewFactoryRegistry = characterGenerics.getAdditionalViewFactoryRegistry();
     IRegistry<String, IAdditionalPersisterFactory> persisterFactory = characterGenerics.getAdditonalPersisterFactoryRegistry();
     registerCharmSlots(additionalModelFactoryRegistry, additionalViewFactoryRegistry, persisterFactory);
-    //registerFlawedFate(additionalModelFactoryRegistry, additionalViewFactoryRegistry, persisterFactory);
-    //registerParadox(additionalModelFactoryRegistry, additionalViewFactoryRegistry, persisterFactory);
+    registerVirtueFlaw(additionalModelFactoryRegistry, additionalViewFactoryRegistry, persisterFactory);
   }
   
   private void registerCharmSlots(
@@ -79,6 +86,15 @@ public class AlchemicalCharacterModule extends NullObjectCharacterModuleAdapter 
 	    additionalModelFactoryRegistry.register(templateId, new CharmSlotsModelFactory());
 	    additionalViewFactoryRegistry.register(templateId, new CharmSlotsViewFactory());
 	    persisterFactory.register(templateId, new CharmSlotsPersisterFactory());
+	  }
+  
+  private void registerVirtueFlaw(
+	      IRegistry<String, IAdditionalModelFactory> additionalModelFactoryRegistry,
+	      IRegistry<String, IAdditionalViewFactory> additionalViewFactoryRegistry,
+	      IRegistry<String, IAdditionalPersisterFactory> persisterFactory) {
+	    String templateId = AlchemicalVirtueFlawTemplate.TEMPLATE_ID;
+	    additionalModelFactoryRegistry.register(templateId, new AlchemicalVirtueFlawModelFactory());
+	    additionalViewFactoryRegistry.register(templateId, new AlchemicalVirtueFlawViewFactory());
 	  }
   
   @Override

@@ -9,6 +9,7 @@
     <presentation uses="template/LunarPresentation.template"/>
     <additionalTemplates>
     	<template id="Alchemical.CharmSlots" dedicated="4" generic="4"/>
+    	<template id="Alchemical.VirtueFlaw"/>
     </additionalTemplates>
     <additionalRules>
     	<useArrayComboRules value="true"/>

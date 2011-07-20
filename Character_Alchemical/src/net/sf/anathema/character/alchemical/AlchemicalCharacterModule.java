@@ -11,7 +11,7 @@ import net.sf.anathema.character.generic.impl.caste.CasteCollection;
 import net.sf.anathema.character.generic.impl.rules.ExaltedEdition;
 import net.sf.anathema.character.generic.impl.traits.EssenceTemplate;
 import net.sf.anathema.character.generic.type.CharacterType;
-import net.sf.anathema.character.library.virtueflaw.persistence.VirtueFlawPersister;
+import net.sf.anathema.character.library.virtueflaw.persistence.DefaultVirtueFlawPersisterFactory;
 import net.sf.anathema.character.reporting.CharacterReportingModule;
 import net.sf.anathema.character.reporting.CharacterReportingModuleObject;
 import net.sf.anathema.character.reporting.sheet.PdfEncodingRegistry;
@@ -95,6 +95,7 @@ public class AlchemicalCharacterModule extends NullObjectCharacterModuleAdapter 
 	    String templateId = AlchemicalVirtueFlawTemplate.TEMPLATE_ID;
 	    additionalModelFactoryRegistry.register(templateId, new AlchemicalVirtueFlawModelFactory());
 	    additionalViewFactoryRegistry.register(templateId, new AlchemicalVirtueFlawViewFactory());
+	    persisterFactory.register(templateId, new DefaultVirtueFlawPersisterFactory());
 	  }
   
   @Override

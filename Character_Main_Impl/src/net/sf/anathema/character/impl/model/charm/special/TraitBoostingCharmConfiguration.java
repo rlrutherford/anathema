@@ -8,11 +8,9 @@ import net.sf.anathema.character.generic.magic.charms.special.ITraitBoostingChar
 import net.sf.anathema.character.library.trait.DefaultTrait;
 import net.sf.anathema.character.model.charm.ICharmConfiguration;
 import net.sf.anathema.character.model.charm.special.ITraitBoostingCharmConfiguration;
-import net.sf.anathema.lib.control.GenericControl;
 
 public class TraitBoostingCharmConfiguration extends MultiLearnableCharmConfiguration implements ITraitBoostingCharmConfiguration
 {
-	private final GenericControl<ISpecialCharmLearnListener> control = new GenericControl<ISpecialCharmLearnListener>();
 	private final ICharacterModelContext context;
 	private final ITraitBoostingCharm specialCharm;
 	private final ICharm charm;
@@ -30,7 +28,7 @@ public class TraitBoostingCharmConfiguration extends MultiLearnableCharmConfigur
 		this.context = context;
 		this.charm = charm;
 		
-		control.addListener(new ISpecialCharmLearnListener()
+		addSpecialCharmLearnListener(new ISpecialCharmLearnListener()
 		{
 			@Override
 			public void learnCountChanged(int newValue)
@@ -39,11 +37,6 @@ public class TraitBoostingCharmConfiguration extends MultiLearnableCharmConfigur
 				lastModifier = newValue;
 			}
 		});
-	}
-
-	@Override
-	public void addSpecialCharmLearnListener(ISpecialCharmLearnListener listener) {
-		control.addListener(listener);
 	}
 	
 	@Override

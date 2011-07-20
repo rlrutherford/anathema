@@ -27,8 +27,9 @@ public class UpgradableCharm extends MultipleEffectCharm implements IUpgradableC
 	private final Map<String, Integer> traitMins;
 	private final Map<String, ITraitType> traits;
 	private final boolean requiresBase;
+	private final boolean isComplex;
 	
-	public UpgradableCharm(String charmId, String[] effectIds, boolean requiresBase,
+	public UpgradableCharm(String charmId, boolean complex, String[] effectIds, boolean requiresBase,
 			Map<String, Integer> bpCosts, Map<String, Integer> xpCosts,
 			Map<String, Integer> essenceMins, Map<String, Integer> traitMins,
 			Map<String, ITraitType> traits)
@@ -40,6 +41,7 @@ public class UpgradableCharm extends MultipleEffectCharm implements IUpgradableC
 		this.traitMins = traitMins;
 		this.traits = traits;
 		this.requiresBase = requiresBase;
+		this.isComplex = complex;
 	}
 	
 	  public void accept(ISpecialCharmVisitor visitor) {
@@ -50,7 +52,7 @@ public class UpgradableCharm extends MultipleEffectCharm implements IUpgradableC
 			  IGenericTraitCollection traitCollection,
 			  ICharmLearnableArbitrator arbitrator,
 			  ICharm charm) {
-		if (upgradeList.isEmpty())
+		upgradeList.clear();
 	    for (String id : effectIds) {
 	      Integer bpCost = bpCosts.get(id);
 	      Integer xpCost = xpCosts.get(id);
@@ -96,7 +98,7 @@ public class UpgradableCharm extends MultipleEffectCharm implements IUpgradableC
 	  {
 		  int total = 0;
 		  for (Upgrade upgrade : upgradeList)
-			  total += upgrade.isCreationLearned() ? upgrade.getBPCost() : 0;
+			  total += upgrade.isCreationLearned() && !upgrade.isCharm() ? upgrade.getBPCost() : 0;
 		  return total;
 	  }
 	  
@@ -127,9 +129,31 @@ public class UpgradableCharm extends MultipleEffectCharm implements IUpgradableC
 		  return total;
 	  }
 	  
+	  public void learnFirst()
+	  {
+		  for (Upgrade upgrade : upgradeList)
+			  if (upgrade.isCharm())
+			  {
+				  upgrade.setLearned(true);
+				  return;
+			  }
+	  }
+	  
+	  public void forgetCharms()
+	  {
+		  for (Upgrade upgrade : upgradeList)
+			  if (upgrade.isCharm())
+				  upgrade.setLearned(false);
+	  }
+	  
 	  public boolean requiresBase()
 	  {
 		  return requiresBase;
+	  }
+	  
+	  public boolean isComplex()
+	  {
+		  return isComplex;
 	  }
 	  
 	  private class Upgrade extends Subeffect

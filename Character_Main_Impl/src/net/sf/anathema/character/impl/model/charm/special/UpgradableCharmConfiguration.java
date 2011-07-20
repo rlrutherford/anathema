@@ -20,11 +20,15 @@ public class UpgradableCharmConfiguration extends MultipleEffectCharmConfigurati
 	@Override
 	public void learn(boolean experienced)
 	{
+		if (upgrade.isComplex() && upgrade.getCreationCharmCount() == 0
+				&& upgrade.getExperiencedCharmCount() == 0)
+			upgrade.learnFirst();
 	}
 
 	@Override
 	public void forget()
 	{
+		upgrade.forgetCharms();
 	}
 	  
 	public int getUpgradeBPCost()
@@ -52,4 +56,9 @@ public class UpgradableCharmConfiguration extends MultipleEffectCharmConfigurati
 		  return upgrade.getCreationCharmCount() == 0 &&
 		  		 upgrade.getExperiencedCharmCount() == 0;
 	  }
+	
+	public boolean isComplex()
+	{
+		return upgrade.isComplex();
+	}
 }

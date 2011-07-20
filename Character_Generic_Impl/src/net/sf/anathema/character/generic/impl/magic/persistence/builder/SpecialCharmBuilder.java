@@ -302,6 +302,7 @@ public class SpecialCharmBuilder
 		Map<String, Integer> essenceMins = new HashMap<String, Integer>();
 		Map<String, Integer> traitMins = new HashMap<String, Integer>();
 		Map<String, ITraitType> traits = new HashMap<String, ITraitType>();
+		boolean isComplex = false;
 		
 		for (Object upgradeObj : upgradableElement.elements(TAG_UPGRADE))
 		{
@@ -333,10 +334,11 @@ public class SpecialCharmBuilder
 			Element effect = (Element)effectObj;
 			String name = effect.attributeValue(ATTRIB_NAME);
 			upgrades.add(name);
+			isComplex = true;
 		}
 		String[] upgradeArray = new String[upgrades.size()];
 		upgrades.toArray(upgradeArray);
-		return new UpgradableCharm(id, upgradeArray, requiresBase,
+		return new UpgradableCharm(id, isComplex, upgradeArray, requiresBase,
 				bpCosts, xpCosts, essenceMins, traitMins, traits);
 	}
 	

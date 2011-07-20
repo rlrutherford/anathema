@@ -9,4 +9,6 @@ public interface IUpgradableCharmConfiguration extends IMultipleEffectCharmConfi
 	public int getCreationCharmCount();
 	
 	public int getExperiencedCharmCount();
+	
+	public boolean isComplex();
 }

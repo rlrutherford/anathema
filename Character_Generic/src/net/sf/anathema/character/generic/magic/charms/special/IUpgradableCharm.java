@@ -11,4 +11,10 @@ public interface IUpgradableCharm extends IMultipleEffectCharm
 	public int getExperiencedCharmCount();
 	
 	public boolean requiresBase();
+	
+	public boolean isComplex();
+	
+	public void learnFirst();
+	
+	public void forgetCharms();
 }

@@ -55,8 +55,20 @@ public class Combo implements ICombo {
 
   public void removeCharms(ICharm[] charms) {
     List<ICharm> removal = Arrays.asList(charms);
-    creationCharmList.removeAll(removal);
-    experiencedCharmList.removeAll(removal);
+    for (ICharm charm : charms)
+    	for (ICharm otherCharm : creationCharmList)
+    		if (charm.equals(otherCharm))
+    		{
+    			creationCharmList.remove(charm);
+    			break;
+    		}
+    for (ICharm charm : charms)
+    	for (ICharm otherCharm : experiencedCharmList)
+    		if (charm.equals(otherCharm))
+    		{
+    			experiencedCharmList.remove(charm);
+    			break;
+    		}
     if (simpleCharm != null && removal.contains(simpleCharm)) {
       simpleCharm = null;
     }

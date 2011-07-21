@@ -6,6 +6,7 @@ import net.sf.anathema.character.generic.magic.charms.ICharmTypeVisitor;
 import net.sf.anathema.character.generic.magic.charms.IComboRestrictions;
 import net.sf.anathema.character.generic.magic.charms.type.CharmType;
 import net.sf.anathema.character.model.charm.ICombo;
+import net.sf.anathema.character.model.charm.IComboConfiguration;
 
 public abstract class ComboArbitrator implements IComboArbitrator {
 
@@ -13,7 +14,13 @@ public abstract class ComboArbitrator implements IComboArbitrator {
   private final IComboRules extraActionCharmRules = new ExtraActionCharmComboRules();
   private final IComboRules supplementalCharmRules = new SupplementalCharmComboRules();
   private final IComboRules reflexiveCharmRules = new ReflexiveCharmComboRules();
-
+  private final IComboConfiguration config;
+  
+  public ComboArbitrator(IComboConfiguration config)
+  {
+	  this.config = config;
+  }
+  
   public void setCrossPrerequisiteTypeComboAllowed(boolean allowed) {
     simpleCharmRules.setCrossPrerequisiteTypeComboAllowed(allowed);
     extraActionCharmRules.setCrossPrerequisiteTypeComboAllowed(allowed);
@@ -41,7 +48,7 @@ public abstract class ComboArbitrator implements IComboArbitrator {
   public boolean canBeAddedToCombo(ICombo combo, ICharm charm, boolean arrayRules) {
     boolean legal = isCharmComboLegal(charm, arrayRules);
     for (ICharm comboCharm : combo.getCharms()) {
-      legal = legal && isComboLegal(comboCharm, charm);
+      legal = legal && isComboLegal(comboCharm, charm, arrayRules);
     }
     return legal;
   }
@@ -52,7 +59,7 @@ public abstract class ComboArbitrator implements IComboArbitrator {
   }
 
   public boolean isComboLegal(final ICharm charm1, final ICharm charm2, boolean arrayRules) {
-    if (charm1 == charm2) {
+    if (charm1 == charm2 && !config.allowRepeats(charm1)) {
       return false;
     }
     if (!isCharmComboLegal(charm1, arrayRules) || !isCharmComboLegal(charm2, arrayRules)) {
@@ -61,7 +68,7 @@ public abstract class ComboArbitrator implements IComboArbitrator {
     if (specialRestrictionsApply(charm1, charm2) || specialRestrictionsApply(charm2, charm1)) {
       return false;
     }
-    return handleComboRules(charm1, charm2) && handleComboRules(charm2, charm1);
+    return handleComboRules(charm1, charm2, arrayRules) && handleComboRules(charm2, charm1, arrayRules);
   }
 
   protected boolean specialRestrictionsApply(ICharm charm1, ICharm charm2) {
@@ -75,7 +82,7 @@ public abstract class ComboArbitrator implements IComboArbitrator {
     return false;
   }
 
-  private boolean handleComboRules(final ICharm charm1, final ICharm charm2) {
+  private boolean handleComboRules(final ICharm charm1, final ICharm charm2, final boolean arrayRules) {
     final boolean[] legal = new boolean[1];
     charm1.getCharmTypeModel().getCharmType().accept(new ICharmTypeVisitor() {
       public void visitSimple(CharmType visitedType) {
@@ -95,7 +102,7 @@ public abstract class ComboArbitrator implements IComboArbitrator {
       }
 
       public void visitPermanent(CharmType visitedType) {
-        legal[0] = false;
+        legal[0] = arrayRules;
       }
 
       public void visitSpecial(CharmType visitedType) {

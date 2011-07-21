@@ -14,6 +14,7 @@ import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.IGenericCombo;
 import net.sf.anathema.character.generic.magic.charms.ICharmAttribute;
 import net.sf.anathema.character.generic.magic.charms.ICharmAttributeRequirement;
+import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharmConfiguration;
 import net.sf.anathema.character.generic.traits.IFavorableGenericTrait;
 import net.sf.anathema.lib.control.change.ChangeControl;
 import net.sf.anathema.lib.control.change.IChangeListener;
@@ -210,12 +211,16 @@ public class CharmSlotsModel implements ICharmSlotsModel, IAdditionalModel
 		{
 			boolean isValid = true;
 			if (slot.getCombo() == null)
+			{
+				int allowedInstallations = getAllowedInstallations(charm);
 				for (CharmSlot otherSlots : slots)
-					if (otherSlots != slot && charm == otherSlots.getCharm() && otherSlots.getCombo() == null)
+					if (otherSlots != slot && charm == otherSlots.getCharm() && otherSlots.getCombo() == null &&
+						--allowedInstallations == 0)
 					{
 						isValid = false;
 						break;
 					}
+			}
 			if (!isValid)
 				continue;
 			if (canSlot(charm, slot))
@@ -224,6 +229,11 @@ public class CharmSlotsModel implements ICharmSlotsModel, IAdditionalModel
 		CharmPick[] array = new CharmPick[charms.size()];
 		charms.toArray(array);
 		return array;
+	}
+	
+	private int getAllowedInstallations(ICharm charm)
+	{
+		return context.getMagicCollection().getLearnCount(charm.getId());
 	}
 	
 	public boolean canSlot(ICharm charm, CharmSlot slot)

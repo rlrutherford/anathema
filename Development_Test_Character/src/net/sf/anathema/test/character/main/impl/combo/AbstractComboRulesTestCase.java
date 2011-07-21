@@ -18,7 +18,7 @@ public abstract class AbstractComboRulesTestCase extends BasicTestCase {
   @Override
   protected void setUp() throws Exception {
     super.setUp();
-    this.rules = new FirstEditionComboArbitrator();
+    this.rules = new FirstEditionComboArbitrator(null);
   }
 
   protected IComboRules getRules() {

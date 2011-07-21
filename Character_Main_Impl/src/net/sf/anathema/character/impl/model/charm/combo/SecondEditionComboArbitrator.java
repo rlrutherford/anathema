@@ -3,9 +3,15 @@ package net.sf.anathema.character.impl.model.charm.combo;
 import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.IExtendedCharmData;
 import net.sf.anathema.character.generic.magic.charms.type.CharmType;
+import net.sf.anathema.character.model.charm.IComboConfiguration;
 
 public class SecondEditionComboArbitrator extends ComboArbitrator {
 
+  public SecondEditionComboArbitrator(IComboConfiguration config)
+  {
+	  super(config);
+  }
+	
   @Override
   protected boolean isCharmLegalByRules(ICharm charm, boolean arrayRules) {
     boolean comboBasic = isComboBasic(charm);

@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.sf.anathema.character.generic.framework.additionaltemplate.model.ICharacterModelContext;
 import net.sf.anathema.character.generic.magic.ICharm;
+import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharmConfiguration;
 import net.sf.anathema.character.generic.rules.IEditionVisitor;
 import net.sf.anathema.character.generic.rules.IExaltedEdition;
 import net.sf.anathema.character.impl.model.charm.combo.FirstEditionComboArbitrator;
@@ -17,6 +18,7 @@ import net.sf.anathema.character.model.charm.ICombo;
 import net.sf.anathema.character.model.charm.IComboConfiguration;
 import net.sf.anathema.character.model.charm.IComboConfigurationListener;
 import net.sf.anathema.character.model.charm.learn.IComboLearnStrategy;
+import net.sf.anathema.character.model.charm.special.IMultiLearnableCharmConfiguration;
 import net.sf.anathema.lib.control.GenericControl;
 import net.sf.anathema.lib.control.IClosure;
 import net.sf.anathema.lib.control.change.IChangeListener;
@@ -37,7 +39,7 @@ public class ComboConfiguration implements IComboConfiguration {
   private ICombo originalCombo;
 
   public ComboConfiguration(
-      ICharmConfiguration charmConfiguration,
+      final ICharmConfiguration charmConfiguration,
       IComboLearnStrategy learnStrategy,
       IExaltedEdition edition,
       IExperiencePointConfiguration experiencePoints,
@@ -55,11 +57,11 @@ public class ComboConfiguration implements IComboConfiguration {
     final IComboArbitrator[] editionRules = new IComboArbitrator[1];
     edition.accept(new IEditionVisitor() {
       public void visitFirstEdition(IExaltedEdition visitedEdition) {
-        editionRules[0] = new FirstEditionComboArbitrator();
+        editionRules[0] = new FirstEditionComboArbitrator(ComboConfiguration.this);
       }
 
       public void visitSecondEdition(IExaltedEdition visitedEdition) {
-        editionRules[0] = new SecondEditionComboArbitrator();
+        editionRules[0] = new SecondEditionComboArbitrator(ComboConfiguration.this);
       }
     });
     this.rules = editionRules[0];
@@ -303,5 +305,38 @@ public class ComboConfiguration implements IComboConfiguration {
 	  ICharm[] charmArray = new ICharm[charms.size()];
 	  charms.toArray(charmArray);
 	  return charmArray;
+  }
+  
+  public String getAvaliableCharmDetail(ICharm charm)
+  {
+	  ISpecialCharmConfiguration config = charmConfiguration.getSpecialCharmConfiguration(charm.getId());
+	  if (config instanceof IMultiLearnableCharmConfiguration)
+	  {
+		  int remainingCount = config.getCurrentLearnCount() - countInCombo(charm);
+		  return remainingCount > 0 ? "(" + remainingCount + ")" : "";
+	  }
+	  return "";
+  }
+  
+  public boolean allowRepeats(ICharm charm)
+  {
+	  ISpecialCharmConfiguration config = charmConfiguration.getSpecialCharmConfiguration(charm.getId());
+	  if (config instanceof IMultiLearnableCharmConfiguration)
+		  return (config.getCurrentLearnCount() - countInCombo(charm)) > 0;
+	  return false;
+  }
+  
+  private int countInCombo(ICharm charm)
+  {
+	  int times = 0;
+	  for (ICharm otherCharm : editCombo.getCharms())
+		  if (charm == otherCharm)
+			  times++;
+	  return times;
+  }
+  
+  public boolean isUseArrayRules()
+  {
+	  return useArrayRules;
   }
 }

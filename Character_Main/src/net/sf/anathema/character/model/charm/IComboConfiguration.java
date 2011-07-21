@@ -46,4 +46,10 @@ public interface IComboConfiguration {
   public ICharm[] getCreationCharmPicks();
   
   public ICharm[] getExperiencedCharmPicks();
+  
+  public String getAvaliableCharmDetail(ICharm charm);
+  
+  public boolean isUseArrayRules();
+  
+  public boolean allowRepeats(ICharm charm);
 }

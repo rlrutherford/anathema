@@ -18,6 +18,7 @@ import net.sf.anathema.character.view.magic.IComboViewProperties;
 import net.sf.anathema.framework.presenter.resources.BasicUi;
 import net.sf.anathema.lib.gui.list.LegalityCheckListCellRenderer;
 import net.sf.anathema.lib.resources.IResources;
+import net.sf.anathema.lib.util.IIdentificate;
 
 public final class ComboViewProperties extends AbstractMagicLearnProperties implements IComboViewProperties {
   private final IComboConfiguration comboConfiguration;
@@ -113,6 +114,13 @@ public final class ComboViewProperties extends AbstractMagicLearnProperties impl
         renderComponent.setToolTipText(tooltipString);
         return renderComponent;
       }
+      
+      protected String getPrintName(IResources res, Object value) {
+  		return res.getString(((IIdentificate) value).getId()) +
+  				(comboConfiguration.isUseArrayRules() ? " " +
+  						comboConfiguration.getAvaliableCharmDetail((ICharm)value) :
+  						"");
+  	  }
     };
   }
 

@@ -21,7 +21,7 @@ public class ComboTest extends BasicTestCase {
   @Override
   protected void setUp() throws Exception {
     super.setUp();
-    this.comboRules = new FirstEditionComboArbitrator();
+    this.comboRules = new FirstEditionComboArbitrator(null);
     this.combo = new Combo();
   }
 

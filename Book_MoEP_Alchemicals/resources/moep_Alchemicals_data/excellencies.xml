@@ -105,6 +105,7 @@
           <genericCharmAttribute attribute="Excellency" />
           <charmAttribute attribute="Mortal" />
           <charmAttribute attribute="Stackable" visualize="true" />
+          <charmAttribute attribute="NoArray"/>
           <traitBoosting limitingTrait="Essence" multiplier=".5"/>
           <source source="Alchemicals2nd" page="120" />
      </genericCharm>
@@ -126,6 +127,7 @@
           <charmAttribute attribute="Mortal" />
           <charmAttribute attribute="Stackable" visualize="true" />
           <charmAttribute attribute="Obvious" visualize="true" />
+          <charmAttribute attribute="NoArray"/>
           <source source="Alchemicals2nd" page="120" />
      </genericCharm>
      <genericCharm id="Alchemical.6thAugmentation" exalt="Alchemical">
@@ -134,14 +136,15 @@
                <essence value="1" />
           </prerequisite>
           <cost>
-               <essence cost="3m" text=" [1m]" />
+               <essence cost="" text="[1m]" />
           </cost>
           <duration amount="1" unit="scene" />
-          <charmtype type="Simple"/>
+          <charmtype type="Permanent"/>
           <attunement essence="1"/>
           <genericCharmAttribute attribute="Excellency" />
           <charmAttribute attribute="Mortal" />
           <charmAttribute attribute="Internal" visualize="true" />
+          <charmAttribute attribute="NoArray"/>
           <upgradeable>
           	<effect name="Archery"/>
           	<effect name="Athletics"/>

@@ -19,13 +19,13 @@ public class SimpleCharmComboRulesTest extends AbstractComboRulesTestCase {
   public void testCharmComboTwoSimple() {
     ICharm charm1 = DummyCharmUtilities.createCharm(CharmType.Simple);
     ICharm charm2 = DummyCharmUtilities.createCharm(CharmType.Simple);
-    assertFalse(rules.isComboLegal(charm1, charm2));
+    assertFalse(rules.isComboLegal(charm1, charm2, false));
   }
 
   public void testCharmComboSimpleReflexive() throws Exception {
     ICharm charm1 = DummyCharmUtilities.createCharm(CharmType.Simple);
     ICharm charm2 = DummyCharmUtilities.createCharm(CharmType.Reflexive);
-    assertTrue(rules.isComboLegal(charm1, charm2));
+    assertTrue(rules.isComboLegal(charm1, charm2, false));
   }
 
   public void testCharmComboSimpleCharmWithSupplementalOfSameAbility() throws Exception {

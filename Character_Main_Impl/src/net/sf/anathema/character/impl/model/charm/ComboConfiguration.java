@@ -266,7 +266,18 @@ public class ComboConfiguration implements IComboConfiguration {
 	  {
 		  if (originalCombo == null ||
 			  originalCombo.contains(charm))
+		  {
+			  ISpecialCharmConfiguration config = charmConfiguration.getSpecialCharmConfiguration(charm);
+			  if (config != null)
+			  {
+				  if (config instanceof IMultiLearnableCharmConfiguration)
+				  {
+					  ((IMultiLearnableCharmConfiguration)config).setCurrentLearnCount(config.getCurrentLearnCount() - countInCombo(charm));
+					  continue;
+				  }
+			  }
 			  charmConfiguration.getGroup(charm).forgetCharm(charm, isExperienceLearned(editCombo, charm));
+		  }
 	  }
   }
   

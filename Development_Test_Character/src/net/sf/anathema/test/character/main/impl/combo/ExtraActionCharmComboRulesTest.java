@@ -19,13 +19,13 @@ public class ExtraActionCharmComboRulesTest extends AbstractComboRulesTestCase {
   public void testCharmComboTwoExtraAction() throws Exception {
     ICharm charm1 = DummyCharmUtilities.createCharm(CharmType.ExtraAction);
     ICharm charm2 = DummyCharmUtilities.createCharm(CharmType.ExtraAction);
-    assertFalse(rules.isComboLegal(charm1, charm2));
+    assertFalse(rules.isComboLegal(charm1, charm2, false));
   }
 
   public void testCharmComboExtraActionReflexive() throws Exception {
     ICharm charm1 = DummyCharmUtilities.createCharm(CharmType.ExtraAction);
     ICharm charm2 = DummyCharmUtilities.createCharm(CharmType.Reflexive);
-    assertTrue(rules.isComboLegal(charm1, charm2));
+    assertTrue(rules.isComboLegal(charm1, charm2, false));
   }
 
   public void testCharmComboExtraActionCharmWithSupplementalOfSameAbility() throws Exception {

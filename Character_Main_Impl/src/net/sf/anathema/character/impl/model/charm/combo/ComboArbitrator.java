@@ -86,19 +86,19 @@ public abstract class ComboArbitrator implements IComboArbitrator {
     final boolean[] legal = new boolean[1];
     charm1.getCharmTypeModel().getCharmType().accept(new ICharmTypeVisitor() {
       public void visitSimple(CharmType visitedType) {
-        legal[0] = simpleCharmRules.isComboLegal(charm1, charm2);
+        legal[0] = simpleCharmRules.isComboLegal(charm1, charm2, arrayRules);
       }
 
       public void visitExtraAction(CharmType visitedType) {
-        legal[0] = extraActionCharmRules.isComboLegal(charm1, charm2);
+        legal[0] = extraActionCharmRules.isComboLegal(charm1, charm2, arrayRules);
       }
 
       public void visitReflexive(CharmType visitedType) {
-        legal[0] = reflexiveCharmRules.isComboLegal(charm1, charm2);
+        legal[0] = reflexiveCharmRules.isComboLegal(charm1, charm2, arrayRules);
       }
 
       public void visitSupplemental(CharmType visitedType) {
-        legal[0] = supplementalCharmRules.isComboLegal(charm1, charm2);
+        legal[0] = supplementalCharmRules.isComboLegal(charm1, charm2, arrayRules);
       }
 
       public void visitPermanent(CharmType visitedType) {

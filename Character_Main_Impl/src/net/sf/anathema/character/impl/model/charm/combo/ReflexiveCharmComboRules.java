@@ -11,7 +11,7 @@ public class ReflexiveCharmComboRules extends AbstractComboRules {
     this.crossPrerequisite = allowed;
   }
 
-  public boolean isComboLegal(final ICharm reflexiveCharm, final ICharm otherCharm) {
+  public boolean isComboLegal(final ICharm reflexiveCharm, final ICharm otherCharm, final boolean arrayRules) {
     final boolean[] legal = new boolean[1];
     otherCharm.getCharmTypeModel().getCharmType().accept(new ICharmTypeVisitor() {
       public void visitSimple(CharmType visitedType) {
@@ -39,7 +39,7 @@ public class ReflexiveCharmComboRules extends AbstractComboRules {
       }
 
       public void visitPermanent(CharmType visitedType) {
-        legal[0] = false;
+        legal[0] = arrayRules;
       }
 
       public void visitSpecial(CharmType visitedType) {

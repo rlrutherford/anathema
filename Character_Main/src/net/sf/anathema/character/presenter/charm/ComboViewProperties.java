@@ -13,6 +13,7 @@ import net.sf.anathema.character.generic.framework.magic.stringbuilder.ICharmInf
 import net.sf.anathema.character.generic.framework.magic.view.AbstractMagicLearnProperties;
 import net.sf.anathema.character.generic.framework.resources.CharacterUI;
 import net.sf.anathema.character.generic.magic.ICharm;
+import net.sf.anathema.character.generic.magic.charms.special.ISubeffect;
 import net.sf.anathema.character.model.charm.IComboConfiguration;
 import net.sf.anathema.character.view.magic.IComboViewProperties;
 import net.sf.anathema.framework.presenter.resources.BasicUi;
@@ -23,11 +24,15 @@ import net.sf.anathema.lib.util.IIdentificate;
 public final class ComboViewProperties extends AbstractMagicLearnProperties implements IComboViewProperties {
   private final IComboConfiguration comboConfiguration;
   private final ICharmInfoStringBuilder charmInfoStringProvider;
+  private final ComboConfigurationPresenter presenter;
 
-  ComboViewProperties(IResources resources, IComboConfiguration comboConfiguration) {
+  ComboViewProperties(IResources resources,
+		  IComboConfiguration comboConfiguration,
+		  ComboConfigurationPresenter presenter) {
     super(resources);
     this.charmInfoStringProvider = new CharmInfoStringBuilder(getResources());
     this.comboConfiguration = comboConfiguration;
+    this.presenter = presenter;
   }
   
   public boolean canFinalizeWithXP()
@@ -55,7 +60,7 @@ public final class ComboViewProperties extends AbstractMagicLearnProperties impl
     if (object == null) {
       return false;
     }
-    return comboConfiguration.isComboLegal((ICharm) object);
+    return comboConfiguration.isComboLegal(getCharm(object));
   }
 
   @Override
@@ -65,7 +70,7 @@ public final class ComboViewProperties extends AbstractMagicLearnProperties impl
       
       @Override
       protected boolean isLegal(Object object) {
-        return comboConfiguration.isAllowedToRemove((ICharm) object);
+        return comboConfiguration.isAllowedToRemove(getCharm(object));
       }
 
       @Override
@@ -81,10 +86,20 @@ public final class ComboViewProperties extends AbstractMagicLearnProperties impl
             index,
             isSelected,
             cellHasFocus);
-        String tooltipString = charmInfoStringProvider.getInfoString((ICharm) value, null);
+        String tooltipString = charmInfoStringProvider.getInfoString(getCharm(value), null);
         renderComponent.setToolTipText(tooltipString);
         return renderComponent;
       }
+      
+      protected String getPrintName(IResources res, Object value, int index) {
+	    	  if (value instanceof ISubeffect)
+	      	  {
+	      			ISubeffect effect = (ISubeffect)value;
+	      			return res.getString(effect.getCharm().getId()) +
+	      			" (" + res.getString(effect.getId()) + ")";
+	      	  }
+    		  return res.getString(((IIdentificate) value).getId());
+    	  }
     };
   }
 
@@ -94,7 +109,7 @@ public final class ComboViewProperties extends AbstractMagicLearnProperties impl
 
       @Override
       protected boolean isLegal(Object object) {
-        return comboConfiguration.isComboLegal((ICharm) object);
+        return comboConfiguration.isComboLegal(getCharm(object));
       }
 
       @Override
@@ -110,18 +125,29 @@ public final class ComboViewProperties extends AbstractMagicLearnProperties impl
             index,
             isSelected,
             cellHasFocus);
-        String tooltipString = charmInfoStringProvider.getInfoString((ICharm) value, null);
+        String tooltipString = charmInfoStringProvider.getInfoString(getCharm(value), null);
         renderComponent.setToolTipText(tooltipString);
         return renderComponent;
       }
       
-      protected String getPrintName(IResources res, Object value) {
+      protected String getPrintName(IResources res, Object value, int index) {
+    	if (value instanceof ISubeffect)
+    	{
+    		ISubeffect effect = (ISubeffect)value;
+    		return res.getString(effect.getCharm().getId()) +
+			       " (" + res.getString(effect.getId()) + ")";
+    	}
   		return res.getString(((IIdentificate) value).getId()) +
-  				(comboConfiguration.isUseArrayRules() ? " " +
-  						comboConfiguration.getAvaliableCharmDetail((ICharm)value) :
-  						"");
+  			   presenter.getCharmTag((ICharm)value, index, false);
   	  }
     };
+  }
+  
+  private ICharm getCharm(Object obj)
+  {
+	  if (obj instanceof ISubeffect)
+		  return ((ISubeffect)obj).getCharm();
+	  return (ICharm)obj;
   }
 
   public int getAvailableListSelectionMode() {

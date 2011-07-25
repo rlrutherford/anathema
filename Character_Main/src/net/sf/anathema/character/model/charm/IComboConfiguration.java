@@ -1,11 +1,13 @@
 package net.sf.anathema.character.model.charm;
 
 import net.sf.anathema.character.generic.magic.ICharm;
+import net.sf.anathema.character.generic.magic.charms.special.ISubeffect;
+import net.sf.anathema.character.model.charm.special.IMultiLearnableCharmConfiguration;
 import net.sf.anathema.lib.control.change.IChangeListener;
 
 public interface IComboConfiguration {
 
-  public void addCharmToCombo(ICharm charm);
+  public void addCharmToCombo(ICharm charm, ISubeffect effect);
 
   public void addComboModelListener(IChangeListener listener);
 
@@ -47,9 +49,13 @@ public interface IComboConfiguration {
   
   public ICharm[] getExperiencedCharmPicks();
   
-  public String getAvaliableCharmDetail(ICharm charm);
-  
   public boolean isUseArrayRules();
   
   public boolean allowRepeats(ICharm charm);
+  
+  public void removeEffect(ICharm charm, ISubeffect effect);
+  
+  public ISubeffect[] getEffects(ICharm charm);
+  
+  public int getAllowedCount(ICharm charm, IMultiLearnableCharmConfiguration config, boolean removeBase);
 }

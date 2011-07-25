@@ -20,7 +20,7 @@ public abstract class LegalityCheckListCellRenderer extends
 	@Override
 	public Component getListCellRendererComponent(JList list, Object value,
 			int index, boolean isSelected, boolean cellHasFocus) {
-		String printName = getPrintName(resources, value);
+		String printName = getPrintName(resources, value, index);
 		boolean isLegal = isLegal(value);
 		boolean hasFocus = cellHasFocus && isLegal;
 		boolean selected = isSelected && isLegal;
@@ -31,6 +31,11 @@ public abstract class LegalityCheckListCellRenderer extends
 	}
 
 	protected abstract boolean isLegal(Object object);
+	
+	protected String getPrintName(IResources res, Object Value, int index)
+	{
+		return getPrintName(res, Value);
+	}
 
 	protected String getPrintName(IResources res, Object value) {
 		return res.getString(((IIdentificate) value).getId());

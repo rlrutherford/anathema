@@ -1,6 +1,7 @@
 package net.sf.anathema.character.generic.impl.magic.charm.special;
 
 import net.sf.anathema.character.generic.IBasicCharacterData;
+import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.charms.special.ISubeffect;
 import net.sf.anathema.lib.control.change.ChangeControl;
 import net.sf.anathema.lib.control.change.IChangeListener;
@@ -14,11 +15,21 @@ public class Subeffect extends Identificate implements ISubeffect {
   private boolean learned = false;
   private boolean creationLearned = false;
   private final ICondition learnable;
+  private final ICharm charm;
 
-  public Subeffect(String subeffectId, IBasicCharacterData data, ICondition learnable) {
+  public Subeffect(String subeffectId,
+		  ICharm charm,
+		  IBasicCharacterData data,
+		  ICondition learnable) {
     super(subeffectId);
     this.data = data;
     this.learnable = learnable;
+    this.charm = charm;
+  }
+  
+  public ICharm getCharm()
+  {
+	  return charm;
   }
 
   public void addChangeListener(IChangeListener listener) {

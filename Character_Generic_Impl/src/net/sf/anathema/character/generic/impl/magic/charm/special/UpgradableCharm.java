@@ -21,6 +21,7 @@ public class UpgradableCharm extends MultipleEffectCharm implements IUpgradableC
 	private final int NO_XP_UPGRADE = -1;
 	
 	List<Upgrade> upgradeList = new ArrayList<Upgrade>();
+	private ISubeffect[] charms;
 	private final Map<String, Integer> bpCosts;
 	private final Map<String, Integer> xpCosts;
 	private final Map<String, Integer> essenceMins;
@@ -53,19 +54,24 @@ public class UpgradableCharm extends MultipleEffectCharm implements IUpgradableC
 			  ICharmLearnableArbitrator arbitrator,
 			  ICharm charm) {
 		upgradeList.clear();
+		List<ISubeffect> charmList = new ArrayList<ISubeffect>();
 	    for (String id : effectIds) {
 	      Integer bpCost = bpCosts.get(id);
 	      Integer xpCost = xpCosts.get(id);
 	      Integer essenceMin = essenceMins.get(id);
 	      Integer traitMin = traitMins.get(id);
 	      ITraitType trait = traits.get(id);
-	      upgradeList.add(new Upgrade(id, data,
+	      Upgrade upgrade = new Upgrade(id, charm, data,
 	    		  buildLearnCondition(arbitrator, data, traitCollection,
 	    				  charm, bpCost != null, bpCost == null && xpCost == null,
 	    				  essenceMin, traitMin, trait),
 	    		  bpCost == null ? NO_BP_UPGRADE : bpCost,
-	    		  xpCost == null ? NO_XP_UPGRADE : xpCost));
+	    		  xpCost == null ? NO_XP_UPGRADE : xpCost);
+	      upgradeList.add(upgrade);
+	      if (upgrade.isCharm())
+	    	  charmList.add(upgrade);
 	    }
+	    charms = charmList.toArray(new ISubeffect[0]);
 	    return upgradeList.toArray(new ISubeffect[upgradeList.size()]);
 	  }
 
@@ -156,14 +162,19 @@ public class UpgradableCharm extends MultipleEffectCharm implements IUpgradableC
 		  return isComplex;
 	  }
 	  
+	  public ISubeffect[] getCharmEffects()
+	  {
+		  return charms;
+	  }
+	  
 	  private class Upgrade extends Subeffect
 	  {
 		  private int bpCost;
 		  private int xpCost;
 		  
-		public Upgrade(String subeffectId, IBasicCharacterData data,
+		public Upgrade(String subeffectId, ICharm charm, IBasicCharacterData data,
 				ICondition learnable, int bpCost, int xpCost) {
-			super(subeffectId, data, learnable);
+			super(subeffectId, charm, data, learnable);
 			this.bpCost = bpCost;
 			this.xpCost = xpCost;
 		}

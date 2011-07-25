@@ -190,6 +190,7 @@ public class MagicCostCalculator {
     	if (specialCharmConfiguration instanceof IUpgradableCharmConfiguration)
     	{
     		IUpgradableCharmConfiguration config = (IUpgradableCharmConfiguration)specialCharmConfiguration;
+
     		return (config.isComplex() ? 0 : 1) + config.getCreationCharmCount();
     	}
       return specialCharmConfiguration.getCreationLearnCount();

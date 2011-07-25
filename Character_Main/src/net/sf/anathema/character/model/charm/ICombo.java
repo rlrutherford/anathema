@@ -1,6 +1,7 @@
 package net.sf.anathema.character.model.charm;
 
 import net.sf.anathema.character.generic.magic.ICharm;
+import net.sf.anathema.character.generic.magic.charms.special.ISubeffect;
 import net.sf.anathema.lib.control.change.IChangeListener;
 import net.sf.anathema.lib.workflow.textualdescription.ITextualDescription;
 
@@ -33,4 +34,16 @@ public interface ICombo extends Cloneable {
   public void getValuesFrom(ICombo combo);
 
   public void addCharm(ICharm charm, boolean experienced);
+  
+  public ISubeffect[] getLearnedSubeffects(ICharm charm);
+  
+  public ISubeffect[] getCreationSubeffects();
+  
+  public ISubeffect[] getExperiencedSubeffects();
+  
+  public void addEffect(ICharm charm, ISubeffect effect, boolean experienced);
+  
+  public void removeEffect(ICharm charm, ISubeffect effect);
+  
+  public ISubeffect[] getEffects(ICharm charm);
 }

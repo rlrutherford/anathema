@@ -222,7 +222,7 @@ private ISpecialCharmPersister createSpecialCharmPersister(ICharmConfiguration c
       for (Object charmElementObject : comboElement.elements(TAG_CHARM)) {
         Element charmElement = (Element) charmElementObject;
         ICharm comboCharm = charms.getCharmById(charmElement.attributeValue(ATTRIB_NAME));
-        comboConfiguration.addCharmToCombo(comboCharm);
+        comboConfiguration.addCharmToCombo(comboCharm, null);
       }
       comboConfiguration.finalizeCombo(experienceLearned);
     }

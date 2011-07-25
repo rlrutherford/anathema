@@ -37,7 +37,7 @@ public class ElementalMultipleEffectCharm implements IMultipleEffectCharm {
 		  ICharm charm) {
     if (effectList.isEmpty()) {
       for (Elements element : Elements.values()) {
-        effectList.add(new ElementalSubeffect(element, data, buildLearnCondition(element, data, arbitrator, charm)));
+        effectList.add(new ElementalSubeffect(element, charm, data, buildLearnCondition(element, data, arbitrator, charm)));
       }
     }
     return effectList.toArray(new ISubeffect[effectList.size()]);
@@ -71,8 +71,8 @@ public class ElementalMultipleEffectCharm implements IMultipleEffectCharm {
   {
 	  private final Elements aspect;
 
-	  public ElementalSubeffect(Elements aspect, IBasicCharacterData data, ICondition learnable) {
-	    super(aspect.getId(), data, learnable);
+	  public ElementalSubeffect(Elements aspect, ICharm charm, IBasicCharacterData data, ICondition learnable) {
+	    super(aspect.getId(), charm, data, learnable);
 	    this.aspect = aspect;
 	  }
 

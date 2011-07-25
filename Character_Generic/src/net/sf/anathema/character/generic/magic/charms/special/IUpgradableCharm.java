@@ -17,4 +17,6 @@ public interface IUpgradableCharm extends IMultipleEffectCharm
 	public void learnFirst();
 	
 	public void forgetCharms();
+	
+	public ISubeffect[] getCharmEffects();
 }

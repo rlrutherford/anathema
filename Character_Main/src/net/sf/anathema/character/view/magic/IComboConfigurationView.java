@@ -10,10 +10,10 @@ public interface IComboConfigurationView extends IView {
   public void initGui(IComboViewProperties properties);
 
   public void setAllCharms(Object[] charms);
+  
+  public void setComboCharms(Object[] charms);
 
   public void addComboViewListener(IComboViewListener listener);
-
-  public void setComboCharms(Object[] charms);
 
   public ITextView addComboNameView(String viewTitle);
 

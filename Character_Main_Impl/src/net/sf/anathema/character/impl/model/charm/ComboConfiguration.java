@@ -3,9 +3,11 @@ package net.sf.anathema.character.impl.model.charm;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.disy.commons.core.util.ArrayUtilities;
 import net.sf.anathema.character.generic.framework.additionaltemplate.model.ICharacterModelContext;
 import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharmConfiguration;
+import net.sf.anathema.character.generic.magic.charms.special.ISubeffect;
 import net.sf.anathema.character.generic.rules.IEditionVisitor;
 import net.sf.anathema.character.generic.rules.IExaltedEdition;
 import net.sf.anathema.character.impl.model.charm.combo.FirstEditionComboArbitrator;
@@ -19,6 +21,7 @@ import net.sf.anathema.character.model.charm.IComboConfiguration;
 import net.sf.anathema.character.model.charm.IComboConfigurationListener;
 import net.sf.anathema.character.model.charm.learn.IComboLearnStrategy;
 import net.sf.anathema.character.model.charm.special.IMultiLearnableCharmConfiguration;
+import net.sf.anathema.character.model.charm.special.IMultipleEffectCharmConfiguration;
 import net.sf.anathema.lib.control.GenericControl;
 import net.sf.anathema.lib.control.IClosure;
 import net.sf.anathema.lib.control.change.IChangeListener;
@@ -93,9 +96,12 @@ public class ComboConfiguration implements IComboConfiguration {
     }
   }
 
-  public void addCharmToCombo(ICharm charm) {
+  public void addCharmToCombo(ICharm charm, ISubeffect effect) {
     if (rules.canBeAddedToCombo(getEditCombo(), charm, useArrayRules)) {
-      getEditCombo().addCharm(charm, context.getBasicCharacterContext().isExperienced());
+      if (effect != null)
+      	  getEditCombo().addEffect(charm, effect, context.getBasicCharacterContext().isExperienced());
+      if (effect == null || !getEditCombo().contains(charm))
+    	  getEditCombo().addCharm(charm, context.getBasicCharacterContext().isExperienced());
     }
     else {
       throw new IllegalArgumentException("The charm " + charm.getId() + " is illegal in this combo."); //$NON-NLS-1$ //$NON-NLS-2$
@@ -122,6 +128,7 @@ public class ComboConfiguration implements IComboConfiguration {
 
   public void finalizeCombo(boolean experienced) {
     ICombo combo = editCombo.clone();
+    if (originalCombo != null) originalCombo = originalCombo.clone();
     if (combo.getId() == null) {
       combo.setId(idProvider.createId());
       if (experienced) {
@@ -272,8 +279,20 @@ public class ComboConfiguration implements IComboConfiguration {
 			  {
 				  if (config instanceof IMultiLearnableCharmConfiguration)
 				  {
-					  ((IMultiLearnableCharmConfiguration)config).setCurrentLearnCount(config.getCurrentLearnCount() - countInCombo(charm));
+					  int comboCount = originalCombo == null ? -countInCombo(editCombo, charm) :
+						  countInCombo(originalCombo, charm) - countInCombo(editCombo, charm);
+					  ((IMultiLearnableCharmConfiguration)config).setCurrentLearnCount(config.getCurrentLearnCount()
+							  + comboCount);
 					  continue;
+				  }
+				  if (config instanceof IMultipleEffectCharmConfiguration)
+				  {
+					  IMultipleEffectCharmConfiguration multiConfig = (IMultipleEffectCharmConfiguration)config;
+					  for (ISubeffect effect : multiConfig.getEffects())
+						  if (effect.isLearned() && ArrayUtilities.contains(editCombo.getEffects(charm), effect) &&
+							  (originalCombo == null || !ArrayUtilities.contains(originalCombo.getEffects(charm), effect)))
+							  effect.setLearned(false);
+					  continue;						  
 				  }
 			  }
 			  charmConfiguration.getGroup(charm).forgetCharm(charm, isExperienceLearned(editCombo, charm));
@@ -294,9 +313,17 @@ public class ComboConfiguration implements IComboConfiguration {
 	  if (!useArrayRules)
 		  return new ICharm[0];
 	  List<ICharm> charms = new ArrayList<ICharm>();
+	  List<ICharm> handledMultiEffects = new ArrayList<ICharm>();
 	  for (ICombo combo : creationComboList)
+	  {
 		  for (ICharm charm : combo.getCharms())
 			  charms.add(charm);
+		  for (ISubeffect effect : combo.getCreationSubeffects())
+			  if (handledMultiEffects.contains(effect.getCharm()))
+				  charms.add(effect.getCharm());
+			  else
+				  handledMultiEffects.add(effect.getCharm());
+	  }
 	  ICharm[] charmArray = new ICharm[charms.size()];
 	  charms.toArray(charmArray);
 	  return charmArray;
@@ -308,39 +335,45 @@ public class ComboConfiguration implements IComboConfiguration {
 		  return new ICharm[0];
 	  List<ICharm> charms = new ArrayList<ICharm>();
 	  for (ICombo combo : creationComboList)
+	  {
 		  for (ICharm charm : combo.getExperiencedLearnedCharms())
 			  charms.add(charm);
+		  for (ISubeffect effect : combo.getExperiencedSubeffects())
+			  charms.add(effect.getCharm());
+	  }
 	  for (ICombo combo : experiencedComboList)
+	  {
 		  for (ICharm charm : combo.getExperiencedLearnedCharms())
 			  charms.add(charm);
+		  for (ISubeffect effect : combo.getExperiencedSubeffects())
+			  charms.add(effect.getCharm());
+	  }
 	  ICharm[] charmArray = new ICharm[charms.size()];
 	  charms.toArray(charmArray);
 	  return charmArray;
-  }
-  
-  public String getAvaliableCharmDetail(ICharm charm)
-  {
-	  ISpecialCharmConfiguration config = charmConfiguration.getSpecialCharmConfiguration(charm.getId());
-	  if (config instanceof IMultiLearnableCharmConfiguration)
-	  {
-		  int remainingCount = config.getCurrentLearnCount() - countInCombo(charm);
-		  return remainingCount > 0 ? "(" + remainingCount + ")" : "";
-	  }
-	  return "";
   }
   
   public boolean allowRepeats(ICharm charm)
   {
 	  ISpecialCharmConfiguration config = charmConfiguration.getSpecialCharmConfiguration(charm.getId());
 	  if (config instanceof IMultiLearnableCharmConfiguration)
-		  return (config.getCurrentLearnCount() - countInCombo(charm)) > 0;
+		  return getAllowedCount(charm, (IMultiLearnableCharmConfiguration)config, true) > 0;
+	  if (config instanceof IMultipleEffectCharmConfiguration)
+		  return true;
 	  return false;
   }
   
-  private int countInCombo(ICharm charm)
+  public int getAllowedCount(ICharm charm, IMultiLearnableCharmConfiguration config, boolean countBase)
+  {
+	  int base = originalCombo == null ? 0 : countInCombo(originalCombo, charm);
+	  return (config.getCurrentLearnCount() - countInCombo(editCombo, charm) + (countBase ? 1 : 0) * base);
+	  
+  }
+  
+  private int countInCombo(ICombo combo, ICharm charm)
   {
 	  int times = 0;
-	  for (ICharm otherCharm : editCombo.getCharms())
+	  for (ICharm otherCharm : combo.getCharms())
 		  if (charm == otherCharm)
 			  times++;
 	  return times;
@@ -349,5 +382,15 @@ public class ComboConfiguration implements IComboConfiguration {
   public boolean isUseArrayRules()
   {
 	  return useArrayRules;
+  }
+  
+  public void removeEffect(ICharm charm, ISubeffect effect)
+  {
+	  editCombo.removeEffect(charm, effect);
+  }
+  
+  public ISubeffect[] getEffects(ICharm charm)
+  {
+	  return editCombo.getEffects(charm);
   }
 }

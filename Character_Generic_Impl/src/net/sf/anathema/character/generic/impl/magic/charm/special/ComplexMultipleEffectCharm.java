@@ -28,7 +28,7 @@ public class ComplexMultipleEffectCharm extends MultipleEffectCharm
 			ICharm charm) {
 	  for (String id : effectIds) {
 		String prereqEffect = prereqEffectMap.get(id);
-	    effectList.add(new Subeffect(id, data, buildLearnCondition(arbitrator, charm, prereqEffect)));
+	    effectList.add(new Subeffect(id, charm, data, buildLearnCondition(arbitrator, charm, prereqEffect)));
 	  }
 	  return effectList.toArray(new ISubeffect[effectList.size()]);
 	}

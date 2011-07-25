@@ -2,10 +2,13 @@ package net.sf.anathema.character.impl.model.charm;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.disy.commons.core.util.Ensure;
 import net.sf.anathema.character.generic.magic.ICharm;
+import net.sf.anathema.character.generic.magic.charms.special.ISubeffect;
 import net.sf.anathema.character.generic.magic.charms.type.CharmType;
 import net.sf.anathema.character.model.charm.ICombo;
 import net.sf.anathema.lib.control.change.ChangeControl;
@@ -18,6 +21,8 @@ public class Combo implements ICombo {
   private final ChangeControl control = new ChangeControl();
   private final List<ICharm> creationCharmList = new ArrayList<ICharm>();
   private final List<ICharm> experiencedCharmList = new ArrayList<ICharm>();
+  private final Map<ICharm, List<ISubeffect>> creationSubeffectList = new HashMap<ICharm, List<ISubeffect>>();
+  private final Map<ICharm, List<ISubeffect>> experiencedSubeffectList = new HashMap<ICharm, List<ISubeffect>>();
   private ICharm extraActionCharm = null;
   private ICharm simpleCharm = null;
   private final ITextualDescription name = new SimpleTextualDescription();
@@ -91,6 +96,8 @@ public class Combo implements ICombo {
   }
 
   private void copyCombo(ICombo source, Combo destination) {
+	destination.creationSubeffectList.putAll(((Combo)source).creationSubeffectList);
+	destination.experiencedSubeffectList.putAll(((Combo)source).experiencedSubeffectList);
     for (ICharm charm : source.getCreationLearnedCharms())
       destination.addCharm(charm, false);
     for (ICharm charm : source.getExperiencedLearnedCharms())
@@ -108,6 +115,8 @@ public class Combo implements ICombo {
     description.setText(""); //$NON-NLS-1$
     removeCharms(creationCharmList.toArray(new ICharm[0]));
     removeCharms(experiencedCharmList.toArray(new ICharm[0]));
+    creationSubeffectList.clear();
+    experiencedSubeffectList.clear();
   }
 
   public ITextualDescription getName() {
@@ -141,5 +150,78 @@ public class Combo implements ICombo {
 	@Override
 	public ICharm[] getExperiencedLearnedCharms() {
 		return experiencedCharmList.toArray(new ICharm[0]);
+	}
+	
+	public ISubeffect[] getLearnedSubeffects(ICharm charm)
+	{
+		List<ISubeffect> effects = new ArrayList<ISubeffect>();
+		for(List<ISubeffect> effectList : creationSubeffectList.values())
+			effects.addAll(effectList);
+		for(List<ISubeffect> effectList : experiencedSubeffectList.values())
+			effects.addAll(effectList);
+		return effects.toArray(new ISubeffect[0]);		
+	}
+	
+	private List<ISubeffect> getList(ICharm charm, boolean experienced)
+	{
+		List<ISubeffect> list;
+		if (!experienced)
+		{
+			list = creationSubeffectList.get(charm);
+			if (list == null)
+			{
+				list = new ArrayList<ISubeffect>();
+				creationSubeffectList.put(charm, list);
+			}
+		}
+		else
+		{
+			list = experiencedSubeffectList.get(charm);
+			if (list == null)
+			{
+				list = new ArrayList<ISubeffect>();
+				experiencedSubeffectList.put(charm, list);
+			}
+		}
+		return list;
+	}
+	
+	public void addEffect(ICharm charm, ISubeffect effect, boolean experienced)
+	{
+		getList(charm, experienced).add(effect);
+		fireComboChanged();
+	}
+	
+	public void removeEffect(ICharm charm, ISubeffect effect)
+	{
+		List<ISubeffect> list = getList(charm, true);
+		if (!list.contains(effect))
+			list = getList(charm, false);
+		list.remove(effect);
+		fireComboChanged();
+	}
+	
+	public ISubeffect[] getEffects(ICharm charm)
+	{
+		List<ISubeffect> list = new ArrayList<ISubeffect>();
+		list.addAll(getList(charm, false));
+		list.addAll(getList(charm, true));
+		return list.toArray(new ISubeffect[0]);
+	}
+	
+	public ISubeffect[] getCreationSubeffects()
+	{
+		List<ISubeffect> creationList = new ArrayList<ISubeffect>();
+		for (List<ISubeffect> list : creationSubeffectList.values())
+			creationList.addAll(list);
+		return creationList.toArray(new ISubeffect[0]);
+	}
+	
+	public ISubeffect[] getExperiencedSubeffects()
+	{
+		List<ISubeffect> experiencedList = new ArrayList<ISubeffect>();
+		for (List<ISubeffect> list : experiencedSubeffectList.values())
+			experiencedList.addAll(list);
+		return experiencedList.toArray(new ISubeffect[0]);
 	}
 }

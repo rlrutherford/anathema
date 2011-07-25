@@ -8,11 +8,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import net.disy.commons.core.util.ArrayUtilities;
 import net.disy.commons.core.util.StringUtilities;
 import net.disy.commons.swing.action.SmartAction;
 import net.sf.anathema.character.generic.caste.ICasteType;
 import net.sf.anathema.character.generic.framework.additionaltemplate.listening.DedicatedCharacterChangeAdapter;
 import net.sf.anathema.character.generic.magic.ICharm;
+import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharmConfiguration;
+import net.sf.anathema.character.generic.magic.charms.special.ISubeffect;
 import net.sf.anathema.character.model.ICharacterStatistics;
 import net.sf.anathema.character.model.charm.CharmLearnAdapter;
 import net.sf.anathema.character.model.charm.ICharmConfiguration;
@@ -21,6 +24,9 @@ import net.sf.anathema.character.model.charm.ICombo;
 import net.sf.anathema.character.model.charm.IComboConfiguration;
 import net.sf.anathema.character.model.charm.IComboConfigurationListener;
 import net.sf.anathema.character.model.charm.ILearningCharmGroup;
+import net.sf.anathema.character.model.charm.special.IMultiLearnableCharmConfiguration;
+import net.sf.anathema.character.model.charm.special.IMultipleEffectCharmConfiguration;
+import net.sf.anathema.character.model.charm.special.IUpgradableCharmConfiguration;
 import net.sf.anathema.character.view.magic.IComboConfigurationView;
 import net.sf.anathema.character.view.magic.IComboView;
 import net.sf.anathema.character.view.magic.IComboViewListener;
@@ -43,6 +49,8 @@ public class ComboConfigurationPresenter implements IContentPresenter {
   private final IResources resources;
   private final IComboConfigurationView view;
   private final boolean useArrayRules;
+  private Object[] allCharms;
+  private Object[] comboCharms;
 
   public ComboConfigurationPresenter(IResources resources, ICharacterStatistics statistics, IMagicViewFactory factory, boolean useArrayRules) {
     this.resources = resources;
@@ -54,7 +62,7 @@ public class ComboConfigurationPresenter implements IContentPresenter {
   }
 
   public void initPresentation() {
-    view.initGui(new ComboViewProperties(resources, comboConfiguration));
+    view.initGui(new ComboViewProperties(resources, comboConfiguration, this));
     initCharmLearnListening(view);
     ITextView nameView = view.addComboNameView(resources.getString("CardView.CharmConfiguration.ComboCreation.NameLabel")); //$NON-NLS-1$);
     ICombo editCombo = comboConfiguration.getEditCombo();
@@ -201,9 +209,63 @@ public class ComboConfigurationPresenter implements IContentPresenter {
   }
 
   private void updateCharmListsInView(final IComboConfigurationView comboView) {
-    comboView.setComboCharms(comboConfiguration.getEditCombo().getCharms());
-    ICharm[] learnedCharms = charmConfiguration.getLearnedCharms(statistics.isExperienced());
-    comboView.setAllCharms(learnedCharms);
+	allCharms = getCharmList(charmConfiguration.getLearnedCharms(statistics.isExperienced()), false);
+	comboCharms = getCharmList(comboConfiguration.getEditCombo().getCharms(), true);
+    comboView.setComboCharms(comboCharms);
+    comboView.setAllCharms(allCharms);
+  }
+  
+  private Object[] getCharmList(ICharm[] charms, boolean isCombo)
+  {
+	  List<Object> displayCharmList = new ArrayList<Object>();
+      for (ICharm charm : charms)
+	  {
+    	  displayCharmList.add(charm);
+    	  
+    	  ISpecialCharmConfiguration config = charmConfiguration.getSpecialCharmConfiguration(charm);
+    	  if (config != null)
+    	  {
+    		  if (config instanceof IMultipleEffectCharmConfiguration)
+    		  {
+    			  IMultipleEffectCharmConfiguration effectConfig = (IMultipleEffectCharmConfiguration)config;
+    			  if (hasMultiPicks(effectConfig))
+    			  {
+	    			  ISubeffect[] effectList = getEffectList(effectConfig, isCombo);
+	    			  for (ISubeffect effect : effectList)
+	    				  displayCharmList.add(effect);
+    				  displayCharmList.remove(charm);
+    			  }
+	    	  }
+	      }
+	  }
+      return displayCharmList.toArray(new Object[0]);
+  }
+  
+  private boolean hasMultiPicks(IMultipleEffectCharmConfiguration config)
+  {
+	  if (config instanceof IUpgradableCharmConfiguration)
+		  return ((IUpgradableCharmConfiguration)config).getCharmEffects().length > 0;
+	  return true;
+  }
+  
+  private ISubeffect[] getEffectList(IMultipleEffectCharmConfiguration config, boolean isCombo)
+  {
+	  if (isCombo)
+		  return comboConfiguration.getEditCombo().getLearnedSubeffects(config.getCharm());
+	  else
+	  {
+		  List<ISubeffect> effectList = new ArrayList<ISubeffect>();
+		  ISubeffect[] baseList = config.getEffects();
+		  if (config instanceof IUpgradableCharmConfiguration)
+			  baseList = ((IUpgradableCharmConfiguration)config).getCharmEffects();
+		  for (ISubeffect effect : baseList)
+			  if (effect.isLearned() && !ArrayUtilities.contains(
+					  comboConfiguration.getEditCombo().getLearnedSubeffects(config.getCharm()),
+					  effect))
+				  effectList.add(effect);
+		  return effectList.toArray(new ISubeffect[0]);		  
+	  }
+	  
   }
 
   private void initComboModelListening(final IComboConfigurationView comboView) {
@@ -216,13 +278,21 @@ public class ComboConfigurationPresenter implements IContentPresenter {
 
   private void initViewListening(final IComboConfigurationView comboView) {
     comboView.addComboViewListener(new IComboViewListener() {
-      public void charmAdded(Object addedCharm) {
-        comboConfiguration.addCharmToCombo((ICharm) addedCharm);
+      public void charmAdded(ICharm addedCharm, ISubeffect effect) {
+        comboConfiguration.addCharmToCombo(addedCharm, effect);
       }
 
       public void charmRemoved(Object[] removedCharms) {
         List<ICharm> removedCharmList = new ArrayList<ICharm>();
         for (Object charmObject : removedCharms) {
+          if (charmObject instanceof ISubeffect)
+          {
+        	  comboConfiguration.removeEffect(((ISubeffect)charmObject).getCharm(), (ISubeffect)charmObject);
+        	  if (comboConfiguration.getEffects(((ISubeffect)charmObject).getCharm()).length > 0)
+        		  continue;
+        	  else
+        		  charmObject = ((ISubeffect)charmObject).getCharm();
+          }
           removedCharmList.add((ICharm) charmObject);
         }
         comboConfiguration.removeCharmsFromCombo(removedCharmList.toArray(new ICharm[0]));
@@ -267,5 +337,35 @@ public class ComboConfigurationPresenter implements IContentPresenter {
       boolean disabled = comboConfiguration.isLearnedOnCreation(combo) && statistics.isExperienced();
       comboView.setEditButtonsVisible(!disabled);
     }
+  }
+  
+  public String getCharmTag(ICharm charm, int index, boolean isCombo)
+  {
+	  if (!comboConfiguration.isUseArrayRules())
+		  return "";
+	  
+	  ISpecialCharmConfiguration config = charmConfiguration.getSpecialCharmConfiguration(charm.getId());
+	  if (config instanceof IMultiLearnableCharmConfiguration)
+	  {
+		  int remainingCount = comboConfiguration.getAllowedCount(charm, (IMultiLearnableCharmConfiguration) config, true);
+		  return remainingCount > 0 ? " (" + remainingCount + ")" : "";
+	  }
+	  /*if (config instanceof IMultipleEffectCharmConfiguration)
+	  {
+		  List<String> tagList = isCombo ? comboTagsByCharm.get(entry) : learnedTagsByCharm.get(entry);
+		  int stringIndex = countCopiesThrough(entry, index, isCombo ? comboCharms : allCharms);
+		  String tag = tagList.get(stringIndex);
+		  return " (" + tag + ")";
+	  }*/
+	  return "";
+  }
+  
+  private int countInCombo(ICharm charm)
+  {
+	  int times = 0;
+	  for (ICharm otherCharm : comboConfiguration.getEditCombo().getCharms())
+		  if (charm == otherCharm)
+			  times++;
+	  return times;
   }
 }

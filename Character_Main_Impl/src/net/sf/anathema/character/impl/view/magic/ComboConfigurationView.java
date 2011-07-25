@@ -22,6 +22,8 @@ import net.disy.commons.swing.layout.grid.GridDialogLayout;
 import net.disy.commons.swing.layout.grid.GridDialogLayoutData;
 import net.sf.anathema.character.generic.framework.magic.view.IMagicViewListener;
 import net.sf.anathema.character.generic.framework.magic.view.MagicLearnView;
+import net.sf.anathema.character.generic.magic.ICharm;
+import net.sf.anathema.character.generic.magic.charms.special.ISubeffect;
 import net.sf.anathema.character.view.magic.IComboConfigurationView;
 import net.sf.anathema.character.view.magic.IComboView;
 import net.sf.anathema.character.view.magic.IComboViewListener;
@@ -187,7 +189,16 @@ public class ComboConfigurationView implements IComboConfigurationView {
 
       public void magicAdded(Object[] addedMagic) {
         Ensure.ensureTrue("Only one charm may be added.", addedMagic.length == 1); //$NON-NLS-1$
-        listener.charmAdded(addedMagic[0]);
+        ICharm charm;
+        ISubeffect effect = null;
+        if (addedMagic[0] instanceof ISubeffect)
+        {
+        	charm = ((ISubeffect)addedMagic[0]).getCharm();
+        	effect = (ISubeffect) addedMagic[0];
+        }
+        else
+        	charm = (ICharm) addedMagic[0];
+        listener.charmAdded(charm, effect);
       }
     });
     comboViewListeners.addListener(listener);

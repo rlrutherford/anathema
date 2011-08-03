@@ -238,7 +238,8 @@ public class ComboConfigurationPresenter implements IContentPresenter {
     	  ISpecialCharmConfiguration config = charmConfiguration.getSpecialCharmConfiguration(charm);
     	  if (config != null)
     	  {
-    		  if (config instanceof IMultipleEffectCharmConfiguration)
+    		  if (comboConfiguration.isUseArrayRules() &&
+    			  config instanceof IMultipleEffectCharmConfiguration)
     		  {
     			  IMultipleEffectCharmConfiguration effectConfig = (IMultipleEffectCharmConfiguration)config;
     			  if (hasMultiPicks(effectConfig))

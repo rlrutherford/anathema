@@ -8,6 +8,7 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 
+import net.disy.commons.core.util.ArrayUtilities;
 import net.sf.anathema.character.generic.framework.magic.stringbuilder.CharmInfoStringBuilder;
 import net.sf.anathema.character.generic.framework.magic.stringbuilder.ICharmInfoStringBuilder;
 import net.sf.anathema.character.generic.framework.magic.view.AbstractMagicLearnProperties;
@@ -109,6 +110,10 @@ public final class ComboViewProperties extends AbstractMagicLearnProperties impl
 
       @Override
       protected boolean isLegal(Object object) {
+    	if (object instanceof ISubeffect)
+    		return !ArrayUtilities.contains(comboConfiguration.getEditCombo().
+    				getEffects(getCharm(object)),
+    				(ISubeffect)object);
         return comboConfiguration.isComboLegal(getCharm(object));
       }
 

@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.disy.commons.core.util.ArrayUtilities;
 import net.disy.commons.core.util.StringUtilities;
 import net.disy.commons.swing.action.SmartAction;
 import net.sf.anathema.character.generic.caste.ICasteType;
@@ -273,9 +272,7 @@ public class ComboConfigurationPresenter implements IContentPresenter {
 		  if (config instanceof IUpgradableCharmConfiguration)
 			  baseList = ((IUpgradableCharmConfiguration)config).getCharmEffects();
 		  for (ISubeffect effect : baseList)
-			  if (effect.isLearned() && !ArrayUtilities.contains(
-					  comboConfiguration.getEditCombo().getLearnedSubeffects(config.getCharm()),
-					  effect))
+			  if (effect.isLearned())
 				  effectList.add(effect);
 		  return effectList.toArray(new ISubeffect[0]);		  
 	  }

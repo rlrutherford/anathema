@@ -339,14 +339,16 @@ public class ComboConfiguration implements IComboConfiguration {
 		  for (ICharm charm : combo.getExperiencedLearnedCharms())
 			  charms.add(charm);
 		  for (ISubeffect effect : combo.getExperiencedSubeffects())
-			  charms.add(effect.getCharm());
+			  if (!effect.isCreationLearned())
+				  charms.add(effect.getCharm());
 	  }
 	  for (ICombo combo : experiencedComboList)
 	  {
 		  for (ICharm charm : combo.getExperiencedLearnedCharms())
 			  charms.add(charm);
 		  for (ISubeffect effect : combo.getExperiencedSubeffects())
-			  charms.add(effect.getCharm());
+			  if (!effect.isCreationLearned())
+				  charms.add(effect.getCharm());
 	  }
 	  ICharm[] charmArray = new ICharm[charms.size()];
 	  charms.toArray(charmArray);

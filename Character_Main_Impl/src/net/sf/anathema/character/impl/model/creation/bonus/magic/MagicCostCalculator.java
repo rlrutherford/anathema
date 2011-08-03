@@ -43,6 +43,7 @@ public class MagicCostCalculator {
   private final IMagicTemplate magicTemplate;
   private final IUniqueRequiredCharmType uniqueType;
   private final IComboConfiguration combos;
+  private final List<ICharm> comboList = new ArrayList<ICharm>();
 
   public MagicCostCalculator(
       IMagicTemplate magicTemplate,
@@ -149,6 +150,8 @@ public class MagicCostCalculator {
     completeList.addAll(Arrays.asList(charms.getCreationLearnedCharms()));
     completeList.addAll(Arrays.asList(spells.getLearnedSpells(false)));
     completeList.addAll(Arrays.asList(combos.getCreationCharmPicks()));
+    comboList.clear();
+    comboList.addAll(Arrays.asList(combos.getCreationCharmPicks()));
     return completeList;
   }
 
@@ -186,11 +189,15 @@ public class MagicCostCalculator {
 
   private int handleSpecialCharm(ICharm charm) {
     ISpecialCharmConfiguration specialCharmConfiguration = charms.getSpecialCharmConfiguration(charm);
+    if (comboList.contains(charm))
+	{
+    	comboList.remove(charm);
+    	return 1;
+	}
     if (specialCharmConfiguration != null) {
     	if (specialCharmConfiguration instanceof IUpgradableCharmConfiguration)
     	{
     		IUpgradableCharmConfiguration config = (IUpgradableCharmConfiguration)specialCharmConfiguration;
-
     		return (config.isComplex() ? 0 : 1) + config.getCreationCharmCount();
     	}
       return specialCharmConfiguration.getCreationLearnCount();

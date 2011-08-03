@@ -1,6 +1,9 @@
 package net.sf.anathema.character.impl.model.advance.models;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.sf.anathema.character.generic.IBasicCharacterData;
@@ -20,6 +23,7 @@ public class CharmExperienceModel extends AbstractIntegerValueModel {
   private final IPointCostCalculator calculator;
   private final ICharacterStatistics statistics;
   private final IBasicCharacterData basicCharacter;
+  private List<ICharm> comboPicks = new ArrayList<ICharm>();
 
   public CharmExperienceModel(
       ICoreTraitConfiguration traitConfiguration,
@@ -49,7 +53,9 @@ public class CharmExperienceModel extends AbstractIntegerValueModel {
       experienceCosts += charmCosts;
       charmsCalculated.add(charm);
     }
-    for (ICharm charm : statistics.getCombos().getExperiencedCharmPicks()) {
+    ICharm[] comboXPPicks = statistics.getCombos().getExperiencedCharmPicks();
+    comboPicks.addAll(Arrays.asList(comboXPPicks));
+    for (ICharm charm : comboXPPicks) {
         int charmCosts = calculateCharmCost(charmConfiguration, charm, charmsCalculated, false);
         if (charmConfiguration.isAlienCharm(charm)) {
           charmCosts *= 2;
@@ -84,8 +90,13 @@ public class CharmExperienceModel extends AbstractIntegerValueModel {
       final int specialCharmCost = timesLearnedWithExperience * charmCost;
       if (specialCharm instanceof IUpgradableCharmConfiguration)
       {
+    	  if (comboPicks.contains(charm))
+    	  {
+    		  comboPicks.remove(charm);
+    		  return charmCost;
+    	  }
     	  IUpgradableCharmConfiguration config = (IUpgradableCharmConfiguration)specialCharm;
-    	  return (charmConfiguration.getGroup(charm).isLearned(charm, true) || !requireLearning ? charmCost * config.getExperiencedCharmCount() : 0) +
+    	  return (charmConfiguration.getGroup(charm).isLearned(charm) || !requireLearning ? charmCost * config.getExperiencedCharmCount() : 0) +
     	  		+ config.getUpgradeXPCost();
       }
       if (!(specialCharm instanceof ISubeffectCharmConfiguration)) {

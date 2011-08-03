@@ -191,10 +191,10 @@ public class ComboConfigurationPresenter implements IContentPresenter {
     String charmList = "<b>"; //$NON-NLS-1$
     Iterator<ICharm> charmIterator = Arrays.asList(charms).iterator();
     if (charmIterator.hasNext()) {
-      charmList = charmList.concat(resources.getString(charmIterator.next().getId()));
+      charmList = charmList.concat(getCharmString(charmIterator.next(), combo));
     }
     while (charmIterator.hasNext()) {
-      charmList = charmList.concat(", " + resources.getString(charmIterator.next().getId())); //$NON-NLS-1$
+      charmList = charmList.concat(", " + getCharmString(charmIterator.next(), combo)); //$NON-NLS-1$
     }
     charmList += "</b>"; //$NON-NLS-1$
     if (StringUtilities.isNullOrEmpty(text)) {
@@ -202,6 +202,20 @@ public class ComboConfigurationPresenter implements IContentPresenter {
     }
     String converted = text.replace("\n", "<br>"); //$NON-NLS-1$ //$NON-NLS-2$
     return wrapHtml(charmList + " - <i>" + converted + "</i>"); //$NON-NLS-1$//$NON-NLS-2$
+  }
+  
+  private String getCharmString(ICharm charm, ICombo combo)
+  {
+	  String baseName = resources.getString(charm.getId());
+	  ISubeffect[] effectList = combo.getLearnedSubeffects(charm);
+	  if (effectList != null && effectList.length > 0)
+	  {
+		  baseName += " (";
+		  for (ISubeffect effect : effectList)
+			  baseName += (effect == effectList[0] ? "" : ", ") + resources.getString(effect.getId());
+		  baseName += ")";
+	  }
+	  return baseName;
   }
 
   private String wrapHtml(String text) {
@@ -350,22 +364,6 @@ public class ComboConfigurationPresenter implements IContentPresenter {
 		  int remainingCount = comboConfiguration.getAllowedCount(charm, (IMultiLearnableCharmConfiguration) config, true);
 		  return remainingCount > 0 ? " (" + remainingCount + ")" : "";
 	  }
-	  /*if (config instanceof IMultipleEffectCharmConfiguration)
-	  {
-		  List<String> tagList = isCombo ? comboTagsByCharm.get(entry) : learnedTagsByCharm.get(entry);
-		  int stringIndex = countCopiesThrough(entry, index, isCombo ? comboCharms : allCharms);
-		  String tag = tagList.get(stringIndex);
-		  return " (" + tag + ")";
-	  }*/
 	  return "";
-  }
-  
-  private int countInCombo(ICharm charm)
-  {
-	  int times = 0;
-	  for (ICharm otherCharm : comboConfiguration.getEditCombo().getCharms())
-		  if (charm == otherCharm)
-			  times++;
-	  return times;
   }
 }

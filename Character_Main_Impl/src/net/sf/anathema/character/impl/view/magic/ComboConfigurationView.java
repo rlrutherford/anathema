@@ -8,18 +8,21 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import net.disy.commons.core.util.Ensure;
 import net.disy.commons.swing.action.SmartAction;
-import net.disy.commons.swing.layout.GridDialogLayoutDataUtilities;
 import net.disy.commons.swing.layout.grid.GridDialogLayout;
 import net.disy.commons.swing.layout.grid.GridDialogLayoutData;
+import net.disy.commons.swing.layout.grid.GridDialogLayoutDataFactory;
 import net.sf.anathema.character.generic.framework.magic.view.IMagicViewListener;
 import net.sf.anathema.character.generic.framework.magic.view.MagicLearnView;
 import net.sf.anathema.character.generic.magic.ICharm;
@@ -42,7 +45,7 @@ public class ComboConfigurationView implements IComboConfigurationView {
 
   // TODO Move listener management / button initialization to presenter
   private static final int TEXT_COLUMNS = 20;
-  private final MagicLearnView magicLearnView = new MagicLearnView();
+  private MagicLearnView magicLearnView = new MagicLearnView();
   private JComponent content;
   private final GenericControl<IComboViewListener> comboViewListeners = new GenericControl<IComboViewListener>();
   private final JPanel namePanel = new JPanel(new GridDialogLayout(1, false));
@@ -64,7 +67,17 @@ public class ComboConfigurationView implements IComboConfigurationView {
   private IComboViewProperties properties;
 
   public void initGui(final IComboViewProperties viewProperties) {
-    this.properties = viewProperties;
+	this.properties = viewProperties;
+    magicLearnView = new MagicLearnView() {
+        @Override
+        protected ListSelectionListener createLearnedListListener(final JButton button, final JList list) {
+          return new ListSelectionListener() {
+              public void valueChanged(ListSelectionEvent e) {
+                  button.setEnabled(!list.isSelectionEmpty() && viewProperties.isRemoveButtonEnabled((ICharm) list.getSelectedValue()));
+                }
+              };
+        }
+      };
     magicLearnView.init(viewProperties);
     finalizeButton = createFinalizeComboButton(viewProperties.getFinalizeButtonIcon());
     finalizeButton.setToolTipText(viewProperties.getFinalizeButtonToolTip());
@@ -76,21 +89,24 @@ public class ComboConfigurationView implements IComboConfigurationView {
     learnedListModel.addListDataListener(new ListDataListener() {
       public void intervalAdded(ListDataEvent e) {
         learnedListModelSize = learnedListModel.getSize();
-        finalizeButton.setEnabled(learnedListModelSize > 1);
+        finalizeButton.setEnabled(learnedListModelSize > 1 &&
+        		viewProperties.canFinalize());
         finalizeXPButton.setEnabled(viewProperties.canFinalizeWithXP());
         clearButton.setEnabled(isDescriptionEntered || isNameEntered || learnedListModelSize > 0);
       }
 
       public void intervalRemoved(ListDataEvent e) {
         learnedListModelSize = learnedListModel.getSize();
-        finalizeButton.setEnabled(learnedListModelSize > 1);
+        finalizeButton.setEnabled(learnedListModelSize > 1 &&
+        		viewProperties.canFinalize());
         finalizeXPButton.setEnabled(viewProperties.canFinalizeWithXP());
         clearButton.setEnabled(isDescriptionEntered || isNameEntered || learnedListModelSize > 0);
       }
 
       public void contentsChanged(ListDataEvent e) {
         learnedListModelSize = learnedListModel.getSize();
-        finalizeButton.setEnabled(learnedListModelSize > 1);
+        finalizeButton.setEnabled(learnedListModelSize > 1 &&
+        		viewProperties.canFinalize());
         finalizeXPButton.setEnabled(viewProperties.canFinalizeWithXP());
         clearButton.setEnabled(isDescriptionEntered || isNameEntered || learnedListModelSize > 0);
       }
@@ -103,13 +119,13 @@ public class ComboConfigurationView implements IComboConfigurationView {
     viewPort.add(new JLabel(viewProperties.getComboedCharmsLabel()));
     viewPort.add(new JLabel());
 
-    GridDialogLayoutData nameData = GridDialogLayoutDataUtilities.createTopData();
+    GridDialogLayoutData nameData = GridDialogLayoutDataFactory.createTopData();
     nameData.setVerticalSpan(2);
     viewPort.add(namePanel, nameData);
     magicLearnView.addTo(viewPort);
     comboPane.setBackground(viewPort.getBackground());
     comboScrollPane = new JScrollPane(comboPane);
-    viewPort.add(comboScrollPane, GridDialogLayoutDataUtilities.createHorizontalSpanData(
+    viewPort.add(comboScrollPane, GridDialogLayoutDataFactory.createHorizontalSpanData(
         5,
         GridDialogLayoutData.FILL_BOTH));
     content = new JScrollPane(viewPort);

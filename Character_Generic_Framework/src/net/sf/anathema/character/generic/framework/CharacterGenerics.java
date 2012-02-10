@@ -41,7 +41,7 @@ public class CharacterGenerics implements ICharacterGenerics {
 
   public CharacterGenerics(IDataFileProvider dataFileProvider) {
     this.additionalPersisterRegistry = new Registry<String, IAdditionalPersisterFactory>(
-        new NullAdditionalPersisterFactory());
+            new NullAdditionalPersisterFactory());
     this.dataFileProvider = dataFileProvider;
   }
 

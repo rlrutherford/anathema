@@ -12,6 +12,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.List;
 
 import net.disy.commons.core.io.IOUtilities;
 import net.sf.anathema.lib.exception.AnathemaException;
@@ -20,6 +21,7 @@ import net.sf.anathema.lib.exception.PersistenceException;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
+import org.dom4j.XPath;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
@@ -27,7 +29,8 @@ import org.xml.sax.EntityResolver;
 
 public class DocumentUtilities {
 
-  private static final String DEFAULT_ENCODING = "ISO-8859-1"; //$NON-NLS-1$
+  // We should save all documents in an encoding which can encode any valid string.
+  private static final String DEFAULT_ENCODING = "UTF-8"; //$NON-NLS-1$
 
   private DocumentUtilities() {
     // Nothing to do
@@ -158,5 +161,22 @@ public class DocumentUtilities {
           "Element '" + expectedRootElementName + "' expected, was:'" + rootElement.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
     return rootElement;
+  }
+
+  /**
+   * Finds the first occurrence of an element in a document.
+   * 
+   * @param document the document to be searched for the element. Must not be null.
+   * @param childName the name of the element to be searched for. Must not be null.
+   * @return the found element or null if it could not be found
+   * @throws NullPointerException thrown if any of the arguments is null
+   */
+  public static Element findElement(Document document, String childName) {
+    XPath xpath = document.createXPath("//"+childName+"[1]");
+    Object result = xpath.evaluate(document.getRootElement());
+    if (result instanceof List) {
+      return null;
+    }
+    return (Element) result;
   }
 }

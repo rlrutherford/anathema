@@ -1,8 +1,8 @@
 Anathema Version History
 (C) 2004 - 2008 by Sandra Sieroux and Urs Reupke
-(C) 2009 - 2011 by Urs Reupke, Sandra Sieroux, Scott Olson, Eric Astor, Paul Adams, Rob Rutherford
+(C) 2009 - 2012 by Urs Reupke, Sandra Sieroux, Scott Olson, Eric Astor, Paul Adams, Rob Rutherford
                    Sean Mattox, Dennis Fotheringham, and Erin Martell.
-Exalted (C) 2001-2010 by White Wolf Publishing, Inc.
+Exalted (C) 2001-2012 by White Wolf Publishing, Inc.
 
 http://anathema.sf.net
 ===------------------------------------------------------------------------------===
@@ -11,9 +11,9 @@ http://anathema.sf.net
 
 -- Features --
 * Essence maximum raised to 10.
-* Added an option to upgrade combos for 1 XP, per errata.
-* Revised the character sheet layout, providing more space for items, weapons,
-  panoply, etc.
+* Added Age stat, which determines a character's Essence cap.
+* [2E] Added an option to upgrade combos for 1 XP, per errata.
+* [2E] Character Sheet now lists excellencies in the abilities block
 * Added some significant enhancements to equipment handling. It is now possible
   to specify attunement costs and current attunement state, which is noted on
   the character sheet. It is also possible for items to affect other character
@@ -22,7 +22,6 @@ http://anathema.sf.net
 * Modified support for Backgrounds, so that they can now have an optional
   descriptor field. This will hopefully finally clarify the ability to take
   multiple Artifact picks!
-* Added Age stat, which determines a character's Essence cap.
 * Added a greyout of trait dots that are above the current maximum.
 * Added persistence for Limit.
 * Implemented removal of charms when character's statistics are adjusted to be
@@ -30,7 +29,6 @@ http://anathema.sf.net
 * Numerous, high impact improvements to the charm tree viewer!
 * [2E] Added support for Infernals and their charms.
 * [2E] Added support for Spirits, Spirit charms, and God-blooded.
-* [2E] Added support for Thaumaturgy.
 * [2E] Added mechanical support for charms like Glory to the Most High and Divine
   	   Transcendence.
 * [2E] Added mechanical support for Lunar DBT "upgrade" charms, like
@@ -50,6 +48,13 @@ http://anathema.sf.net
   for characters to be imported correctly if we make significant modifications to
   charm data. 
 * A vast multitude of miscellaneous bug fixes, both major and minor!
+
+===------------------------------------------------------------------------------===
+			Release 2.0.2 "Calibration"
+===------------------------------------------------------------------------------===
+
+-- Bugs Fixed (Attila Kelemen) --
+* Anathema runs on Java 7
 
 ===------------------------------------------------------------------------------===
 			Release 2.0.1 "Calibration"

@@ -1,25 +1,21 @@
 package net.sf.anathema.character.spirit.reporting;
 
-import net.sf.anathema.character.reporting.sheet.common.anima.AbstractAnimaEncoderFactory;
-import net.sf.anathema.character.reporting.sheet.common.anima.AnimaTableEncoder;
-import net.sf.anathema.character.reporting.sheet.util.IPdfTableEncoder;
+import net.sf.anathema.character.generic.type.CharacterType;
+import net.sf.anathema.character.reporting.pdf.content.BasicContent;
+import net.sf.anathema.character.reporting.pdf.rendering.boxes.anima.AbstractAnimaEncoderFactory;
+import net.sf.anathema.character.reporting.pdf.rendering.boxes.anima.AnimaTableEncoder;
+import net.sf.anathema.character.reporting.pdf.rendering.general.table.ITableEncoder;
 import net.sf.anathema.lib.resources.IResources;
-
-import com.lowagie.text.pdf.BaseFont;
 
 public class SpiritAnimaEncoderFactory extends AbstractAnimaEncoderFactory {
 
-  public SpiritAnimaEncoderFactory(IResources resources, BaseFont basefont, BaseFont symbolBaseFont) {
-    super(resources, basefont, symbolBaseFont);
+  @Override
+  protected ITableEncoder getAnimaTableEncoder(IResources resources) {
+    return new AnimaTableEncoder(resources, getFontSize());
   }
 
   @Override
-  protected IPdfTableEncoder getAnimaTableEncoder() {
-    return new AnimaTableEncoder(getResources(), getBaseFont(), getFontSize());
-  }
-
-  @Override
-  protected int getAnimaPowerCount() {
-    return 3;
+  public boolean supports(BasicContent content) {
+    return content.isOfType(CharacterType.SPIRIT);
   }
 }

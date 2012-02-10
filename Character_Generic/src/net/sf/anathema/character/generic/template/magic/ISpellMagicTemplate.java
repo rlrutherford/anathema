@@ -6,19 +6,27 @@ import net.sf.anathema.character.generic.magic.spells.CircleType;
 
 public interface ISpellMagicTemplate {
 
+  public CircleType[] getSorceryCircles();
+
   public CircleType[] getNecromancyCircles();
 
-  public CircleType[] getSorceryCircles();
+  public boolean canLearnSorcery();
   
   public CircleType[] getProtocolCircles();
 
-  public boolean knowsNecromancy();
+  public boolean canLearnNecromancy();
+  
+  public boolean canLearnSpellMagic();
 
-  public boolean knowsSorcery();
+  public boolean knowsSorcery(ICharm[] knownCharms);
+
+  public boolean knowsNecromancy(ICharm[] knownCharms);
   
   public boolean knowsProtocols();
   
   public boolean knowsSpellMagic();
+  
+  public boolean knowsSpellMagic(ICharm[] knownCharms, CircleType circle);
   
   public boolean canLearnSpell(ISpell spell, ICharm[] knownCharms);
 }

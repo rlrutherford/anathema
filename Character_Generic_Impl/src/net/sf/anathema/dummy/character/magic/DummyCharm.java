@@ -1,11 +1,5 @@
 package net.sf.anathema.dummy.character.magic;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import net.sf.anathema.character.generic.IBasicCharacterData;
 import net.sf.anathema.character.generic.character.IGenericTraitCollection;
 import net.sf.anathema.character.generic.character.IMagicCollection;
@@ -14,11 +8,7 @@ import net.sf.anathema.character.generic.impl.magic.CostList;
 import net.sf.anathema.character.generic.impl.magic.charm.type.CharmTypeModel;
 import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.IMagicVisitor;
-import net.sf.anathema.character.generic.magic.charms.ComboRestrictions;
-import net.sf.anathema.character.generic.magic.charms.ICharmAttribute;
-import net.sf.anathema.character.generic.magic.charms.ICharmAttributeRequirement;
-import net.sf.anathema.character.generic.magic.charms.ICharmLearnArbitrator;
-import net.sf.anathema.character.generic.magic.charms.IComboRestrictions;
+import net.sf.anathema.character.generic.magic.charms.*;
 import net.sf.anathema.character.generic.magic.charms.duration.IDuration;
 import net.sf.anathema.character.generic.magic.charms.duration.SimpleDuration;
 import net.sf.anathema.character.generic.magic.charms.type.CharmType;
@@ -29,9 +19,12 @@ import net.sf.anathema.character.generic.traits.ITraitType;
 import net.sf.anathema.character.generic.traits.types.ValuedTraitType;
 import net.sf.anathema.character.generic.type.ICharacterType;
 import net.sf.anathema.lib.collection.ListOrderedSet;
-import net.sf.anathema.lib.exception.NotYetImplementedException;
 import net.sf.anathema.lib.util.IIdentificate;
 import net.sf.anathema.lib.util.Identificate;
+
+import java.util.*;
+
+import static java.util.Collections.emptySet;
 
 public class DummyCharm extends Identificate implements ICharm {
 
@@ -50,10 +43,10 @@ public class DummyCharm extends Identificate implements ICharm {
   private List<ICharmAttribute> attributes = new ArrayList<ICharmAttribute>();
 
   public DummyCharm(
-      String duration,
-      CharmType charmType,
-      IComboRestrictions comboRestrictions,
-      IGenericTrait[] prerequisites) {
+    String duration,
+    CharmType charmType,
+    IComboRestrictions comboRestrictions,
+    IGenericTrait[] prerequisites) {
     super("DummyCharmDefaultId"); //$NON-NLS-1$
     this.prerequisites = prerequisites;
     this.duration = SimpleDuration.getDuration(duration);
@@ -103,10 +96,10 @@ public class DummyCharm extends Identificate implements ICharm {
   public void setCharacterType(ICharacterType type) {
     characterType = type;
   }
-  
+
   public List<String> getParentSubeffects() {
-	    throw new NotYetImplementedException();
-	  }
+    return new ArrayList<String>();
+  }
 
   public IComboRestrictions getComboRules() {
     return comboRestrictions;
@@ -131,10 +124,9 @@ public class DummyCharm extends Identificate implements ICharm {
   public Set<ICharm> getLearnPrerequisitesCharms(ICharmLearnArbitrator learnArbitrator) {
     return parentCharms;
   }
-  
-  public Set<ICharm> getLearnChildCharms()
-  {
-	    return learnFollowUpCharms;
+
+  public Set<ICharm> getLearnChildCharms() {
+    return learnFollowUpCharms;
   }
 
   public Set<ICharm> getParentCharms() {
@@ -153,10 +145,9 @@ public class DummyCharm extends Identificate implements ICharm {
   public Set<ICharm> getRenderingPrerequisiteCharms() {
     return parentCharms;
   }
-  
-  public Set<String> getRenderingPrerequisiteLabels()
-  {
-	return null;
+
+  public Set<String> getRenderingPrerequisiteLabels() {
+    return emptySet();
   }
 
   public CostList getTemporaryCost() {
@@ -170,7 +161,7 @@ public class DummyCharm extends Identificate implements ICharm {
   public boolean hasAttribute(IIdentificate attribute) {
     return false;
   }
-  
+
   public String getAttributeValue(IIdentificate attribute) {
     return null;
   }
@@ -178,13 +169,9 @@ public class DummyCharm extends Identificate implements ICharm {
   public boolean isBlockedByAlternative(IMagicCollection magicCollection) {
     return false;
   }
-  
+
   public Set<ICharm> getMergedCharms() {
     return new HashSet<ICharm>();
-  }
-
-  public boolean isFreeByMerged(IMagicCollection magicCollection) {
-    return false;
   }
 
   public boolean isFavored(IBasicCharacterData basicCharacter, IGenericTraitCollection traitCollection) {
@@ -208,10 +195,6 @@ public class DummyCharm extends Identificate implements ICharm {
     this.groupId = expectedGroup;
   }
 
-  public void setSource(IExaltedSourceBook source) {
-    this.source = source;
-  }
-
   public IExaltedSourceBook getSource() {
     return source;
   }
@@ -232,16 +215,12 @@ public class DummyCharm extends Identificate implements ICharm {
     this.prerequisites = prerequisites;
   }
 
-  public void setCharmTypeModel(CharmTypeModel model) {
-    this.model = model;
-  }
-
   public CharmTypeModel getCharmTypeModel() {
     return model;
   }
 
   public ICharmAttribute[] getAttributes() {
-    return attributes.toArray(new ICharmAttribute[0]);
+    return attributes.toArray(new ICharmAttribute[attributes.size()]);
   }
 
   public void addKeyword(CharmAttribute attribute) {

@@ -16,7 +16,6 @@ public class ComboView implements IComboView {
   private JLabel label;
   private final Action deleteAction;
   private final Action editAction;
-  //private Component editComponent;
   private Component deleteComponent;
 
   public ComboView(Action deleteAction, Action editAction) {
@@ -48,12 +47,10 @@ public class ComboView implements IComboView {
 
   public void setEditButtonsVisible(boolean enabled) {
     if (!enabled) {
-      //taskPaneGroup.remove(editComponent);
       taskPaneGroup.remove(deleteComponent);
       GuiUtilities.revalidateTree(taskPaneGroup);
-    }
-    else {
-      // todo vom (04.04.2005) (sieroux): Komponenten einfügen falls noch nicht enthalten
+    } else {
+      // todo vom (04.04.2005) (sieroux): Komponenten einfuegen falls noch nicht enthalten
     }
   }
 }

@@ -1,5 +1,7 @@
 package net.sf.anathema.character;
 
+import static java.text.MessageFormat.format;
+
 import java.net.URL;
 
 import net.sf.anathema.ProxySplashscreen;
@@ -29,13 +31,18 @@ public class CharacterPlugin extends Plugin {
         Parameter typeParameter = listParameter.getSubParameter(PARAM_TYPE);
         Parameter rules = listParameter.getSubParameter(PARAM_RULES);
         Parameter path = listParameter.getSubParameter(PARAM_PATH);
-        URL resource = getClass().getClassLoader().getResource(path.valueAsString());
-        charmCompiler.registerCharmFile(typeParameter.valueAsString(), rules.valueAsString(), resource);
+        String typeString = typeParameter.valueAsString();
+        String ruleString = rules.valueAsString();
+        String pathString = path.valueAsString();
+        URL resource = getClass().getClassLoader().getResource(pathString);
+        if (resource == null) {
+          throw new Exception(format("No resource found at {0} for {1}, {2}.", pathString, typeString, ruleString));
+        }
+        charmCompiler.registerCharmFile(typeString, ruleString, resource);
       }
     }
     charmCompiler.buildCharms();
   }
-
 
   @Override
   protected void doStop() throws Exception {

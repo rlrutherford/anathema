@@ -1,10 +1,6 @@
 package net.sf.anathema.character.equipment.impl.character.model;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.db4o.query.Predicate;
 import net.sf.anathema.character.equipment.MagicalMaterial;
 import net.sf.anathema.character.equipment.character.model.IEquipmentItem;
 import net.sf.anathema.character.equipment.item.model.IEquipmentTemplateProvider;
@@ -15,7 +11,15 @@ import net.sf.anathema.character.generic.equipment.weapon.IArmourStats;
 import net.sf.anathema.character.generic.impl.rules.ExaltedRuleSet;
 import net.sf.anathema.character.generic.rules.IExaltedRuleSet;
 
-import com.db4o.query.Predicate;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static net.sf.anathema.character.generic.equipment.ArtifactAttuneType.FullyAttuned;
+import static net.sf.anathema.character.generic.equipment.ArtifactAttuneType.Unattuned;
+import static net.sf.anathema.character.generic.equipment.ArtifactAttuneType.UnharmoniouslyAttuned;
+import static net.sf.anathema.character.generic.type.CharacterType.INFERNAL;
 
 public class EquipmentAdditionalModel extends AbstractEquipmentAdditionalModel {
   private final IEquipmentTemplateProvider equipmentTemplateProvider;
@@ -24,10 +28,11 @@ public class EquipmentAdditionalModel extends AbstractEquipmentAdditionalModel {
   private final List<IEquipmentItem> naturalWeaponItems = new ArrayList<IEquipmentItem>();
 
   public EquipmentAdditionalModel(
-	  IBasicCharacterData context,
-      IArmourStats naturalArmour,
-      IEquipmentTemplateProvider equipmentTemplateProvider,
-      IEquipmentTemplate... naturalWeapons) {
+          ICharacterType characterType,
+          IArmourStats naturalArmour,
+          IEquipmentTemplateProvider equipmentTemplateProvider,
+          IExaltedRuleSet ruleSet,
+          IEquipmentTemplate... naturalWeapons) {
     super(context.getRuleSet(), naturalArmour);
     this.context = context;
     this.defaultMaterial = evaluateDefaultMaterial();
@@ -40,7 +45,7 @@ public class EquipmentAdditionalModel extends AbstractEquipmentAdditionalModel {
       naturalWeaponItems.add(initItem(item));
     }
   }
-  
+
   private MagicalMaterial evaluateDefaultMaterial() {
 	    MagicalMaterial defaultMaterial = MagicalMaterial.getDefault(context.getCharacterType(), context.getCasteType());
 	    if (defaultMaterial == null) {
@@ -60,14 +65,13 @@ public class EquipmentAdditionalModel extends AbstractEquipmentAdditionalModel {
   public String[] getAvailableTemplateIds() {
     final Set<String> idSet = new HashSet<String>();
     equipmentTemplateProvider.queryContainer(new Predicate<IEquipmentTemplate>() {
-		private static final long serialVersionUID = 1L;
+      private static final long serialVersionUID = 1L;
 
-	@Override
+      @Override
       public boolean match(IEquipmentTemplate candidate) {
         if (candidate.getStats(getRuleSet()).length > 0) {
           idSet.add(candidate.getName());
-        }
-        else {
+        } else {
           for (IExaltedRuleSet rules : ExaltedRuleSet.values()) {
             if (candidate.getStats(rules).length > 0) {
               return false;
@@ -99,21 +103,28 @@ public class EquipmentAdditionalModel extends AbstractEquipmentAdditionalModel {
   public MagicalMaterial getDefaultMaterial() {
     return defaultMaterial;
   }
-  
-  public ArtifactAttuneType[] getAttuneTypes(IEquipmentItem item)
-  {
-	  MagicalMaterial material = item.getMaterial();
-	  switch (item.getMaterialComposition())
-	  {
-	  default:
-	  case None:
-		  return null;
-	  case Fixed:
-	  case Variable:
-		  return MagicalMaterial.getAttunementTypes(context.getCharacterType(), context.getCasteType(), material);
-	  case Compound:
-		  return new ArtifactAttuneType[]
-		       { ArtifactAttuneType.Unattuned, ArtifactAttuneType.FullyAttuned };
-	  }
+
+  public ArtifactAttuneType[] getAttuneTypes(IEquipmentItem item) {
+    MagicalMaterial material = item.getMaterial();
+    switch (item.getMaterialComposition()) {
+      default:
+      case None:
+        return null;
+      case Fixed:
+      case Variable:
+        return MagicalMaterial.getAttunementTypes(characterType, material);
+      case Compound:
+        return new ArtifactAttuneType[]
+                {Unattuned, ArtifactAttuneType.FullyAttuned};
+      case MalfeanMaterials:
+        return createMalfeanMaterialsAttunementOptions();
+    }
+  }
+
+  private ArtifactAttuneType[] createMalfeanMaterialsAttunementOptions() {
+    if (characterType != INFERNAL) {
+      return new ArtifactAttuneType[]{Unattuned, UnharmoniouslyAttuned};
+    }
+    return new ArtifactAttuneType[]{Unattuned, FullyAttuned};
   }
 }

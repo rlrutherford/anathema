@@ -29,18 +29,28 @@ public class Combo implements ICombo {
   private final ITextualDescription description = new SimpleTextualDescription();
   private Integer id = null;
 
-  public ICharm[] getCharms() {
-	List<ICharm> charmList = new ArrayList<ICharm>();
-	charmList.addAll(creationCharmList);
-	charmList.addAll(experiencedCharmList);
-    return charmList.toArray(new ICharm[0]);
+  public ICharm[] getCharms()
+  {
+	  ArrayList<ICharm> charms = new ArrayList<ICharm>();
+	  charms.addAll(creationCharmList);
+	  charms.addAll(experiencedCharmList);
+      return charms.toArray(new ICharm[0]);
+  }
+  
+  public ICharm[] getCreationCharms()
+  {
+	  return creationCharmList.toArray(new ICharm[0]);
+  }
+  
+  public ICharm[] getExperiencedCharms()
+  {
+	  return experiencedCharmList.toArray(new ICharm[0]);
   }
 
-  public void addCharm(ICharm charm, boolean experienced) {
-	if (experienced)
-		experiencedCharmList.add(charm);
-	else
-		creationCharmList.add(charm);
+  public void addCharm(ICharm charm, boolean experienced)
+  {
+	List<ICharm> targetList = experienced ? experiencedCharmList : creationCharmList;
+    targetList.add(charm);
     if (charm.getCharmTypeModel().getCharmType() == CharmType.Simple) {
       simpleCharm = charm;
     }
@@ -60,20 +70,8 @@ public class Combo implements ICombo {
 
   public void removeCharms(ICharm[] charms) {
     List<ICharm> removal = Arrays.asList(charms);
-    for (ICharm charm : charms)
-    	for (ICharm otherCharm : creationCharmList)
-    		if (charm.equals(otherCharm))
-    		{
-    			creationCharmList.remove(charm);
-    			break;
-    		}
-    for (ICharm charm : charms)
-    	for (ICharm otherCharm : experiencedCharmList)
-    		if (charm.equals(otherCharm))
-    		{
-    			experiencedCharmList.remove(charm);
-    			break;
-    		}
+    creationCharmList.removeAll(removal);
+    experiencedCharmList.removeAll(removal);
     if (simpleCharm != null && removal.contains(simpleCharm)) {
       simpleCharm = null;
     }
@@ -96,12 +94,12 @@ public class Combo implements ICombo {
   }
 
   private void copyCombo(ICombo source, Combo destination) {
-	destination.creationSubeffectList.putAll(((Combo)source).creationSubeffectList);
-	destination.experiencedSubeffectList.putAll(((Combo)source).experiencedSubeffectList);
-    for (ICharm charm : source.getCreationLearnedCharms())
+    for (ICharm charm : source.getCreationCharms()) {
       destination.addCharm(charm, false);
-    for (ICharm charm : source.getExperiencedLearnedCharms())
+    }
+    for (ICharm charm : source.getExperiencedCharms()) {
         destination.addCharm(charm, true);
+      }
     if (source.getId() != null) {
       destination.setId(source.getId());
     }
@@ -115,8 +113,6 @@ public class Combo implements ICombo {
     description.setText(""); //$NON-NLS-1$
     removeCharms(creationCharmList.toArray(new ICharm[0]));
     removeCharms(experiencedCharmList.toArray(new ICharm[0]));
-    creationSubeffectList.clear();
-    experiencedSubeffectList.clear();
   }
 
   public ITextualDescription getName() {

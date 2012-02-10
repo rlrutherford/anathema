@@ -18,6 +18,14 @@ public enum CircleType implements IIdentificate {
     public CircleType[] getComparableCircles() {
       return getSorceryCircles();
     }
+    
+    public boolean isSorceryCircle() {
+      return true;
+    }
+    
+    public boolean isNecromancyCircle() {
+      return false;
+    }
   },
   Celestial {
     @Override
@@ -28,6 +36,14 @@ public enum CircleType implements IIdentificate {
     @Override
     public CircleType[] getComparableCircles() {
       return getSorceryCircles();
+    }
+    
+    public boolean isSorceryCircle() {
+      return true;
+    }
+    
+    public boolean isNecromancyCircle() {
+      return false;
     }
   },
   Solar {
@@ -40,6 +56,14 @@ public enum CircleType implements IIdentificate {
     public CircleType[] getComparableCircles() {
       return getSorceryCircles();
     }
+    
+    public boolean isSorceryCircle() {
+      return true;
+    }
+    
+    public boolean isNecromancyCircle() {
+      return false;
+    }
   },
   Shadowlands {
     @Override
@@ -51,6 +75,14 @@ public enum CircleType implements IIdentificate {
     public CircleType[] getComparableCircles() {
       return getNecromancyCircles();
     }
+    
+    public boolean isSorceryCircle() {
+      return false;
+    }
+    
+    public boolean isNecromancyCircle() {
+      return true;
+    }
   },
   Labyrinth {
     @Override
@@ -61,6 +93,14 @@ public enum CircleType implements IIdentificate {
     @Override
     public CircleType[] getComparableCircles() {
       return getNecromancyCircles();
+    }
+    
+    public boolean isSorceryCircle() {
+      return false;
+    }
+    
+    public boolean isNecromancyCircle() {
+      return true;
     }
   },
   Void {
@@ -104,6 +144,10 @@ public enum CircleType implements IIdentificate {
   public abstract void accept(ICircleTypeVisitor visitor);
 
   public abstract CircleType[] getComparableCircles();
+  
+  public abstract boolean isSorceryCircle();
+  
+  public abstract boolean isNecromancyCircle();
 
   public static CircleType[] getSorceryCircles() {
     return new CircleType[] { Terrestrial, Celestial, Solar };

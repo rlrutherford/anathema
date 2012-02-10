@@ -21,9 +21,9 @@ public interface ICombo extends Cloneable {
 
   public ICharm[] getCharms();
   
-  public ICharm[] getCreationLearnedCharms();
+  public ICharm[] getCreationCharms();
   
-  public ICharm[] getExperiencedLearnedCharms();
+  public ICharm[] getExperiencedCharms();
 
   public boolean contains(ICharm charm);
 

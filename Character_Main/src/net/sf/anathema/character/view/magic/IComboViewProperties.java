@@ -3,30 +3,35 @@ package net.sf.anathema.character.view.magic;
 import javax.swing.Icon;
 
 import net.sf.anathema.character.generic.framework.magic.view.IMagicLearnProperties;
+import net.sf.anathema.character.generic.magic.ICharm;
 
 public interface IComboViewProperties extends IMagicLearnProperties {
 
-  public Icon getFinalizeButtonIcon();
+  Icon getFinalizeButtonIcon();
+
+  Icon getFinalizeXPButtonIcon();
+
+  String getFinalizeButtonToolTip();
+
+  String getFinalizeXPButtonToolTip();
+
+  String getAvailableComboCharmsLabel();
+
+  String getComboedCharmsLabel();
+
+  Icon getClearButtonIcon();
+
+  String getClearButtonToolTip();
+
+  Icon getCancelEditButtonIcon();
+
+  String getFinalizeButtonEditToolTip();
+
+  String getCancelButtonEditToolTip();
   
-  public Icon getFinalizeXPButtonIcon();
+  boolean isRemoveButtonEnabled(ICharm charm);
 
-  public String getFinalizeButtonToolTip();
+  boolean canFinalize();
   
-  public String getFinalizeXPButtonToolTip();
-
-  public String getAvailableComboCharmsLabel();
-
-  public String getComboedCharmsLabel();
-
-  public Icon getClearButtonIcon();
-
-  public String getClearButtonToolTip();
-
-  public Icon getCancelEditButtonIcon();
-
-  public String getFinalizeButtonEditToolTip();
-
-  public String getCancelButtonEditToolTip();
-  
-  public boolean canFinalizeWithXP();
+  boolean canFinalizeWithXP();
 }

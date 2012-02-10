@@ -196,18 +196,6 @@ public class Charm extends Identificate implements ICharm {
     return mergedCharms;
   }
 
-  public boolean isFreeByMerged(IMagicCollection magicCollection) {
-    for (Set<ICharm> merged : merges) {
-      for (ICharm charm : merged) {
-        boolean isThis = charm.getId().equals(getId());
-        if (!isThis && magicCollection.isLearned(charm)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
   public Set<ICharm> getParentCharms() {
     return new HashSet<ICharm>(parentCharms);
   }
@@ -394,7 +382,7 @@ public class Charm extends Identificate implements ICharm {
 		characterCanFavorMagicOfPrimaryType[0] = false;
 	}
     });
-    if (characterCanFavorMagicOfPrimaryType[0] == false) {
+    if (!characterCanFavorMagicOfPrimaryType[0]) {
       return false;
     }
     IGenericTrait trait = traitCollection.getTrait(primaryTraitType);

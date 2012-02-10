@@ -1,9 +1,6 @@
 package net.sf.anathema.character.impl.generic;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import net.disy.commons.core.util.ContractFailedException;
 import net.sf.anathema.character.generic.additionaltemplate.IAdditionalModel;
 import net.sf.anathema.character.generic.caste.ICasteType;
 import net.sf.anathema.character.generic.character.ICharacterPoints;
@@ -43,20 +40,18 @@ import net.sf.anathema.character.model.charm.special.IMultipleEffectCharmConfigu
 import net.sf.anathema.character.model.charm.special.ISubeffectCharmConfiguration;
 import net.sf.anathema.lib.util.IdentifiedInteger;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class GenericCharacter implements IGenericCharacter {
 
   private final ICharacterStatistics statistics;
   private final CharacterPoints characterPoints;
-  private final IEquipmentModifiers equipmentModifiers;
 
   public GenericCharacter(ICharacterStatistics statistics, IExperiencePointManagement experiencePointManagement) {
-	    this(statistics, experiencePointManagement, null);
-	  }
-  
-  public GenericCharacter(ICharacterStatistics statistics, IExperiencePointManagement experiencePointManagement, IEquipmentModifiers stats) {
     this.statistics = statistics;
     this.characterPoints = new CharacterPoints(statistics, experiencePointManagement);
-    this.equipmentModifiers = stats;
   }
 
   public IGenericTraitCollection getTraitCollection() {
@@ -66,9 +61,8 @@ public class GenericCharacter implements IGenericCharacter {
   public int getLearnCount(IMultiLearnableCharm charm) {
     return getLearnCount(charm.getCharmId());
   }
-  
-  public int getLearnCount(String charmName)
-  {
+
+  public int getLearnCount(String charmName) {
     ICharmConfiguration charms = statistics.getCharms();
     try {
       IMultiLearnableCharmConfiguration configuration = (IMultiLearnableCharmConfiguration) charms.getSpecialCharmConfiguration(charmName);
@@ -83,17 +77,15 @@ public class GenericCharacter implements IGenericCharacter {
       return 1;
     }
   }
-  
-  public void setLearnCount(IMultiLearnableCharm multiLearnableCharm, int newValue)
-  {
-	  setLearnCount(multiLearnableCharm.getCharmId(), newValue);
+
+  public void setLearnCount(IMultiLearnableCharm multiLearnableCharm, int newValue) {
+    setLearnCount(multiLearnableCharm.getCharmId(), newValue);
   }
-  
-  public void setLearnCount(String charmName, int newValue)
-  {
-	  ICharmConfiguration charms = statistics.getCharms();
-	  IMultiLearnableCharmConfiguration configuration = (IMultiLearnableCharmConfiguration) charms.getSpecialCharmConfiguration(charmName);
-	  configuration.setCurrentLearnCount(newValue);
+
+  public void setLearnCount(String charmName, int newValue) {
+    ICharmConfiguration charms = statistics.getCharms();
+    IMultiLearnableCharmConfiguration configuration = (IMultiLearnableCharmConfiguration) charms.getSpecialCharmConfiguration(charmName);
+    configuration.setCurrentLearnCount(newValue);
   }
 
   public boolean isLearned(IMagic magic) {
@@ -157,21 +149,31 @@ public class GenericCharacter implements IGenericCharacter {
   }
 
   public String getPeripheralPool() {
-    return getTemplate().getEssenceTemplate().isEssenceUser() ? statistics.getEssencePool().getPeripheralPool() : null;
+    try {
+      return getTemplate().getEssenceTemplate().isEssenceUser() ? statistics.getEssencePool().getPeripheralPool() : null;
+    }
+    catch (ContractFailedException e) {
+      return null;
+    }
   }
-  
+
   public int getPeripheralPoolValue() {
     return getTemplate().getEssenceTemplate().isEssenceUser() ? statistics.getEssencePool().getPeripheralPoolValue() : 0;
   }
 
   public String getPersonalPool() {
-    return getTemplate().getEssenceTemplate().isEssenceUser() ? statistics.getEssencePool().getPersonalPool() : null;
+  try {
+      return getTemplate().getEssenceTemplate().isEssenceUser() ? statistics.getEssencePool().getPersonalPool() : null;
+    }
+    catch (ContractFailedException e) {
+      return null;
+    }
   }
-  
+
   public int getPersonalPoolValue() {
     return getTemplate().getEssenceTemplate().isEssenceUser() ? statistics.getEssencePool().getPersonalPoolValue() : 0;
   }
-  
+
   public int getOverdrivePoolValue() {
     return getTemplate().getEssenceTemplate().isEssenceUser() ? statistics.getEssencePool().getOverdrivePoolValue() : 0;
   }
@@ -185,7 +187,7 @@ public class GenericCharacter implements IGenericCharacter {
       return new IdentifiedInteger[0];
     }
   }
-  
+
   public int getAttunedPoolValue() {
     return getTemplate().getEssenceTemplate().isEssenceUser() ? statistics.getEssencePool().getAttunedPoolValue() : 0;
   }
@@ -193,14 +195,13 @@ public class GenericCharacter implements IGenericCharacter {
   public IGenericTrait[] getBackgrounds() {
     return statistics.getTraitConfiguration().getBackgrounds().getBackgrounds();
   }
-  
+
   public IAdditionalModel getAdditionalModel(String id) {
     return statistics.getExtendedConfiguration().getAdditionalModel(id);
   }
-  
-  public IEquipmentModifiers getEquipmentModifiers()
-  {
-	  return equipmentModifiers;
+
+  public IEquipmentModifiers getEquipmentModifiers() {
+    return new EquipmentModifiers(statistics);
   }
 
   public IConcept getConcept() {
@@ -208,10 +209,9 @@ public class GenericCharacter implements IGenericCharacter {
   }
 
   public List<IMagic> getAllLearnedMagic() {
-    boolean experienced = statistics.isExperienced();
     List<IMagic> magicList = new ArrayList<IMagic>();
-    magicList.addAll(Arrays.asList(statistics.getCharms().getLearnedCharms(experienced)));
-    magicList.addAll(Arrays.asList(statistics.getSpells().getLearnedSpells(experienced)));
+    magicList.addAll(Arrays.asList(getLearnedCharms()));
+    magicList.addAll(Arrays.asList(statistics.getSpells().getLearnedSpells(statistics.isExperienced())));
     return magicList;
   }
 
@@ -250,30 +250,26 @@ public class GenericCharacter implements IGenericCharacter {
   public ITraitLimitation getEssenceLimitation() {
     return getTemplate().getTraitTemplateCollection().getTraitTemplate(OtherTraitType.Essence).getLimitation();
   }
-  
-  public int getEssenceCap(boolean modified)
-  {
-	  IDefaultTrait essence = (IDefaultTrait) statistics.getTraitConfiguration().getTrait(OtherTraitType.Essence);
-	  return modified ? essence.getModifiedMaximalValue() : essence.getUnmodifiedMaximalValue();
+
+  public int getEssenceCap(boolean modified) {
+    IDefaultTrait essence = (IDefaultTrait) statistics.getTraitConfiguration().getTrait(OtherTraitType.Essence);
+    return modified ? essence.getModifiedMaximalValue() : essence.getUnmodifiedMaximalValue();
   }
-  
-  public int getAge()
-  {
-	return statistics.getCharacterConcept().getAgeSpinner().getValue();
+
+  public int getAge() {
+    return statistics.getCharacterConcept().getAge().getValue();
   }
 
   public IIdentifiedTraitTypeGroup[] getAbilityTypeGroups() {
     return statistics.getTraitConfiguration().getAbilityTypeGroups();
   }
-  
-  public IIdentifiedTraitTypeGroup[] getAttributeTypeGroups()
-  {
-	  return statistics.getTraitConfiguration().getAttributeTypeGroups();
+
+  public IIdentifiedTraitTypeGroup[] getAttributeTypeGroups() {
+    return statistics.getTraitConfiguration().getAttributeTypeGroups();
   }
-  
-  public IIdentifiedTraitTypeGroup[] getYoziTypeGroups()
-  {
-	  return statistics.getTraitConfiguration().getYoziTypeGroups();
+
+  public IIdentifiedTraitTypeGroup[] getYoziTypeGroups() {
+    return statistics.getTraitConfiguration().getYoziTypeGroups();
   }
 
   public int getSpentExperiencePoints() {
@@ -291,8 +287,7 @@ public class GenericCharacter implements IGenericCharacter {
 
   public boolean isMultipleEffectCharm(ICharm charm) {
     ISpecialCharmConfiguration charmConfiguration = statistics.getCharms().getSpecialCharmConfiguration(charm);
-    return charmConfiguration instanceof IMultipleEffectCharmConfiguration
-        && !(charmConfiguration instanceof ISubeffectCharmConfiguration);
+    return charmConfiguration instanceof IMultipleEffectCharmConfiguration && !(charmConfiguration instanceof ISubeffectCharmConfiguration);
   }
 
   public String[] getLearnedEffects(ICharm charm) {
@@ -317,6 +312,6 @@ public class GenericCharacter implements IGenericCharacter {
 
   @Override
   public ICharm[] getLearnedCharms() {
-    return statistics.getCharms().getLearnedCharms(true);
+    return statistics.getCharms().getLearnedCharms(statistics.isExperienced());
   }
 }

@@ -11,9 +11,9 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
 import net.disy.commons.swing.dialog.core.IPageContent;
-import net.disy.commons.swing.layout.GridDialogLayoutDataUtilities;
 import net.disy.commons.swing.layout.grid.GridDialogLayout;
 import net.disy.commons.swing.layout.grid.GridDialogLayoutData;
+import net.disy.commons.swing.layout.grid.GridDialogLayoutDataFactory;
 import net.disy.commons.swing.layout.grid.IGridDialogLayoutData;
 import net.disy.commons.swing.toolbar.ToolBarUtilities;
 import net.disy.commons.swing.widgets.HorizontalLine;
@@ -21,7 +21,7 @@ import net.sf.anathema.character.equipment.creation.view.IEquipmentTypeChoiceVie
 
 public class EquipmentTypeChoiceView implements IPageContent, IEquipmentTypeChoiceView {
 
-  private static final GridDialogLayoutData OVERALL_HORIZONTAL_FILL = GridDialogLayoutDataUtilities.createHorizontalSpanData(
+  private static final GridDialogLayoutData OVERALL_HORIZONTAL_FILL = GridDialogLayoutDataFactory.createHorizontalSpanData(
       3,
       GridDialogLayoutData.FILL_HORIZONTAL);
   private final ButtonGroup buttonGroup = new ButtonGroup();
@@ -36,9 +36,6 @@ public class EquipmentTypeChoiceView implements IPageContent, IEquipmentTypeChoi
 	panel.add(content, data);
 	panel.add(extra, data);
 	return panel;
-	/*content.remove(extra);
-	content.add(extra);
-    return content;*/
   }
 
   public void addStatisticsRow(String categoryLabel, Action action, String typeLabel, boolean isSelected) {

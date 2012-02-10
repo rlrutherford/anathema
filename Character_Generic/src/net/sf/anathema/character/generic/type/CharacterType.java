@@ -134,7 +134,7 @@ public enum CharacterType implements ICharacterType {
   }
 
   public boolean isExaltType() {
-    return ArrayUtilities.contains(getAllExaltTypes(), this);
+    return ArrayUtilities.containsValue(getAllExaltTypes(), this);
   }
 
   @Override

@@ -1,16 +1,5 @@
 package net.sf.anathema.character.presenter;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.Icon;
-import javax.swing.JList;
-
 import net.sf.anathema.character.generic.backgrounds.IBackgroundTemplate;
 import net.sf.anathema.character.generic.framework.additionaltemplate.listening.DedicatedCharacterChangeAdapter;
 import net.sf.anathema.character.generic.framework.additionaltemplate.model.ICharacterModelContext;
@@ -18,7 +7,6 @@ import net.sf.anathema.character.generic.framework.resources.BackgroundInternati
 import net.sf.anathema.character.library.intvalue.IRemovableTraitView;
 import net.sf.anathema.character.library.trait.presenter.TraitPresenter;
 import net.sf.anathema.character.library.trait.visitor.IDefaultTrait;
-import net.sf.anathema.character.library.util.ProxyComboBoxEditor;
 import net.sf.anathema.character.model.background.IBackground;
 import net.sf.anathema.character.model.background.IBackgroundConfiguration;
 import net.sf.anathema.character.model.background.IBackgroundListener;
@@ -32,23 +20,31 @@ import net.sf.anathema.lib.gui.IPresenter;
 import net.sf.anathema.lib.registry.IIdentificateRegistry;
 import net.sf.anathema.lib.resources.IResources;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 public class BackgroundPresenter implements IPresenter {
 
   private final IBackgroundConfiguration configuration;
   private final IBasicAdvantageView configurationView;
   private final IResources resources;
-  private final IdentityMapping<IDefaultTrait, IRemovableTraitView< ? >> viewsByBackground = new IdentityMapping<IDefaultTrait, IRemovableTraitView< ? >>();
+  private final IdentityMapping<IDefaultTrait, IRemovableTraitView<?>> viewsByBackground = new IdentityMapping<IDefaultTrait, IRemovableTraitView<?>>();
   private final IIdentificateRegistry<IBackgroundTemplate> backgroundRegistry;
   private final Map<String, IBackgroundTemplate> templatesByDisplayName = new HashMap<String, IBackgroundTemplate>();
   private final BackgroundInternationalizer internationalizer;
   private String backgroundDescription = "";
+  private Displayer displayer;
 
   public BackgroundPresenter(
-      IResources resources,
-      IBackgroundConfiguration configuration,
-      ICharacterModelContext context,
-      IBasicAdvantageView backgroundView,
-      IIdentificateRegistry<IBackgroundTemplate> backgroundRegistry) {
+          IResources resources,
+          IBackgroundConfiguration configuration,
+          ICharacterModelContext context,
+          IBasicAdvantageView backgroundView,
+          IIdentificateRegistry<IBackgroundTemplate> backgroundRegistry) {
     this.resources = resources;
     this.configuration = configuration;
     this.configurationView = backgroundView;
@@ -69,47 +65,21 @@ public class BackgroundPresenter implements IPresenter {
         allowRemoveCreationBackground(!experienced);
       }
     });
-  }
-
-  private Object getDisplayObject(Object anObject) {
-    if (anObject instanceof IDefaultTrait) {
-      anObject = ((IDefaultTrait) anObject).getType();
-    }
-    if (anObject instanceof IBackgroundTemplate) {
-      return internationalizer.getDisplayName((IBackgroundTemplate) anObject);
-    }
-    return anObject;
+    this.displayer = new Displayer(internationalizer);
   }
 
   public void initPresentation() {
     Icon addIcon = new BasicUi(resources).getAddIcon();
     final IButtonControlledComboEditView<Object> view = configurationView.addBackgroundSelectionView(
             resources.getString("BackgroundConfigurationView.SelectionCombo.Label"), //$NON-NLS-1$
-            new DefaultListCellRenderer() {
-				private static final long serialVersionUID = 1L;
-
-				@Override
-                public Component getListCellRendererComponent(
-                    JList list,
-                    Object value,
-                    int index,
-                    boolean isSelected,
-                    boolean cellHasFocus) {
-                  return super.getListCellRendererComponent(list, getDisplayObject(value), index, isSelected, cellHasFocus);
-                }
-              },
-            new ProxyComboBoxEditor() {
-  		        @Override
-  		        public void setItem(Object anObject) {
-  		          super.setItem(anObject);
-  		        }
-  		      },
+            new BackgroundListRenderer(displayer),
+            new BackgroundBoxEditor(displayer),
             addIcon);
     view.addEditChangedListener(new IObjectValueChangedListener<String>() {
-        public void valueChanged(String newBackgroundDescription) {
-        	backgroundDescription = newBackgroundDescription;
-        }
-      });
+      public void valueChanged(String newBackgroundDescription) {
+        backgroundDescription = newBackgroundDescription;
+      }
+    });
     view.setObjects(getSortedBackgrounds());
     view.addButtonListener(new IObjectValueChangedListener<Object>() {
       public void valueChanged(Object newValue) {
@@ -117,8 +87,7 @@ public class BackgroundPresenter implements IPresenter {
         String description = backgroundDescription.equals("") ? null : backgroundDescription;
         if (backgroundType == null) {
           configuration.addBackground(newValue.toString(), description);
-        }
-        else {
+        } else {
           configuration.addBackground(backgroundType, description);
         }
         view.clear();
@@ -138,10 +107,9 @@ public class BackgroundPresenter implements IPresenter {
 
   private synchronized void addBackgroundView(final IBackground background) {
     Icon deleteIcon = new BasicUi(resources).getRemoveIcon();
-    String backgroundString = background.getType().toString() + (background.getDescription() != null ?
-    		" (" + background.getDescription() + ")" : "");
-    IRemovableTraitView< ? > backgroundView = configurationView.addBackgroundView(deleteIcon, backgroundString,
-    		background.getCurrentValue(), background.getMaximalValue());
+    String backgroundString = new BackgroundTextCompiler(displayer).compileDisplayedText(background);
+    IRemovableTraitView<?> backgroundView = configurationView.addBackgroundView(deleteIcon, backgroundString,
+            background.getCurrentValue(), background.getMaximalValue());
     new TraitPresenter(background, backgroundView).initPresentation();
     backgroundView.addButtonListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -149,12 +117,12 @@ public class BackgroundPresenter implements IPresenter {
       }
     });
     if (background.getMinimalValue() > 0)
-    	backgroundView.setButtonEnabled(false);
+      backgroundView.setButtonEnabled(false);
     viewsByBackground.put(background, backgroundView);
   }
 
   private synchronized void removeBackgroundView(IDefaultTrait background) {
-    IRemovableTraitView< ? > view = viewsByBackground.get(background);
+    IRemovableTraitView<?> view = viewsByBackground.get(background);
     viewsByBackground.remove(background);
     view.delete();
   }
@@ -174,7 +142,7 @@ public class BackgroundPresenter implements IPresenter {
   public void allowRemoveCreationBackground(boolean allowed) {
     for (IDefaultTrait background : viewsByBackground.getAllKeys()) {
       if (background.getCalculationValue() > 0) {
-        IRemovableTraitView< ? > view = viewsByBackground.get(background);
+        IRemovableTraitView<?> view = viewsByBackground.get(background);
         view.setButtonEnabled(allowed && background.getMinimalValue() == 0);
       }
     }

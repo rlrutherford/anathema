@@ -13,6 +13,7 @@ import net.sf.anathema.character.generic.rules.IExaltedEdition;
 import net.sf.anathema.character.impl.model.charm.combo.FirstEditionComboArbitrator;
 import net.sf.anathema.character.impl.model.charm.combo.IComboArbitrator;
 import net.sf.anathema.character.impl.model.charm.combo.SecondEditionComboArbitrator;
+import net.sf.anathema.character.model.ICharacterStatistics;
 import net.sf.anathema.character.model.advance.IExperiencePointConfiguration;
 import net.sf.anathema.character.model.charm.CharmLearnAdapter;
 import net.sf.anathema.character.model.charm.ICharmConfiguration;
@@ -30,27 +31,25 @@ public class ComboConfiguration implements IComboConfiguration {
 
   private final List<ICombo> creationComboList = new ArrayList<ICombo>();
   private final List<ICombo> experiencedComboList = new ArrayList<ICombo>();
-  private final IExperiencePointConfiguration experiencePoints;
   private final IComboArbitrator rules;
   private final ICombo editCombo = new Combo();
   private final GenericControl<IComboConfigurationListener> control = new GenericControl<IComboConfigurationListener>();
-  private final ICharmConfiguration charmConfiguration;
   private final ComboIdProvider idProvider = new ComboIdProvider();
   private final IComboLearnStrategy learnStrategy;
+  private ExperienceComboEditingSupport experienceSupport;
   private final ICharacterModelContext context;
   private final boolean useArrayRules;
   private ICombo originalCombo;
 
+
   public ComboConfiguration(
-      final ICharmConfiguration charmConfiguration,
-      IComboLearnStrategy learnStrategy,
-      IExaltedEdition edition,
-      IExperiencePointConfiguration experiencePoints,
-      ICharacterModelContext context,
-      final boolean useArrayRules) {
-    this.charmConfiguration = charmConfiguration;
+          ICharmConfiguration charmConfiguration,
+          IComboLearnStrategy learnStrategy,
+          IExaltedEdition edition,
+          IExperiencePointConfiguration experience,
+          ICharacterStatistics characterStatistics) {
     this.learnStrategy = learnStrategy;
-    this.charmConfiguration.addCharmLearnListener(new CharmLearnAdapter() {
+    charmConfiguration.addCharmLearnListener(new CharmLearnAdapter() {
       @Override
       public void charmForgotten(ICharm charm) {
     	  if (!useArrayRules)
@@ -68,7 +67,8 @@ public class ComboConfiguration implements IComboConfiguration {
       }
     });
     this.rules = editionRules[0];
-    this.experiencePoints = experiencePoints;
+    this.experienceSupport = new ExperienceComboEditingSupport(characterStatistics, experience,
+    		editCombo, this);
     this.context = context;
     this.useArrayRules = useArrayRules;
   }
@@ -81,7 +81,7 @@ public class ComboConfiguration implements IComboConfiguration {
     List<ICombo> deletionList = new ArrayList<ICombo>();
     for (ICombo combo : creationComboList) {
       if (combo.contains(charm)) {
-        combo.removeCharms(new ICharm[] { charm });
+        combo.removeCharms(new ICharm[]{charm});
         if (combo.getCharms().length < 2) {
           deletionList.add(combo);
         }
@@ -89,21 +89,17 @@ public class ComboConfiguration implements IComboConfiguration {
       }
     }
     if (editCombo.contains(charm)) {
-      removeCharmsFromCombo(new ICharm[] { charm });
+      removeCharmsFromCombo(new ICharm[]{charm});
     }
     for (ICombo combo : deletionList) {
       deleteCombo(combo);
     }
   }
 
-  public void addCharmToCombo(ICharm charm, ISubeffect effect) {
-    if (rules.canBeAddedToCombo(getEditCombo(), charm, useArrayRules)) {
-      if (effect != null)
-      	  getEditCombo().addEffect(charm, effect, context.getBasicCharacterContext().isExperienced());
-      if (effect == null || !getEditCombo().contains(charm))
-    	  getEditCombo().addCharm(charm, context.getBasicCharacterContext().isExperienced());
-    }
-    else {
+  public void addCharmToCombo(ICharm charm, boolean experienced) {
+    if (rules.canBeAddedToCombo(getEditCombo(), charm)) {
+      getEditCombo().addCharm(charm, experienced);
+    } else {
       throw new IllegalArgumentException("The charm " + charm.getId() + " is illegal in this combo."); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
@@ -116,14 +112,13 @@ public class ComboConfiguration implements IComboConfiguration {
     editCombo.removeCharms(charms);
   }
 
+  public void finalizeComboUpgrade(String xpMessage) {
+    experienceSupport.commitChanges(xpMessage);
+    finalizeCombo();
+  }
+
   public void finalizeCombo() {
     learnStrategy.finalizeCombo(this);
-  }
-  
-  public void finalizeComboXP(String xpMessage)
-  {
-	  experiencePoints.addEntry(xpMessage, -1);
-	  finalizeCombo();
   }
 
   public void finalizeCombo(boolean experienced) {
@@ -133,13 +128,11 @@ public class ComboConfiguration implements IComboConfiguration {
       combo.setId(idProvider.createId());
       if (experienced) {
         experiencedComboList.add(combo);
-      }
-      else {
+      } else {
         creationComboList.add(combo);
       }
       fireComboAdded(combo);
-    }
-    else {
+    } else {
       ICombo editedCombo = getComboById(combo.getId());
       editedCombo.getValuesFrom(combo);
       fireComboChanged(editedCombo);
@@ -212,11 +205,11 @@ public class ComboConfiguration implements IComboConfiguration {
   }
 
   public ICombo[] getCreationCombos() {
-    return creationComboList.toArray(new ICombo[0]);
+    return creationComboList.toArray(new ICombo[creationComboList.size()]);
   }
 
   public ICombo[] getExperienceLearnedCombos() {
-    return experiencedComboList.toArray(new ICombo[0]);
+    return experiencedComboList.toArray(new ICombo[experiencedComboList.size()]);
   }
 
   public boolean isComboLegal(ICharm charm) {
@@ -227,44 +220,41 @@ public class ComboConfiguration implements IComboConfiguration {
     experiencedComboList.remove(combo);
     creationComboList.remove(combo);
     fireComboDeleted(combo);
-    if (combo.getId() == editCombo.getId()) {
+    if (combo.getId().equals(editCombo.getId())) {
       clearCombo();
     }
   }
 
   public void clearCombo() {
     editCombo.clear();
-    originalCombo = null;
+    experienceSupport.abortChange();
     fireEndEditEvent();
   }
 
   public void beginComboEdit(ICombo combo) {
+    experienceSupport.startChanging(combo);
     editCombo.clear();
     editCombo.getValuesFrom(combo);
-    originalCombo = combo;
     fireBeginEditEvent(combo);
   }
 
   public boolean isLearnedOnCreation(ICombo combo) {
     return creationComboList.contains(combo);
   }
-  
-  public boolean isAllowedToRemove(ICharm charm)
-  {
-	  if (originalCombo != null &&
-		  (!creationComboList.contains(originalCombo) || experiencePoints.getTotalExperiencePoints() != 0) &&
-		  originalCombo.contains(charm))
-		  return false;
-	  return true;
+
+  @Override
+  public boolean isAllowedToRemove(ICharm charm) {
+    return experienceSupport.isAllowedToRemove(charm);
+  }
+
+  @Override
+  public boolean canFinalize() {
+    return experienceSupport.canFinalize();
   }
   
-  public boolean canFinalizeWithXP()
-  {
-	  if (originalCombo == null || !context.getBasicCharacterContext().isExperienced()) return false;
-	  ICombo testCombo = new Combo();
-	  testCombo.getValuesFrom(editCombo);
-	  testCombo.removeCharms(originalCombo.getCharms());
-	  return testCombo.getCharms().length > 0;
+  @Override
+  public boolean canFinalizeWithXP() {
+    return experienceSupport.canFinalizeWithXP();
   }
   
   private void removeArrayCharms()

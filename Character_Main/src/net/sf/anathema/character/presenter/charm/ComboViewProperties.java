@@ -36,17 +36,20 @@ public final class ComboViewProperties extends AbstractMagicLearnProperties impl
     this.presenter = presenter;
   }
   
-  public boolean canFinalizeWithXP()
-  {
-	  return comboConfiguration.canFinalizeWithXP();
+  public boolean canFinalize() {
+	    return comboConfiguration.canFinalize();
+	  }
+
+  public boolean canFinalizeWithXP() {
+    return comboConfiguration.canFinalizeWithXP();
   }
 
   public Icon getFinalizeButtonIcon() {
     return new CharacterUI(getResources()).getFinalizeIcon();
   }
-  
+
   public Icon getFinalizeXPButtonIcon() {
-	return new CharacterUI(getResources()).getFinalizeXPIcon();
+    return new CharacterUI(getResources()).getFinalizeXPIcon();
   }
 
   public String getAvailableComboCharmsLabel() {
@@ -63,12 +66,17 @@ public final class ComboViewProperties extends AbstractMagicLearnProperties impl
     }
     return comboConfiguration.isComboLegal(getCharm(object));
   }
+  
+  public boolean isRemoveButtonEnabled(ICharm charm)
+  {
+	  return charm != null && comboConfiguration.isAllowedToRemove(charm);
+  }
 
   @Override
   public ListCellRenderer getLearnedMagicRenderer() {
     return new LegalityCheckListCellRenderer(getResources()) {
       private static final long serialVersionUID = 6643949300795449115L;
-      
+
       @Override
       protected boolean isLegal(Object object) {
         return comboConfiguration.isAllowedToRemove(getCharm(object));
@@ -76,18 +84,27 @@ public final class ComboViewProperties extends AbstractMagicLearnProperties impl
 
       @Override
       public Component getListCellRendererComponent(
-          JList list,
-          Object value,
-          int index,
-          boolean isSelected,
-          boolean cellHasFocus) {
+              JList list,
+              Object value,
+              int index,
+              boolean isSelected,
+              boolean cellHasFocus) {
         JComponent renderComponent = (JComponent) super.getListCellRendererComponent(
+<<<<<<< HEAD
             list,
             value,
             index,
             isSelected,
             cellHasFocus);
         String tooltipString = charmInfoStringProvider.getInfoString(getCharm(value), null);
+=======
+                list,
+                value,
+                index,
+                isSelected,
+                cellHasFocus);
+        String tooltipString = charmInfoStringProvider.getInfoString((ICharm) value, null);
+>>>>>>> master
         renderComponent.setToolTipText(tooltipString);
         return renderComponent;
       }
@@ -119,18 +136,27 @@ public final class ComboViewProperties extends AbstractMagicLearnProperties impl
 
       @Override
       public Component getListCellRendererComponent(
-          JList list,
-          Object value,
-          int index,
-          boolean isSelected,
-          boolean cellHasFocus) {
+              JList list,
+              Object value,
+              int index,
+              boolean isSelected,
+              boolean cellHasFocus) {
         JComponent renderComponent = (JComponent) super.getListCellRendererComponent(
+<<<<<<< HEAD
             list,
             value,
             index,
             isSelected,
             cellHasFocus);
         String tooltipString = charmInfoStringProvider.getInfoString(getCharm(value), null);
+=======
+                list,
+                value,
+                index,
+                isSelected,
+                cellHasFocus);
+        String tooltipString = charmInfoStringProvider.getInfoString((ICharm) value, null);
+>>>>>>> master
         renderComponent.setToolTipText(tooltipString);
         return renderComponent;
       }
@@ -166,13 +192,14 @@ public final class ComboViewProperties extends AbstractMagicLearnProperties impl
   public String getFinalizeButtonToolTip() {
     return getResources().getString("CardView.CharmConfiguration.ComboCreation.FinalizeToolTip"); //$NON-NLS-1$
   }
-  
+
   public String getFinalizeXPButtonToolTip() {
-	    return getResources().getString("CardView.CharmConfiguration.ComboCreation.FinalizeXPToolTip"); //$NON-NLS-1$
-	  }
+    return getResources().getString("CardView.CharmConfiguration.ComboCreation.FinalizeXPToolTip"); //$NON-NLS-1$
+  }
 
   public String getClearButtonToolTip() {
-    return getResources().getString("CardView.CharmConfiguration.ComboCreation.ClearToolTip");} //$NON-NLS-1$
+    return getResources().getString("CardView.CharmConfiguration.ComboCreation.ClearToolTip");
+  } //$NON-NLS-1$
 
   public String getAddButtonToolTip() {
     return getResources().getString("CardView.CharmConfiguration.ComboCreation.AddToolTip"); //$NON-NLS-1$

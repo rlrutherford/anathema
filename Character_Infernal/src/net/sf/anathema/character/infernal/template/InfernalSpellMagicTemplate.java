@@ -31,21 +31,20 @@ public class InfernalSpellMagicTemplate extends SpellMagicTemplate
 		        canLearn[0] = canLearnSorcery(spell, knownCharms);
 		      }
 
-		      public void visitCelestial(CircleType type) {
-		    	canLearn[0] = canLearnSorcery(spell, knownCharms);
-		      }
+  @Override
+  public boolean canLearnSpell(final ISpell spell, final ICharm[] knownCharms) {
+    final boolean canLearn[] = new boolean[1];
 
-		      public void visitSolar(CircleType type) {
-		    	canLearn[0] = canLearnSorcery(spell, knownCharms);
-		      }
+    // may be some special spell specific stuff here for demon summoning
 
-		      public void visitShadowland(CircleType type) {
-		    	canLearn[0] = canLearnNecromancy(spell, knownCharms);        
-		      }
+    spell.getCircleType().accept(new ICircleTypeVisitor() {
+      public void visitTerrestrial(CircleType type) {
+        canLearn[0] = canLearnSorcerySpell(spell, knownCharms);
+      }
 
-		      public void visitLabyrinth(CircleType type) {
-		    	  canLearn[0] = canLearnNecromancy(spell, knownCharms);        
-		      }
+      public void visitCelestial(CircleType type) {
+        canLearn[0] = canLearnSorcerySpell(spell, knownCharms);
+      }
 
 		      public void visitVoid(CircleType type) {
 		    	  canLearn[0] = canLearnNecromancy(spell, knownCharms);        
@@ -106,21 +105,37 @@ public class InfernalSpellMagicTemplate extends SpellMagicTemplate
 		        names.add("Infernal.SorcerousEnlightenment." + yozi.getId());
 		      }
 
-		      public void visitCelestial(CircleType type) {
-		    	  names.add("Infernal.SorcerousEnlightenment2." + yozi.getId());
-		      }
+      public void visitLabyrinth(CircleType type) {
+        canLearn[0] = canLearnNecromancySpell(spell, knownCharms);
+      }
 
-		      public void visitSolar(CircleType type) {
-		    	  names.add("Infernal.SorcerousEnlightenment3." + yozi.getId());
-		      }
+      public void visitVoid(CircleType type) {
+        canLearn[0] = canLearnNecromancySpell(spell, knownCharms);
+      }
+    });
 
-		      public void visitShadowland(CircleType type) {
-		    	  names.add("Infernal.SorcerousEnlightenment." + yozi.getId());        
-		      }
+    return canLearn[0];
+  }
 
-		      public void visitLabyrinth(CircleType type) {
-		    	  names.add("Infernal.SorcerousEnlightenment2." + yozi.getId());        
-		      }
+  protected boolean knowsCharm(String charm, ICharm[] knownCharms) {
+    for (ICharm knownCharm : knownCharms)
+      if (charm.equals(knownCharm.getId()))
+        return true;
+    return false;
+  }
+  
+  protected boolean knowsNecromancyInitiation(ICharm[] knownCharms) {
+    return knowsCharm(necromancyInitiation, knownCharms);
+  }
+  
+  @Override
+  public boolean knowsSorcery(ICharm[] knownCharms) {
+    for (CircleType circle : getSorceryCircles())
+      for (String initiation : getInitiations(circle))
+        if (knowsCharm(initiation, knownCharms))
+          return true;
+    return false;
+  }
 
 		      public void visitVoid(CircleType type) {
 		    	  names.add("Infernal.SorcerousEnlightenment3." + yozi.getId());        
@@ -141,5 +156,53 @@ public class InfernalSpellMagicTemplate extends SpellMagicTemplate
 		  names.toArray(charms);
 		  return charms;
 	}
+
+  private boolean canLearnSorcerySpell(ISpell spell, ICharm[] knownCharms) {
+    String[] charmNames = getInitiations(spell.getCircleType());
+
+    for (String charm : charmNames)
+      if (knowsCharm(charm, knownCharms))
+        return true;
+    return false;
+  }
+
+  private boolean canLearnNecromancySpell(ISpell spell, ICharm[] knownCharms) {
+    return knowsNecromancyInitiation(knownCharms)
+           && canLearnSorcerySpell(spell, knownCharms);
+  }
+
+  public String[] getInitiations(CircleType circle) {
+    final List<String> names = new ArrayList<String>();
+    for (final YoziType yozi : YoziType.values()) {
+      circle.accept(new ICircleTypeVisitor() {
+        public void visitTerrestrial(CircleType type) {
+          names.add("Infernal.SorcerousEnlightenment." + yozi.getId());
+        }
+
+        public void visitCelestial(CircleType type) {
+          names.add("Infernal.SorcerousEnlightenment2." + yozi.getId());
+        }
+
+        public void visitSolar(CircleType type) {
+          names.add("Infernal.SorcerousEnlightenment3." + yozi.getId());
+        }
+
+        public void visitShadowland(CircleType type) {
+          names.add("Infernal.SorcerousEnlightenment." + yozi.getId());
+        }
+
+        public void visitLabyrinth(CircleType type) {
+          names.add("Infernal.SorcerousEnlightenment2." + yozi.getId());
+        }
+
+        public void visitVoid(CircleType type) {
+          names.add("Infernal.SorcerousEnlightenment3." + yozi.getId());
+        }
+      });
+    }
+    String[] charms = new String[names.size()];
+    names.toArray(charms);
+    return charms;
+  }
 
 }

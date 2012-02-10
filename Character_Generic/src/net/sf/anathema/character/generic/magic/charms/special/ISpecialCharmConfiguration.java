@@ -3,17 +3,21 @@ package net.sf.anathema.character.generic.magic.charms.special;
 import net.sf.anathema.character.generic.magic.ICharm;
 
 public interface ISpecialCharmConfiguration {
-  public int getCreationLearnCount();
+  int getCreationLearnCount();
 
-  public void addSpecialCharmLearnListener(ISpecialCharmLearnListener listener);
+  void addSpecialCharmLearnListener(ISpecialCharmLearnListener listener);
 
-  public ICharm getCharm();
+  ICharm getCharm();
 
-  public int getCurrentLearnCount();
+  int getCurrentLearnCount();
 
-  public void forget();
+  void forget();
 
+<<<<<<< HEAD
   public void learn(boolean experienced);
   
   public boolean forgetAtZero();
+=======
+  void learn(boolean experienced);
+>>>>>>> master
 }

@@ -61,7 +61,7 @@ Var StartMenuGroup
 !insertmacro MUI_LANGUAGE Italian
 
 # Installer attributes
-OutFile ..\..\Anathema_v${RELEASE_VERSION}.exe
+OutFile ..\..\..\build\Anathema_v${RELEASE_VERSION}.exe
 InstallDir Anathema
 CRCCheck on
 XPStyle on
@@ -81,69 +81,78 @@ ShowUninstDetails show
 Section -Anathema SEC0000
     SetOutPath $INSTDIR\lib
     SetOverwrite on
-    File /r ..\..\build\libraries\*
+    File /r ..\..\..\build\dependencies\*
     SetOutPath $INSTDIR
-    File ..\..\build\anathema.jar
-    File /r ..\..\build\files\*
+    File ..\..\..\Anathema\build\libs\Anathema.jar
+        File ..\..\..\build\launcher\anathema.exe
+    File /r ..\..\..\Development_Documentation\Distribution\English\*
+    SetOutPath $INSTDIR\docs
+    File /r ..\..\..\Development_Documentation\Distribution\*
     SetOutPath $INSTDIR\plugins
-    File ..\..\build\plugins\core.jar
+    File ..\..\..\build\plugins\core.jar
     WriteRegStr HKLM "${REGKEY}\Components" Anathema 1
 SectionEnd
 
 Section $(SEC0001_NAME) SEC0001
     SetOutPath $INSTDIR\plugins
     SetOverwrite on
-    File ..\..\build\plugins\character.jar
-    File ..\..\build\plugins\character_abyssal.jar
-    File ..\..\build\plugins\character_db.jar
-    File ..\..\build\plugins\character_lunar.jar
-    File ..\..\build\plugins\character_martialarts.jar
-    File ..\..\build\plugins\character_mortal.jar
-    File ..\..\build\plugins\character_sidereal.jar
-    File ..\..\build\plugins\character_solar.jar
-    File ..\..\build\plugins\namegenerator.jar
+    File ..\..\..\build\plugins\character.jar
+    File ..\..\..\build\plugins\character_abyssal.jar
+    File ..\..\..\build\plugins\character_db.jar
+    File ..\..\..\build\plugins\character_ghost.jar
+    File ..\..\..\build\plugins\character_godblooded.jar
+    File ..\..\..\build\plugins\character_infernal.jar
+    File ..\..\..\build\plugins\character_lunar.jar
+    File ..\..\..\build\plugins\character_martialarts.jar
+    File ..\..\..\build\plugins\character_mortal.jar
+    File ..\..\..\build\plugins\character_sidereal.jar
+    File ..\..\..\build\plugins\character_solar.jar
+    File ..\..\..\build\plugins\character_spirit.jar
+    File ..\..\..\build\plugins\namegenerator.jar
     WriteRegStr HKLM "${REGKEY}\Components" "Character Management" 1
 SectionEnd
 
 Section $(SEC0002_NAME) SEC0002
     SetOutPath $INSTDIR\plugins
     SetOverwrite on
-    File ..\..\build\plugins\charmcascades.jar
+    File ..\..\..\build\plugins\charm_cascades.jar
     WriteRegStr HKLM "${REGKEY}\Components" "Charm Cascades" 1
 SectionEnd
 
 Section $(SEC0003_NAME) SEC0003
     SetOutPath $INSTDIR\plugins
     SetOverwrite on
-    File ..\..\build\plugins\music.jar
+    File ..\..\..\build\plugins\music.jar
     WriteRegStr HKLM "${REGKEY}\Components" "Music Database" 1
 SectionEnd
 
 Section $(SEC0004_NAME) SEC0004
     SetOutPath $INSTDIR\plugins
     SetOverwrite on
-    File ..\..\build\plugins\plot.jar
+    File ..\..\..\build\plugins\campaign_plot.jar
     WriteRegStr HKLM "${REGKEY}\Components" "Plot Management" 1
 SectionEnd
 
 Section $(SEC0005_NAME) SEC0005
     SetOutPath $INSTDIR\plugins
     SetOverwrite on
-    File ..\..\build\plugins\blog_inkmonkeys.jar
-    File ..\..\build\plugins\book_glories_luna.jar
-    File ..\..\build\plugins\book_glories_maidens.jar
-    File ..\..\build\plugins\book_glories_unconqueredsun.jar
-    File ..\..\build\plugins\book_moep_abyssals.jar
-    File ..\..\build\plugins\book_moep_infernals.jar
-    File ..\..\build\plugins\book_moep_lunars.jar
-    File ..\..\build\plugins\book_moep_sidereals.jar
-    File ..\..\build\plugins\book_scrollofexalts.jar
-    File ..\..\build\plugins\book_scrollofthefallenraces_debris.jar
-    File ..\..\build\plugins\book_scrollofthemonk.jar
-    File ..\..\build\plugins\book_scrollofthemonk_imperfectlotus.jar
-    File ..\..\build\plugins\book_thousandcorrectactions.jar
-    File ..\..\build\plugins\book_undertherose.jar
-    File ..\..\build\plugins\box_dotfa.jar
+    File ..\..\..\build\plugins\blog_inkmonkeys.jar
+    File ..\..\..\build\plugins\book_glories_luna.jar
+    File ..\..\..\build\plugins\book_glories_maidens.jar
+    File ..\..\..\build\plugins\book_glories_unconqueredsun.jar
+    File ..\..\..\build\plugins\book_moep_abyssals.jar
+    File ..\..\..\build\plugins\book_moep_infernals.jar
+    File ..\..\..\build\plugins\book_moep_lunars.jar
+    File ..\..\..\build\plugins\book_moep_sidereals.jar
+    File ..\..\..\build\plugins\book_scrollofexalts.jar
+    File ..\..\..\build\plugins\book_scrollofthefallenraces_debris.jar
+    File ..\..\..\build\plugins\book_scrollofthemonk.jar
+    File ..\..\..\build\plugins\book_scrollofthemonk_imperfectlotus.jar
+    File ..\..\..\build\plugins\book_thousandcorrectactions.jar
+    File ..\..\..\build\plugins\book_undertherose.jar
+    File ..\..\..\build\plugins\book_returnofthescarletempress.jar
+    File ..\..\..\build\plugins\book_brokenwingedcrane.jar
+    File ..\..\..\build\plugins\box_dotfa.jar
     WriteRegStr HKLM "${REGKEY}\Components" Sourcebooks 1
 SectionEnd
 
@@ -151,7 +160,7 @@ Section -post SEC0006
     WriteRegStr HKLM "${REGKEY}" Path $INSTDIR
     SetOutPath $INSTDIR
     CreateDirectory $INSTDIR\repository
-    AccessControl::GrantOnFile "$INSTDIR\repository" "(BU)" "GenericRead + GenericWrite"
+    AccessControl::GrantOnFile "$INSTDIR\repository" "(S-1-5-32-545)" "FullAccess"
     WriteUninstaller $INSTDIR\uninstall.exe
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     CreateDirectory $SMPROGRAMS\$StartMenuGroup
@@ -184,7 +193,9 @@ done${UNSECTION_ID}:
 # Uninstaller sections
 Section /o "-un.$(SEC0005_NAME)" UNSEC0005
     Delete /REBOOTOK $INSTDIR\plugins\box_dotfa.jar
+    Delete /REBOOTOK $INSTDIR\plugins\book_brokenwingedcrane.jar
     Delete /REBOOTOK $INSTDIR\plugins\book_undertherose.jar
+    Delete /REBOOTOK $INSTDIR\plugins\book_returnofthescarletempress.jar
     Delete /REBOOTOK $INSTDIR\plugins\book_thousandcorrectactions.jar
     Delete /REBOOTOK $INSTDIR\plugins\book_scrollofthemonk_imperfectlotus.jar
     Delete /REBOOTOK $INSTDIR\plugins\book_scrollofthemonk.jar
@@ -197,15 +208,12 @@ Section /o "-un.$(SEC0005_NAME)" UNSEC0005
     Delete /REBOOTOK $INSTDIR\plugins\book_glories_unconqueredsun.jar
     Delete /REBOOTOK $INSTDIR\plugins\book_glories_maidens.jar
     Delete /REBOOTOK $INSTDIR\plugins\book_glories_luna.jar
-    Delete /REBOOTOK $INSTDIR\plugins\blog_inkmonkeys_vol20_22.jar
-    Delete /REBOOTOK $INSTDIR\plugins\blog_inkmonkeys_vol10_11.jar
-    Delete /REBOOTOK $INSTDIR\plugins\blog_inkmonkeys_vol8.jar
     Delete /REBOOTOK $INSTDIR\plugins\blog_inkmonkeys.jar
     DeleteRegValue HKLM "${REGKEY}\Components" Sourcebooks
 SectionEnd
 
 Section /o "-un.$(SEC0004_NAME)" UNSEC0004
-    Delete /REBOOTOK $INSTDIR\plugins\plot.jar
+    Delete /REBOOTOK $INSTDIR\plugins\campaign_plot.jar
     DeleteRegValue HKLM "${REGKEY}\Components" "Plot Management"
 SectionEnd
 
@@ -215,17 +223,21 @@ Section /o "-un.$(SEC0003_NAME)" UNSEC0003
 SectionEnd
 
 Section /o "-un.$(SEC0002_NAME)" UNSEC0002
-    Delete /REBOOTOK $INSTDIR\plugins\charmcascades.jar
+    Delete /REBOOTOK $INSTDIR\plugins\charm_cascades.jar
     DeleteRegValue HKLM "${REGKEY}\Components" "Charm Cascades"
 SectionEnd
 
 Section /o "-un.$(SEC0001_NAME)" UNSEC0001
     Delete /REBOOTOK $INSTDIR\plugins\namegenerator.jar
+    Delete /REBOOTOK $INSTDIR\plugins\character_spirit.jar
     Delete /REBOOTOK $INSTDIR\plugins\character_solar.jar
     Delete /REBOOTOK $INSTDIR\plugins\character_sidereal.jar
     Delete /REBOOTOK $INSTDIR\plugins\character_mortal.jar
     Delete /REBOOTOK $INSTDIR\plugins\character_martialarts.jar
     Delete /REBOOTOK $INSTDIR\plugins\character_lunar.jar
+    Delete /REBOOTOK $INSTDIR\plugins\character_infernal.jar
+    Delete /REBOOTOK $INSTDIR\plugins\character_godblooded.jar
+    Delete /REBOOTOK $INSTDIR\plugins\character_ghost.jar
     Delete /REBOOTOK $INSTDIR\plugins\character_db.jar
     Delete /REBOOTOK $INSTDIR\plugins\character_abyssal.jar
     Delete /REBOOTOK $INSTDIR\plugins\character.jar

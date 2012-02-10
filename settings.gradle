@@ -19,7 +19,7 @@ include('Anathema', 'Thirdparty',
         'Character_Craft', 'Character_Intimacies', 'Character_Linguistics',
 
         'Character_Solar', 'Character_Mortal', 'Character_Spirit', 'Character_Sidereal', 'Character_Db', 'Character_Ghost',
-        'Character_Lunar', 'Character_Abyssal', 'Character_Infernal', 'Character_Godblooded',
+        'Character_Lunar', 'Character_Abyssal', 'Character_Infernal', 'Character_Godblooded', 'Character_Alchemical',
 
         'Blog_InkMonkeys', 'Book_BrokenWingedCrane',
         'Book_Glories_Luna', 'Book_Glories_Maidens', 'Book_Glories_UnconqueredSun',

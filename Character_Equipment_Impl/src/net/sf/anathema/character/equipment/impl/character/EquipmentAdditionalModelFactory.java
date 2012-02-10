@@ -29,7 +29,7 @@ public class EquipmentAdditionalModelFactory implements IAdditionalModelFactory 
     IArmourStats naturalArmour = new NaturalSoak(context);
     IExaltedRuleSet ruleSet = basicCharacterContext.getRuleSet();
     return new EquipmentAdditionalModel(
-        characterType,
+    	basicCharacterContext,
         naturalArmour,
         equipmentTemplateProvider,
         ruleSet,

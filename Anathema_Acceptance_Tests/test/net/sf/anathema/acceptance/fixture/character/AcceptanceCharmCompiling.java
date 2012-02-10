@@ -33,6 +33,10 @@ public class AcceptanceCharmCompiling {
     registerCharmFile(charmCompiler, new File("../Character_Sidereal/resources/plugin-fragment.xml")); //$NON-NLS-1$
     registerCharmFile(charmCompiler, new File("../Character_Solar/resources/plugin-fragment.xml")); //$NON-NLS-1$
     registerCharmFile(charmCompiler, new File("../Character_Db/resources/plugin-fragment.xml")); //$NON-NLS-1$
+    registerCharmFile(charmCompiler, new File("../Character_Infernal/resources/plugin-fragment.xml")); //$NON-NLS-1$
+    registerCharmFile(charmCompiler, new File("../Character_Alchemical/resources/plugin-fragment.xml")); //$NON-NLS-1$
+    registerCharmFile(charmCompiler, new File("../Character_Spirit/resources/plugin-fragment.xml")); //$NON-NLS-1$
+    registerCharmFile(charmCompiler, new File("../Character_Ghost/resources/plugin-fragment.xml")); //$NON-NLS-1$
     registerCharmFile(charmCompiler, new File("../Character_MartialArts/resources/plugin-fragment.xml")); //$NON-NLS-1$
     charmCompiler.buildCharms();
   }

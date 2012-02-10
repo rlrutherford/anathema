@@ -14,6 +14,8 @@ public interface ICharacterTypeVisitor {
 
   public void visitAbyssal(ICharacterType visitedType);
   
+  public void visitAlchemical(ICharacterType visitedType);
+  
   public void visitSpirit(ICharacterType type);
   
   public void visitGhost(ICharacterType type);

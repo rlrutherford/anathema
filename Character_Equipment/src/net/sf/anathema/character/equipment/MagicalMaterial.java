@@ -1,5 +1,6 @@
 package net.sf.anathema.character.equipment;
 
+import net.sf.anathema.character.generic.caste.ICasteType;
 import net.sf.anathema.character.generic.equipment.ArtifactAttuneType;
 import net.sf.anathema.character.generic.type.ICharacterType;
 import net.sf.anathema.character.generic.type.ICharacterTypeVisitor;
@@ -13,7 +14,7 @@ public enum MagicalMaterial implements IIdentificate {
   }
   
   public static ArtifactAttuneType[] getAttunementTypes(final ICharacterType type, 
-		  final MagicalMaterial material)
+		  final ICasteType caste, final MagicalMaterial material)
   {
 	  final ArtifactAttuneType[][] types = new ArtifactAttuneType[1][];
 	  
@@ -22,12 +23,12 @@ public enum MagicalMaterial implements IIdentificate {
 		@Override
 		public void visitAbyssal(ICharacterType visitedType)
 		{
-			types[0] = getSingleMaterialAttunement(type, material);
+			types[0] = getSingleMaterialAttunement(type, caste, material);
 		}
 
 		@Override
 		public void visitDB(ICharacterType visitedType) {
-			types[0] = getSingleMaterialAttunement(type, material);
+			types[0] = getSingleMaterialAttunement(type, caste,  material);
 		}
 
 		@Override
@@ -37,7 +38,7 @@ public enum MagicalMaterial implements IIdentificate {
 
 		@Override
 		public void visitLunar(ICharacterType type) {
-			types[0] = getSingleMaterialAttunement(type, material);
+			types[0] = getSingleMaterialAttunement(type, caste, material);
 		}
 		
 		@Override
@@ -54,12 +55,17 @@ public enum MagicalMaterial implements IIdentificate {
 
 		@Override
 		public void visitSidereal(ICharacterType visitedType) {
-			types[0] = getSingleMaterialAttunement(type, material);
+			types[0] = getSingleMaterialAttunement(type, caste, material);
 		}
 
 		@Override
 		public void visitSolar(ICharacterType visitedType) {
-			types[0] = getSingleMaterialAttunement(type, material);
+			types[0] = getSingleMaterialAttunement(type, caste, material);
+		}
+		
+		@Override
+		public void visitAlchemical(ICharacterType visitedType) {
+			types[0] = getSingleMaterialAttunement(type, caste,  material);
 		}
 
 		@Override
@@ -83,10 +89,10 @@ public enum MagicalMaterial implements IIdentificate {
 	  return types[0];
   }
   
-  private static ArtifactAttuneType[] getSingleMaterialAttunement(ICharacterType type, MagicalMaterial material)
+  private static ArtifactAttuneType[] getSingleMaterialAttunement(ICharacterType type, ICasteType caste, MagicalMaterial material)
   {
 	  ArtifactAttuneType[] attunement;
-	  if (material == getDefault(type))
+	  if (material == getDefault(type, caste))
 		  attunement = new ArtifactAttuneType[] { ArtifactAttuneType.Unattuned, ArtifactAttuneType.FullyAttuned };
 	  else
 		  attunement = new ArtifactAttuneType[] { ArtifactAttuneType.Unattuned,
@@ -94,7 +100,7 @@ public enum MagicalMaterial implements IIdentificate {
 	  return attunement;
   }
 
-  public static MagicalMaterial getDefault(ICharacterType characterType) {
+  public static MagicalMaterial getDefault(ICharacterType characterType, final ICasteType caste) {
     final MagicalMaterial[] material = new MagicalMaterial[1];
 
     characterType.accept(new ICharacterTypeVisitor() {
@@ -105,6 +111,13 @@ public enum MagicalMaterial implements IIdentificate {
 
       public void visitSidereal(ICharacterType visitedType) {
         material[0] = Starmetal;
+      }
+      
+      public void visitAlchemical(ICharacterType visitedType)
+      {
+    	  for (MagicalMaterial materialType : values())
+    		  if (materialType.getId().equals(caste.getId()))
+    			  material[0] = materialType;
       }
 
       public void visitMortal(ICharacterType visitedType) {

@@ -9,28 +9,28 @@ import net.sf.anathema.character.equipment.MagicalMaterial;
 import net.sf.anathema.character.equipment.character.model.IEquipmentItem;
 import net.sf.anathema.character.equipment.item.model.IEquipmentTemplateProvider;
 import net.sf.anathema.character.equipment.template.IEquipmentTemplate;
+import net.sf.anathema.character.generic.IBasicCharacterData;
 import net.sf.anathema.character.generic.equipment.ArtifactAttuneType;
 import net.sf.anathema.character.generic.equipment.weapon.IArmourStats;
 import net.sf.anathema.character.generic.impl.rules.ExaltedRuleSet;
 import net.sf.anathema.character.generic.rules.IExaltedRuleSet;
-import net.sf.anathema.character.generic.type.ICharacterType;
 
 import com.db4o.query.Predicate;
 
 public class EquipmentAdditionalModel extends AbstractEquipmentAdditionalModel {
   private final IEquipmentTemplateProvider equipmentTemplateProvider;
-  private final ICharacterType characterType;
   private final MagicalMaterial defaultMaterial;
+  private final IBasicCharacterData context;
   private final List<IEquipmentItem> naturalWeaponItems = new ArrayList<IEquipmentItem>();
 
   public EquipmentAdditionalModel(
-      ICharacterType characterType,
+	  IBasicCharacterData context,
       IArmourStats naturalArmour,
       IEquipmentTemplateProvider equipmentTemplateProvider,
       IExaltedRuleSet ruleSet,
       IEquipmentTemplate... naturalWeapons) {
     super(ruleSet, naturalArmour);
-    this.characterType = characterType;
+    this.context = context;
     this.defaultMaterial = evaluateDefaultMaterial();
     this.equipmentTemplateProvider = equipmentTemplateProvider;
     for (IEquipmentTemplate template : naturalWeapons) {
@@ -43,7 +43,7 @@ public class EquipmentAdditionalModel extends AbstractEquipmentAdditionalModel {
   }
   
   private MagicalMaterial evaluateDefaultMaterial() {
-	    MagicalMaterial defaultMaterial = MagicalMaterial.getDefault(characterType);
+	    MagicalMaterial defaultMaterial = MagicalMaterial.getDefault(context.getCharacterType(), context.getCasteType());
 	    if (defaultMaterial == null) {
 	      return MagicalMaterial.Orichalcum;
 	    }
@@ -111,7 +111,7 @@ public class EquipmentAdditionalModel extends AbstractEquipmentAdditionalModel {
 		  return null;
 	  case Fixed:
 	  case Variable:
-		  return MagicalMaterial.getAttunementTypes(characterType, material);
+		  return MagicalMaterial.getAttunementTypes(context.getCharacterType(), context.getCasteType(), material);
 	  case Compound:
 		  return new ArtifactAttuneType[]
 		       { ArtifactAttuneType.Unattuned, ArtifactAttuneType.FullyAttuned };

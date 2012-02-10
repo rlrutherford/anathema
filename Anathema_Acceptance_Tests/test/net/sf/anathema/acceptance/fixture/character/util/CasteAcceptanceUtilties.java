@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.anathema.character.abyssal.caste.AbyssalCaste;
+import net.sf.anathema.character.alchemical.caste.AlchemicalCaste;
 import net.sf.anathema.character.db.aspect.DBAspect;
 import net.sf.anathema.character.generic.caste.ICasteType;
 import net.sf.anathema.character.generic.template.ICharacterTemplate;
@@ -39,6 +40,10 @@ public class CasteAcceptanceUtilties {
       public void visitInfernal(ICharacterType visitedType) {
           casteType.add(InfernalCaste.valueOf(caste));
         }
+      
+      public void visitAlchemical(ICharacterType visitedType) {
+    	  casteType.add(AlchemicalCaste.valueOf(caste));
+      }
 
       public void visitMortal(ICharacterType visitedType) {
         throw new IllegalArgumentException("Mortals have no caste"); //$NON-NLS-1$

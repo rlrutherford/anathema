@@ -20,6 +20,7 @@ dependencies {
     testCompile project(':Campaign_Music_Impl')
     testCompile project(':Campaign_Plot')
     testCompile project(':Character_Sidereal')
+    testCompile project(':Character_Alchemical')
     testCompile project(':Character_Abyssal')
     testCompile project(':Character_Lunar')
     testCompile project(':Character_Db')

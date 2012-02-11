@@ -23,6 +23,7 @@ public class CreationPointTemplateParser extends AbstractXmlTemplateParser<Gener
   private static final String ATTRIB_PRIMARY = "primary"; //$NON-NLS-1$
   private static final String ATTRIB_SECONDARY = "secondary"; //$NON-NLS-1$
   private static final String ATTRIB_TERTIARY = "tertiary"; //$NON-NLS-1$
+  private static final String ATTRIB_CASTE_AXIS = "casteAxis"; //$NON-NLS-1$
   private static final String TAG_ABILITY_DOTS = "abilityDots"; //$NON-NLS-1$
   private static final String TAG_CHARM_PICKS = "charmPicks"; //$NON-NLS-1$
   private static final String TAG_ATTRIBUTE_DOTS = "attributeDots"; //$NON-NLS-1$
@@ -115,8 +116,9 @@ public class CreationPointTemplateParser extends AbstractXmlTemplateParser<Gener
     int favoredPicks = ElementUtilities.getIntAttrib(element, ATTRIB_FAVORED_PICKS, 0);
     int favoredDots = ElementUtilities.getIntAttrib(element, ATTRIB_FAVORED_DOTS, 0);
     int genericDots = ElementUtilities.getIntAttrib(element, ATTRIB_GENERIC_DOTS, 0);
+    boolean casteAxis = ElementUtilities.getBooleanAttribute(element, ATTRIB_CASTE_AXIS, false);
     creationPoints.setAttributeCreationPoints(new AttributeCreationPoints(primaryDots, secondaryDots, tertiaryDots,
-    		favoredPicks, favoredDots, genericDots));
+    		favoredPicks, favoredDots, genericDots, casteAxis));
   }
 
   private int getCountAttribute(Element element) throws PersistenceException {

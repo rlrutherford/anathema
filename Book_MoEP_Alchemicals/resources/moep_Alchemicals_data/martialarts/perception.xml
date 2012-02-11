@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<charmlist>
+	<charm id="Alchemical.PerfectedLotusMatrix" exalt="Alchemical" group="MartialArts">
+		<prerequisite>
+			<essence id="Essence" value="2"/>
+			<trait id="Perception" value="2"/>
+		</prerequisite>
+		<attunement essence="2"/>
+		<cost/>
+		<duration duration="Permanent"/>
+		<charmtype type="Permanent"/>
+		<charmAttribute attribute="NoArray"/>
+		<charmAttribute attribute="NoRemoval"/>
+		<source source="Alchemicals2nd" page="170"/>
+	</charm>
+</charmlist>

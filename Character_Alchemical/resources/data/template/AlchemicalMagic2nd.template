@@ -1,0 +1,8 @@
+<magicTemplate>
+	<freePicksPredicate defaultResponse="true"/>
+	<favoringTraitType type="AttributeType"/>
+	<charmTemplate charmType="Alchemical">
+		<martialArts rulesClass="net.sf.anathema.character.alchemical.AlchemicalMartialArtsRules" level="Celestial" highLevel="true" /> 
+	</charmTemplate>
+	<spellTemplate maximumSorceryCircle="Celestial" maximumNecromancyCircle="Labyrinth" maximumProtocolCircle="GodMachine"/>
+</magicTemplate>

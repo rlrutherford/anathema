@@ -1,0 +1,40 @@
+<traitTemplates uses="trait/DefaultTraitCollection.template">
+  <attributes>
+    <defaultTrait startValue="1" lowerableState="Default">
+      <limitation type="Essence"/>
+      <minimum value="1"/>
+      <casteMinimum value="2"/>
+    </defaultTrait>
+  </attributes>
+  <backgrounds>
+  		<defaultTrait startValue="0" lowerableState="LowerableRegain">
+			<limitation type="Static" value="5"/>
+			<minimum value="0"/>
+		</defaultTrait>
+		
+		<specialTrait id="Artifact" startValue="0" lowerableState="Default" zeroLevel="0" isRequiredFavored="false">
+			<limitation type="Static" value="5"/>
+			<minimum value="0"/>
+			<maxFree value="5"/>
+		</specialTrait>
+		
+		<casteMinimumTraits caste="Orichalum">
+			<specialTrait id="Class" minimum="3"/>
+		</casteMinimumTraits>
+		<casteMinimumTraits caste="Soulsteel">
+			<specialTrait id="Class" minimum="3"/>
+		</casteMinimumTraits>
+		<casteMinimumTraits caste="Starmetal">
+			<specialTrait id="Class" minimum="3"/>
+		</casteMinimumTraits>
+		<casteMinimumTraits caste="Moonsilver">
+			<specialTrait id="Class" minimum="3"/>
+		</casteMinimumTraits>
+		<casteMinimumTraits caste="Jade">
+			<specialTrait id="Class" minimum="3"/>
+		</casteMinimumTraits>
+		<casteMinimumTraits caste="Adamant">
+			<specialTrait id="Mentor" minimum="3"/>
+		</casteMinimumTraits>
+  </backgrounds>
+</traitTemplates>

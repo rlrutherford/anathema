@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<charmlist>
+	<charm id="Alchemical.Man-MachineWeavingEngine" exalt="Alchemical" group="Spiritual">
+		<prerequisite>
+			<essence id="Essence" value="4"/>
+			<trait id="Intelligence" value="4"/>
+			<charmAttributeRequirement attribute="ExcellencyIntelligence" count="1" />
+		</prerequisite>
+		<attunement essence="1"/>
+		<cost/>
+		<duration duration="Permanent"/>
+		<charmtype type="Permanent"/>
+		<upgradeable requiresBase="false">
+			<upgrade name="WeaveShreddingParadoxEngine" xpCost="12"/>
+		</upgradeable>
+		<charmAttribute attribute="NoArray"/>
+		<charmAttribute attribute="NoRemoval"/>
+		<charmAttribute attribute="Obvious" visualize="true"/>
+		<charmAttribute attribute="Exemplar1" visualize="true"/>
+		<source source="Alchemicals2nd" page="176"/>
+	</charm>
+	<charm id="Alchemical.God-MachineWeavingEngine" exalt="Alchemical" group="Spiritual">
+		<prerequisite>
+			<essence id="Essence" value="5"/>
+			<trait id="Intelligence" value="5"/>
+			<charmReference id="Alchemical.Man-MachineWeavingEngine" />
+		</prerequisite>
+		<attunement essence="1"/>
+		<cost/>
+		<duration duration="Permanent"/>
+		<charmtype type="Permanent"/>
+		<upgradeable requiresBase="false">
+			<upgrade name="WeaveShreddingParadoxEngineSorcery" xpCost="12"/>
+			<upgrade name="WeaveShreddingParadoxEngineNecromancy" xpCost="12"/>
+		</upgradeable>
+		<charmAttribute attribute="NoArray"/>
+		<charmAttribute attribute="NoRemoval"/>
+		<charmAttribute attribute="Obvious" visualize="true"/>
+		<charmAttribute attribute="Exemplar1" visualize="true"/>
+		<source source="Alchemicals2nd" page="177"/>
+	</charm>
+</charmlist>

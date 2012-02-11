@@ -1,0 +1,36 @@
+<exaltedCharacterTemplate characterType="Alchemical" subtemplate="default">
+  <general>
+    <edition edition="SecondEdition"/>
+    <abilityGroups uses="trait/DefaultSecondEditionAbilityGroup.template" />
+    <attributeGroups uses="template/AlchemicalAttributeGroup.template"/>
+    <essence uses="template/AlchemicalEssence.template" />
+    <traitCollection uses="template/AlchemicalTraitCollection.template"/>
+    <magicTemplate uses="template/AlchemicalMagic2nd.template"/>
+    <presentation uses="template/LunarPresentation.template"/>
+    <additionalTemplates>
+    	<template id="Alchemical.CharmSlots" dedicated="4" generic="4"/>
+    	<template id="Alchemical.VirtueFlaw"/>
+    </additionalTemplates>
+    <additionalRules>
+    	<useArrayComboRules value="true"/>
+    </additionalRules>
+    <healthTemplate>
+      <usesBaseProvider path="net.sf.anathema.character.alchemical.AlchemicalHealthLevelProvider"/>
+      <toughnessControllingTrait type="Stamina"/>
+    </healthTemplate>
+  </general>
+  <creation>
+    <bonusPointCosts uses="template/AlchemicalBonusPointCost.template"/>
+    <creationPoints>
+      <attributeDots primary="8" secondary="6" tertiary="4" favoredPicks="3" favoredDots="1" casteAxis="true"/>
+      <abilityDots general="25"/>
+      <backgroundDots count="10" />
+      <virtueDots count="5" />
+      <bonusPoints count="15" />
+      <charmPicks favored="4" general="4"/>
+    </creationPoints>
+  </creation>
+  <experience>
+    <experiencePointCost uses="template/AlchemicalExperienceCost.template" />
+  </experience>
+</exaltedCharacterTemplate>

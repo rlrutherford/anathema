@@ -17,4 +17,6 @@ public interface IAttributeCreationPoints extends ICloneable<IAttributeCreationP
   public int[] getCounts();
   
   public void informTraits(Object traits);
+  
+  public boolean isCasteAxis();
 }

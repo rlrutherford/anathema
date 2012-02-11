@@ -97,4 +97,10 @@ public class SpiritAttributeCreationPoints extends ReflectionCloneableObject<IAt
 	{
 		this.traits = ((ICharacterStatistics)traits).getTraitConfiguration();
 	}
+
+	@Override
+	public boolean isCasteAxis()
+	{
+		return false;
+	}
 }

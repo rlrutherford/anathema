@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="charmreview-xmlns.xsl"?>
+<!DOCTYPE charmlist PUBLIC "-//TA//DTD Charms 1.5.1//EN"
+"charms.dtd">
+<!--
+
+    excellencies.xml - XML charm data for Anathema Plug-ins.
+    Copyright (C) 2007  Paul R. Adams (pauladams@hotmail.com)
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+-->
+<charmlist xmlns="http://anathema.sourceforge.net/charms">
+     <!-- Alchemical Excellencies -->
+     <genericCharm id="Alchemical.1stAugmentation" exalt="Alchemical">
+          <prerequisite>
+               <trait value="1" />
+               <essence value="1" />
+          </prerequisite>
+          <cost>
+               <essence cost="1" text="per die [1m]" />
+          </cost>
+          <duration duration="Instant" />
+          <charmtype type="Reflexive">
+               <special primaryStep="1" secondaryStep="2" />
+          </charmtype>
+          <combo>
+               <restrictions>
+                    <genericCharmReference id="Alchemical.3rdExcellency" />
+               </restrictions>
+          </combo>
+          <genericCharmAttribute attribute="Excellency" />
+          <charmAttribute attribute="Mortal" />
+          <charmAttribute attribute="Combo-OK" visualize="true" />
+          <charmAttribute attribute="Attunement1"/>
+          <source source="Alchemicals2nd" page="119" />
+     </genericCharm>
+     <genericCharm id="Alchemical.2ndAugmentation" exalt="Alchemical">
+          <prerequisite>
+               <trait value="1" />
+               <essence value="1" />
+          </prerequisite>
+          <cost>
+               <essence cost="2" text="per success [1m]" />
+          </cost>
+          <duration duration="Instant" />
+          <charmtype type="Reflexive">
+               <special primaryStep="1" secondaryStep="2" />
+          </charmtype>
+          <combo>
+               <restrictions>
+                    <genericCharmReference id="Alchemical.3rdAugmentation" />
+               </restrictions>
+          </combo>
+          <genericCharmAttribute attribute="Excellency" />
+          <charmAttribute attribute="Mortal" />
+          <charmAttribute attribute="Combo-OK" visualize="true" />
+          <charmAttribute attribute="Attunement1"/>
+          <source source="Alchemicals2nd" page="119" />
+     </genericCharm>
+     <genericCharm id="Alchemical.3rdAugmentation" exalt="Alchemical">
+          <prerequisite>
+               <trait value="1" />
+               <essence value="1" />
+          </prerequisite>
+          <cost>
+               <essence cost="" text="0-5m [1m]"/>
+          </cost>
+          <duration duration="Instant" />
+          <charmtype type="Reflexive">
+               <special primaryStep="4" secondaryStep="6" />
+          </charmtype>
+          <genericCharmAttribute attribute="Excellency" />
+          <charmAttribute attribute="Mortal" />
+          <charmAttribute attribute="Attunement1"/>
+          <charmAttribute attribute="Combo-OK" visualize="true" />
+          <source source="Alchemicals2nd" page="120" />
+     </genericCharm>
+     
+     
+     <!-- Unique Alchemical Excellencies -->
+     <genericCharm id="Alchemical.4thAugmentation" exalt="Alchemical">
+          <prerequisite>
+               <trait value="1" />
+               <essence value="1" />
+          </prerequisite>
+          <cost>
+               <essence cost="-" text=" [1m first only]" />
+          </cost>
+          <duration duration="Instant" />
+          <charmtype type="Permanent"/>
+          <genericCharmAttribute attribute="Excellency" />
+          <charmAttribute attribute="Mortal" />
+          <charmAttribute attribute="Stackable" visualize="true" />
+          <charmAttribute attribute="Attunement1"/>
+          <traitBoosting limitingTrait="Essence" multiplier=".5"/>
+          <source source="Alchemicals2nd" page="120" />
+     </genericCharm>
+     <genericCharm id="Alchemical.5thAugmentation" exalt="Alchemical">
+          <prerequisite>
+               <trait value="1" />
+               <essence value="1" />
+          </prerequisite>
+          <cost>
+               <essence cost="-" text=" (1m first only)" />
+          </cost>
+          <duration duration="Instant" />
+          <charmtype type="Permanent"/>
+          <genericCharmAttribute attribute="Excellency" />
+          <upgradeable requiresBase="false">
+          	<upgrade name="UnboundEssenceBooster" xpCost="1" essence="5"/>
+          </upgradeable>
+          <charmAttribute attribute="Mortal" />
+          <charmAttribute attribute="Attunement1"/>
+          <charmAttribute attribute="Stackable" visualize="true" />
+          <charmAttribute attribute="Obvious" visualize="true" />
+          <source source="Alchemicals2nd" page="120" />
+     </genericCharm>
+     <genericCharm id="Alchemical.6thAugmentation" exalt="Alchemical">
+          <prerequisite>
+               <trait value="1" />
+               <essence value="1" />
+          </prerequisite>
+          <cost>
+               <essence cost="" text="[1m]" />
+          </cost>
+          <duration amount="1" unit="scene" />
+          <charmtype type="Permanent"/>
+          <genericCharmAttribute attribute="Excellency" />
+          <charmAttribute attribute="Mortal" />
+          <charmAttribute attribute="Attunement1"/>
+          <charmAttribute attribute="Internal" visualize="true" />
+          <upgradeable>
+          	<effect name="Archery"/>
+          	<effect name="Athletics"/>
+          	<effect name="Awareness"/>
+          	<effect name="Dodge"/>
+          	<effect name="Integrity"/>
+          	<effect name="MartialArts"/>
+          	<effect name="Melee"/>
+          	<effect name="Resistance"/>
+          	<effect name="Thrown"/>
+          	<effect name="War"/>
+          	<effect name="Bureaucracy"/>
+          	<effect name="Investigation"/>
+          	<effect name="Lore"/>
+          	<effect name="Medicine"/>
+          	<effect name="Occult"/>
+          	<effect name="Craft"/>
+          	<effect name="Larceny"/>
+          	<effect name="Linguistics"/>
+          	<effect name="Performance"/>
+          	<effect name="Presence"/>
+          	<effect name="Ride"/>
+          	<effect name="Sail"/>
+          	<effect name="Socialize"/>
+          	<effect name="Stealth"/>
+          	<effect name="Survival"/>
+          	<upgrade name="SyntheticCompetencyUpgrade1" xpCost="1"/>
+          	<upgrade name="SyntheticCompetencyUpgrade2" xpCost="1"/>
+          	<upgrade name="SyntheticCompetencyUpgrade3" xpCost="1"/>
+          </upgradeable>
+          <source source="Alchemicals2nd" page="121" />
+     </genericCharm>
+     <genericCharm id="Alchemical.TranspuissantUpgrade" exalt="Alchemical">
+          <prerequisite>
+               <trait value="5" />
+               <essence value="3" />
+               <genericCharmAttributeRequirement attribute="Excellency" />
+          </prerequisite>
+          <cost>
+               <essence cost="0" text=" [1m]" />
+          </cost>
+          <duration duration="Instant" />
+          <charmtype type="Reflexive">
+               <special primaryStep="1" secondaryStep="2" />
+          </charmtype>
+          <upgradeable requiresBase="false">
+          	<upgrade name="MachineLogicSubroutines" essence="4" xpCost="6"/>
+          </upgradeable>
+          <charmAttribute attribute="Attunement1"/>
+          <charmAttribute attribute="Combo-OK" visualize="true" />
+          <source source="Alchemicals2nd" />
+     </genericCharm>
+     <genericCharm id="Alchemical.ClockworkPerfectionNodes" exalt="Alchemical">
+          <prerequisite>
+               <trait value="5" />
+               <essence value="3" />
+               <genericCharmAttributeRequirement attribute="Excellency" />
+          </prerequisite>
+          <cost>
+               <essence cost="0" text=" (1m)" />
+          </cost>
+          <duration duration="Instant" />
+          <charmtype type="Reflexive">
+               <special primaryStep="1" secondaryStep="2" />
+          </charmtype>
+          <upgradeable requiresBase="false">
+          	<upgrade name="MetaconductiveCircuitry" essence="4" xpCost="6"/>
+          </upgradeable>
+          <charmAttribute attribute="Attunement1"/>
+          <charmAttribute attribute="Exemplar1" visualize="true" />
+          <source source="Alchemicals2nd" />
+     </genericCharm>
+</charmlist>

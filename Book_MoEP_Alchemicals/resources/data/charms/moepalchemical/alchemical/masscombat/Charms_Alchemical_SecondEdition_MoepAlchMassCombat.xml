@@ -105,9 +105,9 @@
 			<trait id="Intelligence" value="4" />
 			<essence value="2" />
 			<selectiveCharmGroup threshold="1">
-				<charmAttributeRequirement attribute="ExcellencyWits" count="1" />
-				<charmAttributeRequirement attribute="ExcellencyIntelligence" count="1" />
-				<charmAttributeRequirement attribute="ExcellencyPerception" count="1" />
+				<genericCharmAttributeRequirement attribute="Wits" />
+				<genericCharmAttributeRequirement attribute="Intelligence" />
+				<genericCharmAttributeRequirement attribute="Perception" />
 			</selectiveCharmGroup>
 		</prerequisite>
 		<cost>

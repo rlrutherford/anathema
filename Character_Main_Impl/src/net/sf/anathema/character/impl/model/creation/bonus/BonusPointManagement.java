@@ -279,7 +279,8 @@ public class BonusPointManagement implements IBonusPointManagement {
     	models.add(getFavoredAttributeDotModel());
     if (getGenericAttributeDotModel(showingAttributeGroups).getAlotment() > 0)
     	models.add(getGenericAttributeDotModel(showingAttributeGroups));
-    models.add(getFavoredAbilityPickModel());
+    if (getFavoredAbilityPickModel().getAlotment() > 0)
+    	models.add(getFavoredAbilityPickModel());
     if (getFavoredAbilityModel().getAlotment() > 0)
     	models.add(getFavoredAbilityModel());
     models.add(getDefaultAbilityModel());

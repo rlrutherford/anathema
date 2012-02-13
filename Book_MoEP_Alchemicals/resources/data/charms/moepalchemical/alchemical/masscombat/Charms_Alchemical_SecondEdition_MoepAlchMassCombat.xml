@@ -104,11 +104,11 @@
 		<prerequisite>
 			<trait id="Intelligence" value="4" />
 			<essence value="2" />
-			<selectiveCharmGroup threshold="1">
+			<!-- <selectiveCharmGroup threshold="1">
 				<genericCharmAttributeRequirement attribute="Wits" />
 				<genericCharmAttributeRequirement attribute="Intelligence" />
 				<genericCharmAttributeRequirement attribute="Perception" />
-			</selectiveCharmGroup>
+			</selectiveCharmGroup> -->
 		</prerequisite>
 		<cost>
 			<essence cost="-" text="[2m]" />

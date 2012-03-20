@@ -6,6 +6,8 @@ import net.sf.anathema.character.generic.impl.template.experience.ComboCostCalcu
 import net.sf.anathema.character.generic.impl.template.points.FixedValueRatingCosts;
 import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.ISpell;
+import net.sf.anathema.character.generic.magic.IThaumaturgy;
+import net.sf.anathema.character.generic.magic.IThaumaturgyVisitor;
 import net.sf.anathema.character.generic.magic.charms.ICharmAttribute;
 import net.sf.anathema.character.generic.magic.charms.MartialArtsLevel;
 import net.sf.anathema.character.generic.template.experience.ICostAnalyzer;
@@ -31,6 +33,9 @@ public class GenericExperiencePointCosts extends ReflectionCloneableObject<Gener
   private int generalHighLevelCharmCost = 0;
   private int favoredHighLevelCharmCost = 0;
   private int spellCost = 0;
+  private int favoredThaumaturgyCost = 0;
+  private int generalThaumaturgyCost = 0;
+  private int thaumaturgyProcedureCost = 0;
   private MartialArtsLevel standardMartialArtsLevel = MartialArtsLevel.Terrestrial;
   private int backgroundCosts = 0;
   private Map<String, Integer> keywordGeneralCosts = new HashMap<String, Integer>();
@@ -134,6 +139,12 @@ public class GenericExperiencePointCosts extends ReflectionCloneableObject<Gener
     this.keywordFavoredCosts = keywordFavoredCost;
     this.keywordGeneralCosts = keywordGeneralCost;
   }
+  
+  public void setThaumaturgyCosts(int favoredArt, int generalArt, int procedure) {
+	this.favoredThaumaturgyCost = favoredArt;
+	this.generalThaumaturgyCost = generalArt;
+	this.thaumaturgyProcedureCost = procedure;
+  }
 
   public void setSpellCost(int spellCost) {
     this.spellCost = spellCost;
@@ -157,4 +168,26 @@ public class GenericExperiencePointCosts extends ReflectionCloneableObject<Gener
   public void setStandardMartialArtsLevel(MartialArtsLevel standardLevel) {
     this.standardMartialArtsLevel = standardLevel;
   }
+
+  public int getThaumaturgyCosts(final IThaumaturgy thaumaturgy,
+		  final IBasicCharacterData basicCharacter,
+		  final IGenericTraitCollection traitCollection) {
+	final int[] cost = new int[1];
+	thaumaturgy.visitThaumaturgy(new IThaumaturgyVisitor() {
+
+		@Override
+		public void visitDegree(IThaumaturgy degree) {
+			cost[0] = thaumaturgy.isFavored(basicCharacter, traitCollection) ?
+					favoredThaumaturgyCost : generalThaumaturgyCost;
+		}
+
+		@Override
+		public void visitProcedure(IThaumaturgy procedure) {
+			cost[0] = thaumaturgyProcedureCost;
+		}
+		
+	});
+	return cost[0];
+  }
+	
 }

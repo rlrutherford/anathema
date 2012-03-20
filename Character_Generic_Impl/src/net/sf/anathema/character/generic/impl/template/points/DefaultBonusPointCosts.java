@@ -4,6 +4,7 @@ import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.IMagic;
 import net.sf.anathema.character.generic.magic.IMagicVisitor;
 import net.sf.anathema.character.generic.magic.ISpell;
+import net.sf.anathema.character.generic.magic.IThaumaturgy;
 import net.sf.anathema.character.generic.magic.charms.MartialArtsLevel;
 import net.sf.anathema.character.generic.template.creation.IBonusPointCosts;
 import net.sf.anathema.character.generic.template.experience.ICostAnalyzer;
@@ -84,6 +85,10 @@ public class DefaultBonusPointCosts implements IBonusPointCosts {
       public void visitSpell(ISpell spell) {
         cost[0] = getSpellCosts(analyzer);
       }
+
+	  public void visitThaumaturgy(IThaumaturgy thaumaturgy) {
+		
+	  }
     });
     return cost[0];
   }

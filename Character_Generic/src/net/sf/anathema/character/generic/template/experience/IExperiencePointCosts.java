@@ -4,6 +4,7 @@ import net.sf.anathema.character.generic.IBasicCharacterData;
 import net.sf.anathema.character.generic.character.IGenericTraitCollection;
 import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.ISpell;
+import net.sf.anathema.character.generic.magic.IThaumaturgy;
 
 public interface IExperiencePointCosts {
 
@@ -24,6 +25,8 @@ public interface IExperiencePointCosts {
   public ICurrentRatingCosts getWillpowerCosts();
 
   public int getSpellCosts(ISpell spell, IBasicCharacterData basicCharacter, IGenericTraitCollection traitCollection);
+  
+  public int getThaumaturgyCosts(IThaumaturgy thaumaturgy, IBasicCharacterData basicCharacter, IGenericTraitCollection traitCollection);
 
   public int getBackgroundCost();
 }

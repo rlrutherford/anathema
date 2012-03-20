@@ -5,6 +5,8 @@ import net.sf.anathema.character.generic.character.IGenericTraitCollection;
 import net.sf.anathema.character.generic.impl.template.points.MultiplyRatingCosts;
 import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.ISpell;
+import net.sf.anathema.character.generic.magic.IThaumaturgy;
+import net.sf.anathema.character.generic.magic.IThaumaturgyVisitor;
 import net.sf.anathema.character.generic.magic.charms.MartialArtsLevel;
 import net.sf.anathema.character.generic.template.experience.ICostAnalyzer;
 import net.sf.anathema.character.generic.template.experience.ICurrentRatingCosts;
@@ -22,6 +24,27 @@ public class DefaultExperienceCosts implements IExperiencePointCosts {
   public ICurrentRatingCosts getAttributeCosts(boolean favored)
   {
 	  return favored ? new MultiplyRatingCosts(3) : new MultiplyRatingCosts(4);
+  }
+  
+  public int getThaumaturgyCosts(final IThaumaturgy thaumaturgy,
+		  final IBasicCharacterData basicCharacter,
+		  final IGenericTraitCollection traitCollection) {
+	final int[] cost = new int[1];
+	thaumaturgy.visitThaumaturgy(new IThaumaturgyVisitor() {
+
+		@Override
+		public void visitDegree(IThaumaturgy degree) {
+			cost[0] = thaumaturgy.isFavored(basicCharacter, traitCollection) ? 4 : 5;
+		}
+
+		@Override
+		public void visitProcedure(IThaumaturgy procedure) {
+			cost[0] = 1;
+		}
+		
+	});
+	return cost[0];
+	
   }
 
   public int getSpellCosts(ISpell spell, IBasicCharacterData basicCharacter, IGenericTraitCollection traitCollection) {

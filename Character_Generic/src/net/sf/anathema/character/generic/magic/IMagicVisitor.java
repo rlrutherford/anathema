@@ -5,4 +5,6 @@ public interface IMagicVisitor {
   public void visitCharm(ICharm charm);
 
   public void visitSpell(ISpell spell);
+  
+  public void visitThaumaturgy(IThaumaturgy thaumaturgy);
 }

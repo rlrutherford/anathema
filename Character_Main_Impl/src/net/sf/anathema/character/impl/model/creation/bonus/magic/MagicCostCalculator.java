@@ -6,6 +6,8 @@ import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.IMagic;
 import net.sf.anathema.character.generic.magic.IMagicVisitor;
 import net.sf.anathema.character.generic.magic.ISpell;
+import net.sf.anathema.character.generic.magic.IThaumaturgy;
+import net.sf.anathema.character.generic.magic.IThaumaturgyVisitor;
 import net.sf.anathema.character.generic.magic.charms.ICharmAttribute;
 import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharmConfiguration;
 import net.sf.anathema.character.generic.template.creation.IBonusPointCosts;
@@ -86,6 +88,22 @@ public class MagicCostCalculator {
 
     public void visitCharm(ICharm charm) {
       learnCount = determineLearnCount(charm, handledMagic);
+    }
+    
+    public void visitThaumaturgy(IThaumaturgy thaumaturgy) {
+    	thaumaturgy.visitThaumaturgy(new IThaumaturgyVisitor() {
+
+			@Override
+			public void visitDegree(IThaumaturgy degree) {
+				learnCount = degree.getRank();
+			}
+
+			@Override
+			public void visitProcedure(IThaumaturgy procedure) {
+				learnCount = 0;
+			}
+    		
+    	});
     }
 
     public void visitSpell(ISpell spell) {

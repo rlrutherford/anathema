@@ -5,11 +5,9 @@ import net.sf.anathema.character.generic.character.IGenericTraitCollection;
 import net.sf.anathema.character.generic.magic.IMagicVisitor;
 import net.sf.anathema.character.generic.magic.IThaumaturgy;
 import net.sf.anathema.character.generic.magic.ThaumaturgyRank;
-import net.sf.anathema.character.generic.magic.charms.duration.IDuration;
 import net.sf.anathema.character.generic.magic.general.ICostList;
 import net.sf.anathema.character.generic.rules.IExaltedSourceBook;
 import net.sf.anathema.character.generic.traits.types.AbilityType;
-import net.sf.anathema.character.generic.traits.types.AttributeType;
 import net.sf.anathema.lib.util.IIdentificate;
 import net.sf.anathema.lib.util.Identificate;
 
@@ -17,18 +15,11 @@ public abstract class Thaumaturgy extends Identificate implements IThaumaturgy {
 	
 	private final IIdentificate art;
 	private final ThaumaturgyRank rank;
-	private final AttributeType attribute;
-	private final int difficulty;
-	private final IDuration duration;
 	
-	public Thaumaturgy(String id, IIdentificate art, ThaumaturgyRank rank,
-			AttributeType attribute, int difficulty, IDuration duration) {
+	public Thaumaturgy(String id, IIdentificate art, ThaumaturgyRank rank) {
 		super(id);
 		this.art = art;
 		this.rank = rank;
-		this.attribute = attribute;
-		this.difficulty = difficulty;
-		this.duration = duration;
 	}
 	
 	public IIdentificate getArt() {
@@ -37,18 +28,6 @@ public abstract class Thaumaturgy extends Identificate implements IThaumaturgy {
 	
 	public ThaumaturgyRank getRank() {
 		return rank;
-	}
-	
-	public AttributeType getAttribute() {
-		return attribute;
-	}
-	
-	public int getDifficulty() {
-		return difficulty;
-	}
-	
-	public IDuration getDuration() {
-		return duration;
 	}
 	
 	@Override
@@ -60,12 +39,6 @@ public abstract class Thaumaturgy extends Identificate implements IThaumaturgy {
 	public boolean isFavored(IBasicCharacterData basicCharacter,
 			IGenericTraitCollection traitCollection) {
 		return traitCollection.isFavoredOrCasteTrait(AbilityType.Occult);
-	}
-
-	@Override
-	public IExaltedSourceBook[] getSources() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

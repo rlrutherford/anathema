@@ -6,6 +6,7 @@ import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.IMagic;
 import net.sf.anathema.character.generic.magic.IMagicVisitor;
 import net.sf.anathema.character.generic.magic.ISpell;
+import net.sf.anathema.character.generic.magic.IThaumaturgy;
 import net.sf.anathema.character.generic.magic.charms.ICharmAttribute;
 import net.sf.anathema.character.generic.magic.charms.MartialArtsLevel;
 import net.sf.anathema.character.generic.template.creation.IBonusPointCosts;
@@ -95,6 +96,13 @@ public class GenericBonusPointCosts extends ReflectionCloneableObject<GenericBon
     boolean isSorceryFavored = costMapping.isOccultFavored();
     return getCharmCosts(isSorceryFavored, null);
   }
+  
+  @Override
+  public int getThaumaturgyCosts(IThaumaturgy thaumaturgy, ICostAnalyzer costMapping) {
+    boolean isSorceryFavored = costMapping.isOccultFavored();
+    // TODO: COSTS
+    return getCharmCosts(isSorceryFavored, null);
+  }
 
   private int getCharmCosts(boolean favored, MartialArtsLevel martialArtsLevel) {
     if (martialArtsLevel != null && (standardLevel.compareTo(martialArtsLevel) < 0 ||
@@ -122,6 +130,11 @@ public class GenericBonusPointCosts extends ReflectionCloneableObject<GenericBon
       public void visitSpell(ISpell spell) {
         cost[0] = getSpellCosts(analyzer);
       }
+
+	  @Override
+	  public void visitThaumaturgy(IThaumaturgy thaumaturgy) {
+		cost[0] = getThaumaturgyCosts(thaumaturgy, analyzer);
+	  }
     });
     return cost[0];
   }

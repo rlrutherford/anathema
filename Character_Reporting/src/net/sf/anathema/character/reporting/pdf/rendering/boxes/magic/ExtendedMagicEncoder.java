@@ -7,12 +7,16 @@ import net.sf.anathema.character.generic.magic.IMagic;
 import net.sf.anathema.character.generic.magic.IMagicStats;
 import net.sf.anathema.character.generic.magic.IMagicVisitor;
 import net.sf.anathema.character.generic.magic.ISpell;
+import net.sf.anathema.character.generic.magic.IThaumaturgy;
+import net.sf.anathema.character.generic.magic.IThaumaturgyVisitor;
 import net.sf.anathema.character.reporting.pdf.content.ReportSession;
 import net.sf.anathema.character.reporting.pdf.content.magic.AbstractMagicContent;
 import net.sf.anathema.character.reporting.pdf.content.magic.GenericCharmUtilities;
 import net.sf.anathema.character.reporting.pdf.content.stats.magic.CharmStats;
 import net.sf.anathema.character.reporting.pdf.content.stats.magic.MultipleEffectCharmStats;
 import net.sf.anathema.character.reporting.pdf.content.stats.magic.SpellStats;
+import net.sf.anathema.character.reporting.pdf.content.stats.magic.ThaumaturgyDegreeStats;
+import net.sf.anathema.character.reporting.pdf.content.stats.magic.ThaumaturgyProcedureStats;
 import net.sf.anathema.character.reporting.pdf.rendering.extent.Bounds;
 import net.sf.anathema.character.reporting.pdf.rendering.general.box.ContentEncoder;
 import net.sf.anathema.character.reporting.pdf.rendering.graphics.SheetGraphics;
@@ -28,15 +32,19 @@ public class ExtendedMagicEncoder<C extends AbstractMagicContent> implements Con
   private IResources resources;
 
   public static List<IMagicStats> collectPrintCharms(ReportSession session) {
-    return collectPrintMagic(session.getCharacter(), false, true);
+    return collectPrintMagic(session.getCharacter(), false, true, false);
   }
 
   public static List<IMagicStats> collectPrintSpells(ReportSession session) {
-    return collectPrintMagic(session.getCharacter(), true, false);
+    return collectPrintMagic(session.getCharacter(), true, false, false);
+  }
+  
+  public static List<IMagicStats> collectPrintThaumaturgy(ReportSession session) {
+	return collectPrintMagic(session.getCharacter(), false, false, true);
   }
 
   private static List<IMagicStats> collectPrintMagic(final IGenericCharacter character, final boolean includeSpells,
-          final boolean includeCharms) {
+          final boolean includeCharms, final boolean includeThaumaturgy) {
     final List<IMagicStats> printStats = new ArrayList<IMagicStats>();
     if (includeCharms) {
       for (IMagicStats stats : GenericCharmUtilities.getGenericCharmStats(character)) {
@@ -74,6 +82,23 @@ public class ExtendedMagicEncoder<C extends AbstractMagicContent> implements Con
         if (includeSpells) {
           printStats.add(new SpellStats(spell));
         }
+      }
+      
+      @Override
+      public void visitThaumaturgy(final IThaumaturgy thaumaturgy) {
+    	  if (includeThaumaturgy) {
+    		  thaumaturgy.visitThaumaturgy(new IThaumaturgyVisitor() {
+    				@Override
+    				public void visitDegree(IThaumaturgy degree) {
+    					printStats.add(new ThaumaturgyDegreeStats(thaumaturgy));
+    				}
+
+    				@Override
+    				public void visitProcedure(IThaumaturgy procedure) {
+    					printStats.add(new ThaumaturgyProcedureStats(thaumaturgy));
+    				}
+    			});
+            }
       }
     };
     for (IMagic magic : character.getAllLearnedMagic()) {

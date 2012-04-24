@@ -2,8 +2,6 @@ package net.sf.anathema.character.reporting.pdf.content.stats.magic;
 
 import net.disy.commons.core.util.ArrayUtilities;
 import net.disy.commons.core.util.ITransformer;
-import net.sf.anathema.character.generic.framework.magic.stringbuilder.IMagicSourceStringBuilder;
-import net.sf.anathema.character.generic.framework.magic.stringbuilder.source.MagicSourceStringBuilder;
 import net.sf.anathema.character.generic.framework.magic.stringbuilder.type.ShortCharmTypeStringBuilder;
 import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.IMagicStats;
@@ -31,11 +29,6 @@ public abstract class AbstractCharmStats extends AbstractMagicStats<ICharm> {
 
   public String getDurationString(final IResources resources) {
     return getMagic().getDuration().getText(resources);
-  }
-
-  public String getSourceString(IResources resources) {
-    final IMagicSourceStringBuilder<ICharm> stringBuilder = new MagicSourceStringBuilder<ICharm>(resources);
-    return stringBuilder.createShortSourceString(getMagic());
   }
 
   protected String[] getDetailKeys() {

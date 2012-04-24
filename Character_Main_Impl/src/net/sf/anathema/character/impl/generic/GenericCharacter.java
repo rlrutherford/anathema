@@ -14,6 +14,7 @@ import net.sf.anathema.character.generic.magic.IGenericCombo;
 import net.sf.anathema.character.generic.magic.IMagic;
 import net.sf.anathema.character.generic.magic.IMagicVisitor;
 import net.sf.anathema.character.generic.magic.ISpell;
+import net.sf.anathema.character.generic.magic.IThaumaturgy;
 import net.sf.anathema.character.generic.magic.charms.special.IMultiLearnableCharm;
 import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharmConfiguration;
 import net.sf.anathema.character.generic.magic.charms.special.ISubeffect;
@@ -100,6 +101,11 @@ public class GenericCharacter implements IGenericCharacter {
       @Override
       public void visitCharm(ICharm charm) {
         isLearned[0] = statistics.getCharms().isLearned(charm);
+      }
+      
+      @Override
+      public void visitThaumaturgy(IThaumaturgy thaumaturgy) {
+        isLearned[0] = statistics.getThaumaturgy().isLearned(thaumaturgy);
       }
     });
     return isLearned[0];

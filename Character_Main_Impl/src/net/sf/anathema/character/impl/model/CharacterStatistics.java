@@ -21,6 +21,7 @@ import net.sf.anathema.character.impl.model.traits.essence.EssencePoolConfigurat
 import net.sf.anathema.character.impl.model.traits.listening.CharacterTraitListening;
 import net.sf.anathema.character.model.ICharacterStatistics;
 import net.sf.anathema.character.model.ISpellConfiguration;
+import net.sf.anathema.character.model.IThaumaturgyConfiguration;
 import net.sf.anathema.character.model.advance.IExperiencePointConfiguration;
 import net.sf.anathema.character.model.advance.IExperiencePointConfigurationListener;
 import net.sf.anathema.character.model.advance.IExperiencePointEntry;
@@ -43,6 +44,7 @@ public class CharacterStatistics implements ICharacterStatistics {
   private final CharmConfiguration charms;
   private final IComboConfiguration combos;
   private final ISpellConfiguration spells;
+  private final IThaumaturgyConfiguration thaumaturgy;
   private final IHealthConfiguration health;
   private final IExperiencePointConfiguration experiencePoints = new ExperiencePointConfiguration();
   private boolean experienced = false;
@@ -85,6 +87,7 @@ public class CharacterStatistics implements ICharacterStatistics {
     combos.addComboConfigurationListener(new CharacterChangeComboListener(context.getCharacterListening()));
     this.spells = new SpellConfiguration(charms, context.getSpellLearnStrategy(), template,
     		generics.getDataSet(ISpellCache.class));
+    this.thaumaturgy = new ThaumaturgyConfiguration();
     this.spells.addChangeListener(new IChangeListener() {
       @Override
       public void changeOccurred() {
@@ -171,6 +174,11 @@ public class CharacterStatistics implements ICharacterStatistics {
   @Override
   public ISpellConfiguration getSpells() {
     return spells;
+  }
+  
+  @Override
+  public IThaumaturgyConfiguration getThaumaturgy() {
+    return thaumaturgy;
   }
 
   @Override

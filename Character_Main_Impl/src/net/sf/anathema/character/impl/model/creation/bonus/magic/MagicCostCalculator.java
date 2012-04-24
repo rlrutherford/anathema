@@ -41,6 +41,7 @@ public class MagicCostCalculator {
   private CostAnalyzer analyzer;
   private final IAdditionalBonusPointManagment bonusPools;
   protected int bonusPointsSpentForSpells;
+  protected int bonusPointsSpentForThaumaturgy;
   private final IAdditionalMagicLearnPointManagement magicPools;
   private final IMagicTemplate magicTemplate;
 
@@ -95,7 +96,7 @@ public class MagicCostCalculator {
 
 			@Override
 			public void visitDegree(IThaumaturgy degree) {
-				learnCount = degree.getRank();
+				learnCount = degree.getRank().asNumber();
 			}
 
 			@Override
@@ -168,6 +169,7 @@ public class MagicCostCalculator {
     favoredPicksSpent = 0;
     bonusPointsSpentForCharms = 0;
     bonusPointsSpentForSpells = 0;
+    bonusPointsSpentForThaumaturgy = 0;
   }
 
   private int determineLearnCount(ICharm charm, Set<IMagic> handledMagic) {
@@ -222,6 +224,10 @@ public class MagicCostCalculator {
         public void visitSpell(ISpell spell) {
           bonusPointsSpentForSpells += bonusPointFactor;
         }
+        
+        public void visitThaumaturgy(IThaumaturgy thaumaturgy) {
+            // TODO: Costs
+          }
       });
     }
   }
@@ -271,6 +277,10 @@ public class MagicCostCalculator {
 
   public int getBonusPointsSpentForSpells() {
     return bonusPointsSpentForSpells;
+  }
+  
+  public int getBonusPointsSpentForThaumaturgy() {
+	return bonusPointsSpentForSpells;
   }
 
   public int getAdditionalPointsSpent() {

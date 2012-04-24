@@ -18,6 +18,13 @@ public class DefaultBonusPointCosts implements IBonusPointCosts {
     boolean isSorceryFavored = costMapping.isOccultFavored();
     return getCharmCosts(isSorceryFavored, null);
   }
+  
+  @Override
+  public int getThaumaturgyCosts(IThaumaturgy thaumaturgy, ICostAnalyzer costMapping) {
+    boolean isSorceryFavored = costMapping.isOccultFavored();
+    // TODO: Costs
+    return getCharmCosts(isSorceryFavored, null);
+  }
 
   @Override
   public int getCharmCosts(ICharm charm, ICostAnalyzer costMapping) {
@@ -102,7 +109,7 @@ public class DefaultBonusPointCosts implements IBonusPointCosts {
       }
 
 	  public void visitThaumaturgy(IThaumaturgy thaumaturgy) {
-		
+		cost[0] = getThaumaturgyCosts(thaumaturgy, analyzer); 
 	  }
     });
     return cost[0];

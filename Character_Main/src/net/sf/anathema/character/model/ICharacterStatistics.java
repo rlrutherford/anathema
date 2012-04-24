@@ -35,6 +35,8 @@ public interface ICharacterStatistics {
   IComboConfiguration getCombos();
 
   ISpellConfiguration getSpells();
+  
+  IThaumaturgyConfiguration getThaumaturgy();
 
   ICharacterModelContext getCharacterContext();
 }

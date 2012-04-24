@@ -5,10 +5,14 @@ import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.IMagicStats;
 import net.sf.anathema.character.generic.magic.IMagicVisitor;
 import net.sf.anathema.character.generic.magic.ISpell;
+import net.sf.anathema.character.generic.magic.IThaumaturgy;
+import net.sf.anathema.character.generic.magic.IThaumaturgyVisitor;
 import net.sf.anathema.character.reporting.pdf.content.magic.GenericCharmUtilities;
 import net.sf.anathema.character.reporting.pdf.content.stats.magic.CharmStats;
 import net.sf.anathema.character.reporting.pdf.content.stats.magic.MultipleEffectCharmStats;
 import net.sf.anathema.character.reporting.pdf.content.stats.magic.SpellStats;
+import net.sf.anathema.character.reporting.pdf.content.stats.magic.ThaumaturgyDegreeStats;
+import net.sf.anathema.character.reporting.pdf.content.stats.magic.ThaumaturgyProcedureStats;
 import net.sf.anathema.lib.util.IIdentificate;
 import net.sf.anathema.lib.util.Identificate;
 
@@ -45,5 +49,22 @@ public class MagicStatsFactoryVisitor implements IMagicVisitor {
   @Override
   public void visitSpell(ISpell spell) {
     printStats.add(new SpellStats(spell));
+  }
+
+  @Override
+  public void visitThaumaturgy(final IThaumaturgy thaumaturgy) {
+	thaumaturgy.visitThaumaturgy(new IThaumaturgyVisitor() {
+
+		@Override
+		public void visitDegree(IThaumaturgy degree) {
+			printStats.add(new ThaumaturgyDegreeStats(thaumaturgy));
+		}
+
+		@Override
+		public void visitProcedure(IThaumaturgy procedure) {
+			printStats.add(new ThaumaturgyProcedureStats(thaumaturgy));
+		}
+		
+	});
   }
 }

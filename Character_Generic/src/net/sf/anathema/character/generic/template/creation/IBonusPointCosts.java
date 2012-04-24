@@ -2,6 +2,7 @@ package net.sf.anathema.character.generic.template.creation;
 
 import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.IMagic;
+import net.sf.anathema.character.generic.magic.IThaumaturgy;
 import net.sf.anathema.character.generic.template.experience.IAbilityPointCosts;
 import net.sf.anathema.character.generic.template.experience.ICostAnalyzer;
 import net.sf.anathema.character.generic.template.experience.ICurrentRatingCosts;
@@ -18,6 +19,8 @@ public interface IBonusPointCosts extends IAbilityPointCosts, IBackgroundCreatio
   public int getWillpowerCosts();
 
   public int getSpellCosts(ICostAnalyzer costMapping);
+  
+  public int getThaumaturgyCosts(IThaumaturgy thaumaturgy, ICostAnalyzer costMapping);
 
   public int getEssenceCost();
 

@@ -2,7 +2,9 @@ package net.sf.anathema.character.reporting.pdf.content.stats.magic;
 
 import net.sf.anathema.character.generic.framework.magic.stringbuilder.CostStringBuilder;
 import net.sf.anathema.character.generic.framework.magic.stringbuilder.HealthCostStringBuilder;
+import net.sf.anathema.character.generic.framework.magic.stringbuilder.IMagicSourceStringBuilder;
 import net.sf.anathema.character.generic.framework.magic.stringbuilder.MagicInfoStringBuilder;
+import net.sf.anathema.character.generic.framework.magic.stringbuilder.source.MagicSourceStringBuilder;
 import net.sf.anathema.character.generic.magic.IMagic;
 import net.sf.anathema.character.generic.magic.IMagicStats;
 import net.sf.anathema.lib.resources.IResources;
@@ -34,6 +36,11 @@ public abstract class AbstractMagicStats<T extends IMagic> implements IMagicStat
   public String getCostString(IResources resources) {
     MagicInfoStringBuilder infoBuilder = createMagicInfoStringBuilder(resources);
     return infoBuilder.createCostString(magic);
+  }
+  
+  public String getSourceString(IResources resources) {
+	final IMagicSourceStringBuilder<T> stringBuilder = new MagicSourceStringBuilder<T>(resources);
+	return stringBuilder.createShortSourceString(getMagic());
   }
 
   protected final T getMagic() {

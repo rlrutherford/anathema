@@ -3,8 +3,6 @@ package net.sf.anathema.character.reporting.pdf.content.stats.magic;
 import net.disy.commons.core.util.ArrayUtilities;
 import net.disy.commons.core.util.ITransformer;
 import net.disy.commons.core.util.ObjectUtilities;
-import net.sf.anathema.character.generic.framework.magic.stringbuilder.IMagicSourceStringBuilder;
-import net.sf.anathema.character.generic.framework.magic.stringbuilder.source.MagicSourceStringBuilder;
 import net.sf.anathema.character.generic.magic.IMagicStats;
 import net.sf.anathema.character.generic.magic.ISpell;
 import net.sf.anathema.lib.resources.IResources;
@@ -28,12 +26,6 @@ public class SpellStats extends AbstractMagicStats<ISpell> {
   @Override
   public String getDurationString(final IResources resources) {
     return "-"; //$NON-NLS-1$
-  }
-
-  @Override
-  public String getSourceString(IResources resources) {
-    IMagicSourceStringBuilder<ISpell> stringBuilder = new MagicSourceStringBuilder<ISpell>(resources);
-    return stringBuilder.createShortSourceString(getMagic());
   }
 
   protected String[] getDetailKeys() {

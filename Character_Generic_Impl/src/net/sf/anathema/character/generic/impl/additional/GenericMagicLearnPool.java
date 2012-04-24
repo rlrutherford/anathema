@@ -10,6 +10,7 @@ import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.IMagic;
 import net.sf.anathema.character.generic.magic.IMagicVisitor;
 import net.sf.anathema.character.generic.magic.ISpell;
+import net.sf.anathema.character.generic.magic.IThaumaturgy;
 import net.sf.anathema.character.generic.magic.spells.CircleType;
 import net.sf.anathema.character.generic.traits.IGenericTrait;
 import net.sf.anathema.character.generic.util.IPointModification;
@@ -70,6 +71,11 @@ public class GenericMagicLearnPool implements IAdditionalMagicLearnPool {
       @Override
       public void visitCharm(ICharm charm) {
         isAllowed[0] = false;
+      }
+      
+      @Override
+      public void visitThaumaturgy(IThaumaturgy thaumaturgy) {
+        isAllowed[0] = true;
       }
     });
     return isAllowed[0];

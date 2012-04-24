@@ -1,46 +1,54 @@
 package net.sf.anathema.character.equipment.item.model;
 
+import net.sf.anathema.character.equipment.ItemCost;
 import net.sf.anathema.character.equipment.MagicalMaterial;
 import net.sf.anathema.character.equipment.MaterialComposition;
 import net.sf.anathema.character.equipment.template.IEquipmentTemplate;
 import net.sf.anathema.character.generic.equipment.weapon.IEquipmentStats;
-import net.sf.anathema.character.generic.rules.IExaltedRuleSet;
 import net.sf.anathema.framework.itemdata.model.IItemDescription;
 import net.sf.anathema.lib.control.change.IChangeListener;
 
 public interface IEquipmentTemplateEditModel {
 
-  public void addStatistics(IExaltedRuleSet ruleSet, IEquipmentStats stats);
+  void addStatistics(IEquipmentStats stats);
 
-  public void removeStatistics(IExaltedRuleSet ruleSet, IEquipmentStats... stats);
+  void removeStatistics(IEquipmentStats... stats);
 
-  public IItemDescription getDescription();
+  IItemDescription getDescription();
 
-  public IEquipmentStats[] getStats(IExaltedRuleSet ruleSet);
+  IEquipmentStats[] getStats();
 
-  public boolean isDirty();
+  boolean isDirty();
 
-  public void setEditTemplate(String templateId);
+  void setEditTemplate(String templateId);
 
-  public void addStatsChangeListener(IChangeListener changeListener);
+  void addStatsChangeListener(IChangeListener changeListener);
 
-  public IEquipmentTemplate createTemplate();
+  IEquipmentTemplate createTemplate();
 
-  public String getEditTemplateId();
+  String getEditTemplateId();
 
-  public void setNewTemplate();
+  void setNewTemplate();
+  
+  void copyNewTemplate( String salt );
 
-  public void setMagicalMaterial(MagicalMaterial newValue);
+  void setMagicalMaterial(MagicalMaterial newValue);
 
-  public void setMaterialComposition(MaterialComposition newValue);
+  void setMaterialComposition(MaterialComposition newValue);
+  
+  void addCostChangeListener(IChangeListener listener);
+  
+  void setCost(ItemCost cost);
+  
+  ItemCost getCost();
 
-  public MagicalMaterial getMagicalMaterial();
+  MagicalMaterial getMagicalMaterial();
 
-  public MaterialComposition getMaterialComposition();
+  MaterialComposition getMaterialComposition();
 
-  public void addMagicalMaterialChangeListener(IChangeListener listener);
+  void addMagicalMaterialChangeListener(IChangeListener listener);
 
-  public void addCompositionChangeListener(IChangeListener listener);
+  void addCompositionChangeListener(IChangeListener listener);
 
-  public void replaceStatistics(IExaltedRuleSet ruleset, IEquipmentStats selectedStats, IEquipmentStats equipmentStats);
+  void replaceStatistics(IEquipmentStats selectedStats, IEquipmentStats equipmentStats);
 }

@@ -2,13 +2,15 @@ package net.sf.anathema.character.generic.impl.magic.persistence;
 
 import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharm;
-import net.sf.anathema.character.generic.rules.IExaltedRuleSet;
+import net.sf.anathema.lib.resources.IExtensibleDataSet;
 import net.sf.anathema.lib.util.IIdentificate;
 
-public interface ICharmCache {
-  public ICharm[] getCharms(IIdentificate type, IExaltedRuleSet ruleset);
+public interface ICharmCache extends IExtensibleDataSet {
+  ICharm[] getCharms(IIdentificate type);
   
-  public ISpecialCharm[] getSpecialCharmData(IIdentificate type, IExaltedRuleSet rules);
-  
-  public String getCharmRename(IExaltedRuleSet rules, String name);
+  IIdentificate[] getCharmTypes();
+
+  ISpecialCharm[] getSpecialCharmData(IIdentificate type);
+
+  String getCharmRename(String name);
 }

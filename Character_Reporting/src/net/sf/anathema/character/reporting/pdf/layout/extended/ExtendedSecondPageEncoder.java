@@ -1,83 +1,39 @@
 package net.sf.anathema.character.reporting.pdf.layout.extended;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import net.sf.anathema.character.reporting.pdf.content.ReportContent;
-import net.sf.anathema.character.reporting.pdf.rendering.EncoderIds;
-import net.sf.anathema.character.reporting.pdf.rendering.boxes.EncoderRegistry;
-import net.sf.anathema.character.reporting.pdf.rendering.general.box.ContentEncoder;
+import net.sf.anathema.character.reporting.pdf.content.ReportSession;
+import net.sf.anathema.character.reporting.pdf.layout.Sheet;
+import net.sf.anathema.character.reporting.pdf.layout.SheetPage;
+import net.sf.anathema.character.reporting.pdf.layout.field.LayoutField;
+import net.sf.anathema.character.reporting.pdf.rendering.general.CopyrightEncoder;
 import net.sf.anathema.character.reporting.pdf.rendering.graphics.SheetGraphics;
 import net.sf.anathema.character.reporting.pdf.rendering.page.PageConfiguration;
-import net.sf.anathema.lib.resources.IResources;
+import net.sf.anathema.character.reporting.pdf.rendering.page.PageEncoder;
 
 import static net.sf.anathema.character.reporting.pdf.rendering.EncoderIds.ARSENAL;
+import static net.sf.anathema.character.reporting.pdf.rendering.EncoderIds.COMBAT;
+import static net.sf.anathema.character.reporting.pdf.rendering.EncoderIds.HEALTH;
+import static net.sf.anathema.character.reporting.pdf.rendering.EncoderIds.MOVEMENT;
+import static net.sf.anathema.character.reporting.pdf.rendering.EncoderIds.PANOPLY;
+import static net.sf.anathema.character.reporting.pdf.rendering.EncoderIds.POSSESSIONS;
+import static net.sf.anathema.character.reporting.pdf.rendering.EncoderIds.SOCIAL_COMBAT;
 
-public class ExtendedSecondPageEncoder extends AbstractPdfPageEncoder {
+public class ExtendedSecondPageEncoder implements PageEncoder {
 
-  private EncoderRegistry encoderRegistry;
+  private PageConfiguration pageConfiguration;
 
-  public ExtendedSecondPageEncoder(EncoderRegistry encoderRegistry, IExtendedPartEncoder partEncoder, IResources resources, PageConfiguration pageConfiguration) {
-    super(partEncoder, resources, pageConfiguration);
-    this.encoderRegistry = encoderRegistry;
+  public ExtendedSecondPageEncoder(PageConfiguration pageConfiguration) {
+    this.pageConfiguration = pageConfiguration;
   }
 
-  public void encode(Document document, SheetGraphics graphics, ReportContent content) throws DocumentException {
-    // Left column (top-down)
-    float leftDistanceFromTop = 0;
-    float healthHeight = encodeHealth(graphics, content, leftDistanceFromTop, 175);
-    leftDistanceFromTop += calculateBoxIncrement(healthHeight);
-    float movementHeight = encodeMovement(graphics, content, leftDistanceFromTop, 76);
-    leftDistanceFromTop += calculateBoxIncrement(movementHeight);
-    float socialCombatHeight = encodeSocialCombatStats(graphics, content, leftDistanceFromTop, 125);
-    leftDistanceFromTop += calculateBoxIncrement(socialCombatHeight);
-
-    // Right columns (top-down)
-    float rightDistanceFromTop = 0;
-    float weaponryHeight = encodeWeaponry(graphics, content, rightDistanceFromTop, 140);
-    rightDistanceFromTop += calculateBoxIncrement(weaponryHeight);
-    float armourHeight = encodeArmourAndSoak(graphics, content, rightDistanceFromTop, 111);
-    rightDistanceFromTop += calculateBoxIncrement(armourHeight);
-    float combatHeight = encodeCombatStats(graphics, content, rightDistanceFromTop, 125);
-    rightDistanceFromTop += calculateBoxIncrement(combatHeight);
-
-    // Fill in remaining space with inventory
-    float distanceFromTop = Math.max(leftDistanceFromTop, rightDistanceFromTop);
-    encodeInventory(graphics, content, distanceFromTop, getContentHeight() - distanceFromTop);
-
-    encodeCopyright(graphics);
-  }
-
-  private float encodeInventory(SheetGraphics graphics, ReportContent content, float distanceFromTop, float height) throws DocumentException {
-    ContentEncoder possessionsEncoder = encoderRegistry.createEncoder(getResources(), content, EncoderIds.POSSESSIONS);
-    return encodeFixedBox(graphics, content, possessionsEncoder, 1, 3, distanceFromTop, height);
-  }
-
-  private float encodeArmourAndSoak(SheetGraphics graphics, ReportContent content, float distanceFromTop, float height) throws DocumentException {
-    ContentEncoder armourContentEncoder = encoderRegistry.createEncoder(getResources(), content, EncoderIds.PANOPLY);
-    return encodeFixedBox(graphics, content, armourContentEncoder, 2, 2, distanceFromTop, height);
-  }
-
-  private float encodeSocialCombatStats(SheetGraphics graphics, ReportContent content, float distanceFromTop,
-                                        float height) throws DocumentException {
-    ContentEncoder encoder = encoderRegistry.createEncoder(getResources(), content, EncoderIds.SOCIAL_COMBAT, EncoderIds.MERITS_AND_FLAWS);
-    return encodeFixedBox(graphics, content, encoder, 1, 1, distanceFromTop, height);
-  }
-
-  private float encodeCombatStats(SheetGraphics graphics, ReportContent content, float distanceFromTop, float height) throws DocumentException {
-    ContentEncoder encoder = encoderRegistry.createEncoder(getResources(), content, EncoderIds.COMBAT);
-    return encodeFixedBox(graphics, content, encoder, 2, 2, distanceFromTop, height);
-  }
-
-  private float encodeHealth(SheetGraphics graphics, ReportContent content, float distanceFromTop, float height) throws DocumentException {
-    return encodeFixedBox(graphics, content, getPartEncoder().getHealthEncoder(), 1, 1, distanceFromTop, height);
-  }
-
-  private float encodeMovement(SheetGraphics graphics, ReportContent content, float distanceFromTop, float height) throws DocumentException {
-    return encodeFixedBox(graphics, content, getPartEncoder().getMovementEncoder(), 1, 1, distanceFromTop, height);
-  }
-
-  private float encodeWeaponry(SheetGraphics graphics, ReportContent content, float distanceFromTop, float height) throws DocumentException {
-    ContentEncoder weaponryEncoder = encoderRegistry.createEncoder(getResources(), content, ARSENAL);
-    return encodeFixedBox(graphics, content, weaponryEncoder, 2, 2, distanceFromTop, height);
+  public void encode(Sheet sheet, SheetGraphics graphics, ReportSession session) {
+    SheetPage page = sheet.startPortraitPage(graphics, session);
+    LayoutField health = page.place(HEALTH).atStartOf(page).withHeight(175).now();
+    LayoutField arsenal = page.place(ARSENAL).rightOf(health).withSameHeight().andColumnSpan(2).now();
+    LayoutField movement = page.place(MOVEMENT).below(health).withHeight(76).now();
+    LayoutField panoply = page.place(PANOPLY).rightOf(movement).withSameHeight().andColumnSpan(2).now();
+    LayoutField socialCombat = page.place(SOCIAL_COMBAT).below(movement).withHeight(125).now();
+    LayoutField combat = page.place(COMBAT).rightOf(socialCombat).withSameHeight().andColumnSpan(2).now();
+    LayoutField possessions = page.place(POSSESSIONS).below(socialCombat).fillToBottomOfPage().andColumnSpan(3).now();
+    new CopyrightEncoder(pageConfiguration).encodeCopyright(graphics);
   }
 }

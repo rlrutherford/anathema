@@ -41,11 +41,12 @@ public class EquipmentObjectView implements IEquipmentObjectView, ITaskPaneGroup
 	  taskGroup.removeAll();
 	  boxes.clear();
 	  boxPanels.clear();
+	  taskGroup.add(descriptionLabel);
   }
 
   public BooleanModel addStats(String description) {
     BooleanModel isSelectedModel = new BooleanModel();
-    JCheckBox box = ActionWidgetFactory.createCheckBox(new SmartToggleAction(isSelectedModel, description));
+    JCheckBox box = ActionWidgetFactory.createCheckBox(new SmartToggleAction(isSelectedModel, description.replaceAll( "&", "&&" )));
     boxes.put(isSelectedModel, box);
     
     GridDialogLayout layout = new GridDialogLayout(1, false);

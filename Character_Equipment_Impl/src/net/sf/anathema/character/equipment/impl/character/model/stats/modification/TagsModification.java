@@ -1,10 +1,7 @@
 package net.sf.anathema.character.equipment.impl.character.model.stats.modification;
 
 import com.google.common.collect.Lists;
-import net.sf.anathema.character.equipment.MagicalMaterial;
 import net.sf.anathema.character.equipment.impl.creation.model.WeaponTag;
-import net.sf.anathema.character.generic.impl.rules.ExaltedRuleSet;
-import net.sf.anathema.character.generic.rules.IExaltedRuleSet;
 import net.sf.anathema.lib.util.IIdentificate;
 import net.sf.anathema.lib.util.Identificate;
 
@@ -13,18 +10,13 @@ import static net.sf.anathema.character.equipment.impl.creation.model.WeaponTag.
 
 public class TagsModification {
   private BaseMaterial material;
-  private IExaltedRuleSet ruleSet;
 
-  public TagsModification(MagicalMaterial material, IExaltedRuleSet ruleSet) {
-    this.material = new BaseMaterial(material);
-    this.ruleSet = ruleSet;
+  public TagsModification(BaseMaterial material) {
+    this.material = material;
   }
 
 
   public IIdentificate[] getModifiedValue(IIdentificate[] tags) {
-    if (ruleSet != ExaltedRuleSet.SecondEdition) {
-      return tags;
-    }
     if (!material.isAdamantBased()) {
       return tags;
     }

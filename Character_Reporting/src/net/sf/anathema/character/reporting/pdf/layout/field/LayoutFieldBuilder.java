@@ -1,6 +1,6 @@
 package net.sf.anathema.character.reporting.pdf.layout.field;
 
-import net.sf.anathema.character.reporting.pdf.layout.Body;
+import net.sf.anathema.character.reporting.pdf.layout.SheetPage;
 
 public class LayoutFieldBuilder implements Height, Placement, ColumnSpan {
 
@@ -19,8 +19,8 @@ public class LayoutFieldBuilder implements Height, Placement, ColumnSpan {
   }
 
   @Override
-  public HeightWithoutParent atStartOf(Body body) {
-    this.alignField = LayoutField.CreateUpperLeftFieldWithHeightAndColumnSpan(body, 0, 1);
+  public HeightWithoutParent atStartOf(SheetPage page) {
+    this.alignField = LayoutField.CreateUpperLeftFieldWithHeightAndColumnSpan(page.getBody(), 0, 1);
     this.columnIndex = 0;
     this.fromTop = 0;
     return this;
@@ -61,39 +61,37 @@ public class LayoutFieldBuilder implements Height, Placement, ColumnSpan {
 
   @Override
   public ColumnSpan fillToBottomOfPage() {
-    return withHeight(alignField.getRemainingColumnHeight());
+    return withHeight(alignField.getRemainingColumnHeight(fromTop));
   }
 
   @Override
   public ColumnSpan alignBottomTo(LayoutField field) {
-    return withHeight(alignField.getHeightToBottomFrom(field));
+    float bottomLine = field.getBottomFromTop();
+    return withHeight(bottomLine - fromTop);
   }
 
   @Override
-  public Encoders spanningOneColumn() {
-    this.columnSpan = 1;
-    return this;
-  }
-
-  @Override
-  public Encoders spanningTwoColumns() {
-    this.columnSpan = 2;
-    return this;
-  }
-
-  @Override
-  public Encoders spanningThreeColumns() {
-    this.columnSpan = 3;
+  public Encoders andColumnSpan(int value) {
+    this.columnSpan = value;
     return this;
   }
 
   @Override
   public LayoutField now() {
-    LayoutField field = buildField();
+    LayoutField field = buildField(new HeightStrategy() {
+      @Override
+      public float getHeight(float contentWidth) {
+        if (!encoder.isActive()) {
+          return 0f;
+        }
+        return heightStrategy.getHeight(contentWidth);
+      }
+    });
     return encoder.encode(field);
   }
 
-  private LayoutField buildField() {
-    return alignField.createForFromTopAndHeightAndColumnSpanAndColumnIndex(fromTop, heightStrategy, columnSpan, columnIndex);
+  private LayoutField buildField(HeightStrategy buildHeight) {
+    return alignField
+            .createForFromTopAndHeightAndColumnSpanAndColumnIndex(fromTop, buildHeight, columnSpan, columnIndex);
   }
 }

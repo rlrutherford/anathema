@@ -7,13 +7,120 @@ Exalted (C) 2001-2012 by White Wolf Publishing, Inc.
 http://anathema.github.com
 
 ===------------------------------------------------------------------------------===
-			Release 3.x.x
+			Release 4.1.0 "Varang"
 ===------------------------------------------------------------------------------===
 
--- Features --
-* You can now enter your own Charm descriptions. To do, CTRL-click your Charm and type away.
-* New report (via "File Menu => Save as PDF"): Charm Overview. It prints your Charm data with text, just as the books do.
+From this version onward, Anathema no longer uses the "Equipment.yap" file, but individual files for each item.
+It will back up your existing database, convert it, and remove the original Equipment.yap file.
 
+Anathema now includes a default equipment database, which contains the mundane and artifact weapons, shields,
+and armor from the 2E Core and 2.5 Errata.  If Anathema detects no items in your equipment database, it will
+populate it with the default database.  If you're an existing user and wish to see this database, simply
+back up your old database, delete the equipment folder from your repository, and re-launch the program.
+
+We now import custom charms from your repository, if the data files are provided. Consult the provided
+"Custom Charms.txt" for basic instructions.
+
+Anathema no longer tracks the dots of Lunar Attribute specialties. They never factored into BP and XP, nor were they
+printed them.
+
+-- Features --
+* Equipment modifiers to DVs now add to pools instead of modifying the static rating, allowing for more flexibility
+  in designing your gear. All imported equipment from earlier releases will have its values doubled to achieve the
+  same impact it had before; adjust as desired. 
+* New preference: Allow equipment customization.
+   Allows to overwrite an item's name and description to make it truly yours.
+* Equipment items have a "cost" statistic, which is not enforced.
+* Equipment cards are now out of beta.
+* Character loadout screen shows tooltips for items
+* [Shadow493] Added missing Lunar templates from DotFA.
+* [Jesse Belanger] Added Charm descriptions for Infernals. Most texts taken from the official Wiki.
+* [Curtis Tasker] The character sheet uses your Awareness, Dodge, and Integrity specialties to display Join Battle,
+                  Join Debate, Dodge DV, and Mental Dodge DV values.
+* [Curtis Tasker] Improved behavior of tabs.
+* [Curtis Tasker] Improved look of toolbar buttons.
+* [Curtis Tasker] Added a toolbar button for the equipment database.
+* [Curtis Tasker] Added a 'Copy Item' button to the equipment database.
+* [Curtis Tasker] Added tooltips to the New Item, Copy Item, Save Item, Delete Item buttons in the equipment database.
+* [Curtis Tasker] Improved confirmation dialog for item deletion in the equipment database.
+* [Curtis Tasker] Improved weapon stats tooltip in the equipment database.  Now shows weapon tags (Overwhelming, Piercing, etc).
+* [Curtis Tasker] Default equipment database now included with Anathema.
+* Added support for custom charm loading from the repository.
+* Abyssal Taint Charms calculate their upgrade cost
+
+-- Bugfixes --
+* Charm Cards now sport the beautiful icons by Democritus.
+* Improved rendering of some Charm cascades, notably Solar Melee, Solar Medicine and Solar Hero Style.
+* Mobility penalty for equipment is calculated once more
+* Half-Caste are printable once more
+* Charms that raise the Essence cap still work after reloading
+* Character creation calculates the available dots correctly for splats with fixed dots, like Sidereals
+* Fixed an issue with attunement for items made of non-magical Materials
+* Fixed free Virtue cap for non-Solars at character creation
+* [Shadow493] First Age Solars have the correct points
+* [Curtis Tasker] Item stats can contain the '&' character
+* [Curtis Tasker] Clinch attacks now calculate using the higher of your Strength or Dexterity
+* Hero style extension Charms are only available to matching Exalts
+* (Solar/Melee) "Honored Companion of the Sun" is present
+* (Solar/Melee) "Deft Hands Deflection" has correct cost
+* (Solar/Melee) "Rising Sun Slash" and it's Abyssal Mirror have correct keywords and description
+* (Solar/Resistance) "Iron Kettle Body" has correct cost
+* (Infernal/SWLiHN) "Counter-Conceptual Interposition" requires "Essence-Dissecting Stare"
+* (Infernal/Kimbery) "Bitter Heart Unbleeding" has an Essence 3 repurchase
+* (Infernal) "Ascendancy Mantle" gives Broken Winged Crane as source
+* (Infernal) "Past Life" Background shows plain english name
+* (Sidereal/Craft) "World-Shaping Artistic Vision" has no repurchases
+* (Abyssal) Updated Mirrored Charms for Exalted 2.5
+* (Abyssal) Most backgrounds are limited to loyal Abyssals
+* (Abyssal/Resistance) "Wounds Mean Nothing" shows all sources
+* (Abyssal/Archery) "Withering Feathered Maelstrom" has correct prerequisites and cost
+* (Lunar/Stamina) It is "Purging the Tarnished Silver" now
+* (Lunar) "Tattoo Artifact" BG is available to all Lunars except Casteless and Half-Caste
+
+===------------------------------------------------------------------------------===
+			Release 4.0.0 "Sperimin"
+===------------------------------------------------------------------------------===
+
+-- Changes for Exalted 2.5 --
+* Updated Sidereal XP Cost
+* Errata'd Orichalcum to reflect the improved accuracy in melee.
+* Revised Charms for Solars, Lunars, Dragon-Blooded, Sidereal, Abyssal and Infernal Exalted
+* Added "Shield#" & "Thrust" Tags. Shield# applies its listed mobility penalty.
+* It is no longer possible to create old-style shields stats.
+* Soak from multiple worn armor no longer stacks, only the highest applies.
+* Equipment that modifies various pools no longer stacks, only the highest applies.
+* Combos no longer cost XP or BP and drop some editing restrictions
+* Weapon Speed cannot fall below 3
+* Weapon Rate cannot rise over 5
+
+Anathema no longer supports First Edition or "classic" Second Edition.
+At first launch, it will create a backup ZIP of your repository, delete all 1E Characters and convert 2E characters to
+the appropriate template from the Scroll of Errata.
+It will also filter your equipment database and remove all stats from 1E and all shield stats.
+It will delete all items that have no stats remaining after filtering - if they previously had any.
+If your Character spent XP to change a Combo and you tracked the expenditure in the XP table, please remove the
+entry manually to reflect the new rules.
+
+-- Features --
+* You can enter your own descriptions for Charms and Spells. To do, CTRL-click your Charm and type away.
+* New PDFs (via "File Menu => Save as PDF"):
+    Charm Overview. It prints your Charm data with text, just as the books do.
+    Landscape Character sheet. Re-structured to better utilize space.
+    Character Cards. Print a set of charm, spell, and other cards for your character, using the Democritus layout.
+* Equipment keeps track of minimum damage
+* [Jesse Belanger] Added Charm descriptions for the 2E Core Book, Abyssals and the Ink Monkeys. Most texts taken from the official Wiki.
+* New preference: Enable beta content.
+       Stuff that doesn't seem to break but isn't done yet will hide here. Please give feedback!
+* New beta content: An early draft of an extended character sheet.
+* New beta content: Equipment cards, when printing Character Cards.
+
+-- Bugfixes --
+* Characters remember which weapons were attuned when saving
+* (Infernal/SWLIHN) "Precision Thought-Force Exercise" and "Orbital Impact Storm" attributed to Ink Monkeys
+* Duplication of Series possible on Windows systems
+* Anathema respects Accuracy and MPDV modifiers from equipment
+* Sidereal Colleges names are readable, and the House of Serenity bears the name it has in 2E
+* Martial Arts Weapons remember their print state
 
 ===------------------------------------------------------------------------------===
 			Release 3.1.2

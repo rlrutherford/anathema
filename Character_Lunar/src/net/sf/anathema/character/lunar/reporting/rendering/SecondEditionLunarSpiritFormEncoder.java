@@ -1,6 +1,5 @@
 package net.sf.anathema.character.lunar.reporting.rendering;
 
-import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Phrase;
 import net.sf.anathema.character.generic.character.IGenericTraitCollection;
@@ -11,7 +10,7 @@ import net.sf.anathema.character.generic.traits.types.AttributeGroupType;
 import net.sf.anathema.character.generic.traits.types.AttributeType;
 import net.sf.anathema.character.lunar.beastform.BeastformTemplate;
 import net.sf.anathema.character.lunar.beastform.model.SecondEditionBeastformModel;
-import net.sf.anathema.character.reporting.pdf.content.ReportContent;
+import net.sf.anathema.character.reporting.pdf.content.ReportSession;
 import net.sf.anathema.character.reporting.pdf.rendering.extent.Bounds;
 import net.sf.anathema.character.reporting.pdf.rendering.extent.Position;
 import net.sf.anathema.character.reporting.pdf.rendering.general.box.ContentEncoder;
@@ -31,9 +30,10 @@ public class SecondEditionLunarSpiritFormEncoder implements ContentEncoder {
   }
 
   @Override
-  public void encode(SheetGraphics graphics, ReportContent reportContent, Bounds bounds) {
-    IGroupedTraitType[] attributeGroups = reportContent.getCharacter().getTemplate().getAttributeGroups();
-    SecondEditionBeastformModel additionalModel = (SecondEditionBeastformModel) reportContent.getCharacter().getAdditionalModel(BeastformTemplate.TEMPLATE_ID);
+  public void encode(SheetGraphics graphics, ReportSession reportSession, Bounds bounds) {
+    IGroupedTraitType[] attributeGroups = reportSession.getCharacter().getTemplate().getAttributeGroups();
+    SecondEditionBeastformModel additionalModel = (SecondEditionBeastformModel) reportSession.getCharacter()
+            .getAdditionalModel(BeastformTemplate.TEMPLATE_ID);
     IGenericTraitCollection traitCollection = additionalModel.getSpiritTraitCollection();
     encodeAttributes(graphics, bounds, attributeGroups, traitCollection);
     encodeForm(graphics, bounds, additionalModel.getSpiritForm());
@@ -43,19 +43,18 @@ public class SecondEditionLunarSpiritFormEncoder implements ContentEncoder {
     Font font = graphics.createTableFont();
     Bounds newBounds = new Bounds(bounds.x, bounds.y, bounds.width, bounds.height - 50);
     String text = resources.getString("Sheet.Header.Lunar.SpiritForm") + ": " + form;
-    try {
-      graphics.createSimpleColumn(newBounds).withLeading(LINE_HEIGHT - 2).andTextPart(new Phrase(text, font)).encode();
-    } catch (DocumentException e) {
-    }
+    graphics.createSimpleColumn(newBounds).withLeading(LINE_HEIGHT - 2).andTextPart(new Phrase(text, font)).encode();
   }
 
-  private void encodeAttributes(SheetGraphics graphics, Bounds contentBounds, IGroupedTraitType[] attributeGroups, IGenericTraitCollection traitCollection) {
+  private void encodeAttributes(SheetGraphics graphics, Bounds contentBounds, IGroupedTraitType[] attributeGroups,
+          IGenericTraitCollection traitCollection) {
     float groupSpacing = smallTraitEncoder.getTraitHeight() / 2;
     float y = contentBounds.getMaxY() - 2 * groupSpacing;
     int maximum = EssenceTemplate.SYSTEM_ESSENCE_MAX;
     float width = contentBounds.getWidth();
     for (IGroupedTraitType groupedTraitType : attributeGroups) {
-      if (!groupedTraitType.getGroupId().equals(AttributeGroupType.Physical.name()) && !groupedTraitType.getTraitType().getId().equals(AttributeType.Appearance.name())) {
+      if (!groupedTraitType.getGroupId().equals(AttributeGroupType.Physical.name()) &&
+              !groupedTraitType.getTraitType().getId().equals(AttributeType.Appearance.name())) {
         continue;
       }
 
@@ -68,12 +67,12 @@ public class SecondEditionLunarSpiritFormEncoder implements ContentEncoder {
   }
 
   @Override
-  public String getHeader(ReportContent content) {
+  public String getHeader(ReportSession session) {
     return resources.getString("Sheet.Header.Lunar.SpiritForm");
   }
 
   @Override
-  public boolean hasContent(ReportContent content) {
+  public boolean hasContent(ReportSession session) {
     return true;
   }
 }

@@ -4,7 +4,7 @@ import net.sf.anathema.framework.extension.IAnathemaExtension;
 import net.sf.anathema.framework.item.IItemType;
 import net.sf.anathema.framework.presenter.view.IItemTypeViewProperties;
 import net.sf.anathema.initialization.Extension;
-import net.sf.anathema.initialization.Instantiater;
+import net.sf.anathema.initialization.reflections.AnathemaReflections;
 import net.sf.anathema.initialization.repository.IDataFileProvider;
 import net.sf.anathema.lib.registry.Registry;
 import net.sf.anathema.lib.resources.IResources;
@@ -15,7 +15,9 @@ public class ItemTypeCreationViewPropertiesExtensionPoint extends Registry<IItem
 
   public static final String ID = ItemTypeCreationViewPropertiesExtensionPoint.class.getName();
 
-  public void initialize(IResources resources, IDataFileProvider dataFileProvider, Instantiater instantiater) {
+  public void initialize(IResources resources,
+		  IDataFileProvider dataFileProvider,
+		  AnathemaReflections reflections) {
     // nothing to do
   }
 }

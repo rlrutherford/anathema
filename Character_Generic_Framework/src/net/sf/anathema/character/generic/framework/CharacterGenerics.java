@@ -10,7 +10,7 @@ import net.sf.anathema.character.generic.framework.backgrounds.BackgroundRegistr
 import net.sf.anathema.character.generic.framework.module.object.CharacterModuleObjectMap;
 import net.sf.anathema.character.generic.framework.xml.additional.IAdditionalTemplateParser;
 import net.sf.anathema.character.generic.framework.xml.registry.CharacterTemplateRegistryCollection;
-import net.sf.anathema.character.generic.impl.magic.persistence.CharmCache;
+import net.sf.anathema.character.generic.impl.magic.persistence.ICharmCache;
 import net.sf.anathema.character.generic.impl.template.TemplateRegistry;
 import net.sf.anathema.character.generic.impl.template.magic.CharmProvider;
 import net.sf.anathema.character.generic.impl.template.magic.ICharmProvider;
@@ -23,6 +23,8 @@ import net.sf.anathema.lib.registry.IIdentificateRegistry;
 import net.sf.anathema.lib.registry.IRegistry;
 import net.sf.anathema.lib.registry.IdentificateRegistry;
 import net.sf.anathema.lib.registry.Registry;
+import net.sf.anathema.lib.resources.IExtensibleDataSet;
+import net.sf.anathema.lib.resources.IExtensibleDataSetProvider;
 
 public class CharacterGenerics implements ICharacterGenerics {
 
@@ -35,16 +37,21 @@ public class CharacterGenerics implements ICharacterGenerics {
   private final ICharacterTemplateRegistryCollection templateRegistries = new CharacterTemplateRegistryCollection();
   private final IRegistry<ICharacterType, ICasteCollection> casteCollectionRegistry = new Registry<ICharacterType, ICasteCollection>();
   private final IRegistry<String, IAdditionalTemplateParser> additionalTemplateParserRegistry = new Registry<String, IAdditionalTemplateParser>();
-  private final ICharmProvider charmProvider = new CharmProvider(CharmCache.getInstance());
+  private final ICharmProvider charmProvider;
   private final CharacterModuleObjectMap moduleObjectMap = new CharacterModuleObjectMap();
   private final IDataFileProvider dataFileProvider;
+  private final IExtensibleDataSetProvider dataSetProvider;
   private final Instantiater instantiater;
 
-  public CharacterGenerics(IDataFileProvider dataFileProvider, Instantiater instantiater) {
+  public CharacterGenerics(IDataFileProvider dataFileProvider,
+		  Instantiater instantiater,
+		  IExtensibleDataSetProvider dataSetProvider) {
     this.instantiater = instantiater;
     this.additionalPersisterRegistry = new Registry<String, IAdditionalPersisterFactory>(
             new NullAdditionalPersisterFactory());
     this.dataFileProvider = dataFileProvider;
+    this.dataSetProvider = dataSetProvider;
+    this.charmProvider = new CharmProvider(dataSetProvider.getDataSet(ICharmCache.class));
   }
 
   @Override
@@ -110,5 +117,10 @@ public class CharacterGenerics implements ICharacterGenerics {
   @Override
   public IDataFileProvider getDataFileProvider() {
     return dataFileProvider;
+  }
+  
+  @Override
+  public <T extends IExtensibleDataSet> T getDataSet(Class<T> set) {
+	  return dataSetProvider.getDataSet(set);
   }
 }

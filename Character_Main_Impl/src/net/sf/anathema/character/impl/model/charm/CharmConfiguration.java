@@ -1,5 +1,6 @@
 package net.sf.anathema.character.impl.model.charm;
 
+import com.google.common.base.Functions;
 import net.disy.commons.core.util.ArrayUtilities;
 import net.sf.anathema.character.generic.IBasicCharacterData;
 import net.sf.anathema.character.generic.caste.ICasteType;
@@ -9,7 +10,6 @@ import net.sf.anathema.character.generic.framework.additionaltemplate.model.ICha
 import net.sf.anathema.character.generic.impl.magic.MartialArtsUtilities;
 import net.sf.anathema.character.generic.impl.magic.charm.CharmTree;
 import net.sf.anathema.character.generic.impl.magic.charm.MartialArtsCharmTree;
-import net.sf.anathema.character.generic.impl.magic.persistence.CharmCache;
 import net.sf.anathema.character.generic.impl.template.magic.ICharmProvider;
 import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.ICharmData;
@@ -21,12 +21,9 @@ import net.sf.anathema.character.generic.magic.charms.MartialArtsLevel;
 import net.sf.anathema.character.generic.magic.charms.special.IPrerequisiteModifyingCharm;
 import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharm;
 import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharmConfiguration;
-import net.sf.anathema.character.generic.rules.IExaltedEdition;
-import net.sf.anathema.character.generic.rules.IExaltedRuleSet;
 import net.sf.anathema.character.generic.template.ICharacterTemplate;
 import net.sf.anathema.character.generic.template.ITemplateRegistry;
 import net.sf.anathema.character.generic.template.ITemplateType;
-import net.sf.anathema.character.generic.template.IUnsupportedTemplate;
 import net.sf.anathema.character.generic.template.magic.ICharmTemplate;
 import net.sf.anathema.character.generic.template.magic.IMagicTemplate;
 import net.sf.anathema.character.generic.template.magic.IUniqueCharmType;
@@ -46,7 +43,6 @@ import net.sf.anathema.character.presenter.magic.CharacterSourceBookFilter;
 import net.sf.anathema.character.presenter.magic.EssenceLevelCharmFilter;
 import net.sf.anathema.character.presenter.magic.ObtainableCharmFilter;
 import net.sf.anathema.charmtree.filters.ICharmFilter;
-import net.sf.anathema.lib.collection.DefaultValueHashMap;
 import net.sf.anathema.lib.control.change.ChangeControl;
 import net.sf.anathema.lib.control.change.IChangeListener;
 import net.sf.anathema.lib.util.IIdentificate;
@@ -63,8 +59,7 @@ public class CharmConfiguration implements ICharmConfiguration {
   private final ISpecialCharmManager manager;
   private final MartialArtsCharmTree martialArtsCharmTree;
   private final Map<IIdentificate, ICharmTree> alienTreesByType = new HashMap<IIdentificate, ICharmTree>();
-  private final Map<IIdentificate, ILearningCharmGroup[]> nonMartialArtsGroupsByType = new DefaultValueHashMap<IIdentificate, ILearningCharmGroup[]>(
-          new ILearningCharmGroup[0]);
+  private final Map<IIdentificate, ILearningCharmGroup[]> nonMartialArtsGroupsByType = new HashMap<IIdentificate, ILearningCharmGroup[]>();
   private final Map<ICharacterType, ICharmTemplate> templatesByType = new HashMap<ICharacterType, ICharmTemplate>();
   private final ICharacterType[] types;
   private final ILearningCharmGroupContainer learningCharmGroupContainer = new ILearningCharmGroupContainer() {
@@ -86,28 +81,26 @@ public class CharmConfiguration implements ICharmConfiguration {
     this.manager = new SpecialCharmManager(this, health, context);
     this.context = context;
     this.provider = provider;
-    IExaltedRuleSet rules = context.getBasicCharacterContext().getRuleSet();
     List<ICharacterType> allCharacterTypes = new ArrayList<ICharacterType>();
     ICharmTemplate nativeCharmTemplate = getNativeCharmTemplate(registry);
     this.arbitrator = new LearningCharmGroupArbitrator(nativeCharmTemplate, context);
-    this.martialArtsCharmTree = new MartialArtsCharmTree(nativeCharmTemplate, rules);
+    this.martialArtsCharmTree = new MartialArtsCharmTree(nativeCharmTemplate);
     this.martialArtsGroups = createGroups(martialArtsCharmTree.getAllCharmGroups());
-    initCharacterType(nativeCharmTemplate, rules, getNativeCharacterType());
+    initCharacterType(nativeCharmTemplate, getNativeCharacterType());
     allCharacterTypes.add(getNativeCharacterType());
-    initAlienTypes(registry, rules, allCharacterTypes);
-    initUniqueTypes(nativeCharmTemplate, rules);
+    initAlienTypes(registry, allCharacterTypes);
+    initUniqueTypes(nativeCharmTemplate);
     initSpecialCharmConfigurations();
     types = allCharacterTypes.toArray(new ICharacterType[allCharacterTypes.size()]);
     filterSet.add(new ObtainableCharmFilter(this));
-    filterSet.add(new CharacterSourceBookFilter(context.getBasicCharacterContext().getRuleSet().getEdition(), this));
+    filterSet.add(new CharacterSourceBookFilter(this));
     filterSet.add(new EssenceLevelCharmFilter());
   }
 
   private ICharmTemplate getNativeCharmTemplate(ITemplateRegistry registry) {
     IBasicCharacterData basicCharacterContext = context.getBasicCharacterContext();
     ITemplateType templateType = basicCharacterContext.getTemplateType();
-    IExaltedEdition edition = basicCharacterContext.getRuleSet().getEdition();
-    ICharacterTemplate template = registry.getTemplate(templateType, edition);
+    ICharacterTemplate template = registry.getTemplate(templateType);
     IMagicTemplate magicTemplate = template.getMagicTemplate();
     return magicTemplate.getCharmTemplate();
   }
@@ -123,14 +116,14 @@ public class CharmConfiguration implements ICharmConfiguration {
   public ICharmIdMap getCharmIdMap() {
     List<ICharmIdMap> trees = new ArrayList<ICharmIdMap>(alienTreesByType.values());
     trees.add(martialArtsCharmTree);
-    ICharmTree[] treeArray = trees.toArray(new ICharmTree[trees.size()]);
+    ICharmIdMap[] treeArray = trees.toArray(new ICharmIdMap[trees.size()]);
     return new GroupedCharmIdMap(treeArray);
   }
 
   @Override
   public ISpecialCharm[] getSpecialCharms() {
-    return provider.getSpecialCharms(context.getBasicCharacterContext().getRuleSet().getEdition(),
-            new MartialArtsLearnableArbitrator(martialArtsCharmTree), getCharmIdMap(), getNativeCharacterType());
+    return provider.getSpecialCharms(new MartialArtsLearnableArbitrator(martialArtsCharmTree), getCharmIdMap(),
+            getNativeCharacterType());
   }
 
   private IPrerequisiteModifyingCharm[] getPrerequisiteModifyingCharms() {
@@ -224,7 +217,7 @@ public class CharmConfiguration implements ICharmConfiguration {
 
       group.addCharmLearnListener(mergedListener);
     }
-    return newGroups.toArray(new LearningCharmGroup[newGroups.size()]);
+    return newGroups.toArray(new ILearningCharmGroup[newGroups.size()]);
   }
 
   private String getSubeffectParent(String subeffect) {
@@ -261,7 +254,7 @@ public class CharmConfiguration implements ICharmConfiguration {
 
   @Override
   public String getCharmTrueName(String charmId) {
-    return provider.getCharmRename(context.getBasicCharacterContext().getRuleSet(), charmId);
+    return provider.getCharmRename(charmId);
   }
 
   @Override
@@ -314,7 +307,7 @@ public class CharmConfiguration implements ICharmConfiguration {
     if (MartialArtsUtilities.MARTIAL_ARTS.equals(type)) {
       return martialArtsGroups;
     }
-    return nonMartialArtsGroupsByType.get(type);
+    return Functions.forMap(nonMartialArtsGroupsByType, new ILearningCharmGroup[0]).apply(type);
   }
 
   private ILearningCharmGroup[] getMartialArtsGroups() {
@@ -338,42 +331,41 @@ public class CharmConfiguration implements ICharmConfiguration {
     return manager.getSpecialCharmConfiguration(charm);
   }
 
-  private void initCharacterType(ICharmTemplate charmTemplate, IExaltedRuleSet rules, ICharacterType type) {
-    CharmTree charmTree = new CharmTree(charmTemplate, rules);
+  private void initCharacterType(ICharmTemplate charmTemplate, ICharacterType type) {
+    CharmTree charmTree = new CharmTree(charmTemplate);
     alienTreesByType.put(type, charmTree);
     ILearningCharmGroup[] groups = createGroups(charmTree.getAllCharmGroups());
     nonMartialArtsGroupsByType.put(type, groups);
     templatesByType.put(type, charmTemplate);
   }
 
-  private void initUniqueTypes(ICharmTemplate charmTemplate, IExaltedRuleSet rules) {
+  private void initUniqueTypes(ICharmTemplate charmTemplate) {
     if (!charmTemplate.hasUniqueCharms()) {
       return;
     }
     IUniqueCharmType type = charmTemplate.getUniqueCharmType();
-    CharmTree charmTree = new CharmTree(CharmCache.getInstance().getCharms(type.getId(), rules));
+    CharmTree charmTree = new CharmTree(charmTemplate.getUniqueCharms());
     ILearningCharmGroup[] groups = createGroups(charmTree.getAllCharmGroups());
     nonMartialArtsGroupsByType.put(type.getId(), groups);
     alienTreesByType.put(type.getId(), charmTree);
   }
 
   private ICharmTemplate getCharmTemplate(ITemplateRegistry registry, ICharacterType type) {
-    ICharacterTemplate defaultTemplate = registry.getDefaultTemplate(type,
-            context.getBasicCharacterContext().getRuleSet().getEdition());
-    if (defaultTemplate == null || defaultTemplate instanceof IUnsupportedTemplate) {
+    ICharacterTemplate defaultTemplate = registry.getDefaultTemplate(type);
+    if (defaultTemplate == null) {
       return null;
     }
     return defaultTemplate.getMagicTemplate().getCharmTemplate();
   }
 
-  private void initAlienTypes(ITemplateRegistry registry, IExaltedRuleSet rules, List<ICharacterType> characterTypes) {
+  private void initAlienTypes(ITemplateRegistry registry, List<ICharacterType> characterTypes) {
     for (ICharacterType type : CharacterType.values()) {
       if (characterTypes.contains(type)) {
         continue;
       }
       ICharmTemplate charmTemplate = getCharmTemplate(registry, type);
-      if (charmTemplate != null && charmTemplate.canLearnCharms(rules)) {
-        initCharacterType(charmTemplate, rules, type);
+      if (charmTemplate != null && charmTemplate.canLearnCharms()) {
+        initCharacterType(charmTemplate, type);
         characterTypes.add(type);
       }
     }

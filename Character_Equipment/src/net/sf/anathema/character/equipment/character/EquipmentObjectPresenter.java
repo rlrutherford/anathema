@@ -4,6 +4,8 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.Action;
+
 import net.disy.commons.core.model.BooleanModel;
 import net.disy.commons.core.model.listener.IChangeListener;
 import net.sf.anathema.character.equipment.MaterialComposition;
@@ -27,28 +29,35 @@ public class EquipmentObjectPresenter implements Presenter {
   private final IEquipmentItem model;
   private final IEquipmentObjectView view;
   private final IEquipmentStringBuilder stringBuilder;
-  private final IResources resources;
+  private final IEquipmentCharacterOptionProvider characterOptionProvider;
   private final IEquipmentCharacterDataProvider dataProvider;
+  private final IResources resources;
+  private final Action[] additionalActions;
   
-  public EquipmentObjectPresenter(
-      IEquipmentItem model,
-      IEquipmentObjectView view,
-      IEquipmentStringBuilder stringBuilder,
-      IEquipmentCharacterDataProvider dataProvider,
-      IResources resources) {
+  public EquipmentObjectPresenter(IEquipmentItem model,
+		  						  IEquipmentObjectView view,
+		  						  IEquipmentStringBuilder stringBuilder,
+                                  IEquipmentCharacterDataProvider dataProvider,
+                                  IEquipmentCharacterOptionProvider characterOptionProvider,
+                                  IResources resources,
+                                  Action... additionalActions) {
     this.model = model;
     this.view = view;
     this.stringBuilder = stringBuilder;
+    this.characterOptionProvider = characterOptionProvider;
     this.resources = resources;
     this.dataProvider = dataProvider;
+    this.additionalActions = additionalActions;
   }
 
+  @Override
   public void initPresentation() {
-    String itemTitle = model.getTemplateId();
+    String itemTitle = model.getTitle();
+    boolean customTitle = !model.getTemplateId().equals(itemTitle);
     if (resources.supportsKey(EQUIPMENT_NAME_PREFIX + itemTitle)) {
       itemTitle = resources.getString(EQUIPMENT_NAME_PREFIX + itemTitle);
     }
-    if (model.getMaterialComposition() == MaterialComposition.Variable) {
+    if (!customTitle && model.getMaterialComposition() == MaterialComposition.Variable) {
       String materialString = resources.getString("MagicMaterial." + model.getMaterial().name()); //$NON-NLS-1$
       itemTitle += " (" + materialString + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     }
@@ -67,6 +76,8 @@ public class EquipmentObjectPresenter implements Presenter {
   public void prepareContents()
   {
 	  view.clearContents();
+	  attuneStatFlags.clear();
+	  otherStatFlags.clear();
 	  
 	  boolean isRequireAttuneArtifact = false;
 	  boolean isAttuned = false;
@@ -85,42 +96,41 @@ public class EquipmentObjectPresenter implements Presenter {
 	    else {
 	  	  otherStatFlags.put(equipment, booleanModel);
 	    }
-	    booleanModel.setValue(true);
+	    booleanModel.setValue(model.isPrintEnabled(equipment));
 	    booleanModel.addChangeListener(new IChangeListener() {
-	      public void stateChanged() {
+	      @Override
+          public void stateChanged() {
 	        model.setPrintEnabled(equipment, booleanModel.getValue());
 	        if (equipment instanceof IArtifactStats)
 	        {
+	        	// if we are enabling an attunement stats ...
 		        if (booleanModel.getValue())
 		        {
-		      	  for (IEquipmentStats stats : attuneStatFlags.keySet())
-		      		  if (equipment != stats)
-		      			  attuneStatFlags.get(stats).setValue(false);
+		          // disable all other attunement stats
+		      	  for (IEquipmentStats stats : attuneStatFlags.keySet()) {
+		      		  if (!equipment.equals(stats) && model.isPrintEnabled(stats)) {
+		      			  model.setPrintEnabled(stats, false);
+		      		  }
+		      	  }
 		        }
-		        boolean otherEnableState = !((IArtifactStats)equipment).requireAttunementToUse();
-		        for (IEquipmentStats attuneStats : attuneStatFlags.keySet())
-		      	  if (model.isPrintEnabled(attuneStats))
-		     		  otherEnableState = true;
-		        for (IEquipmentStats stats : otherStatFlags.keySet())
-		        {
-		              BooleanModel bool = otherStatFlags.get(stats);
-		        	  if (!otherEnableState)
-		        		  bool.setValue(false);
-		        	  view.setEnabled(bool, otherEnableState);
-			          view.updateStatText(bool, createEquipmentDescription(model, stats));
-			    }
+		        prepareContents();
 	        }
 	      }
 	    });
-	    booleanModel.setValue(model.isPrintEnabled(equipment));
 	      
 	    addOptionalModels(booleanModel, equipment);
 	  }
-	  if (isRequireAttuneArtifact && !isAttuned)
+	  // if we require attunement, but we are not, clear and disable all other stats
+	  if (isRequireAttuneArtifact && !isAttuned) {		  
 	   	for (BooleanModel bool : otherStatFlags.values()) {
 	    	view.setEnabled(bool, false);
 	    	bool.setValue(false);
 	    }
+	  }
+	  
+	  for (Action action : additionalActions) {
+		  view.addAction(action);
+	  }
   }
   
   private void addOptionalModels(BooleanModel baseModel, final IEquipmentStats stats)
@@ -135,14 +145,15 @@ public class EquipmentObjectPresenter implements Presenter {
 			  final BooleanModel booleanModel = view.addOptionFlag(baseModel, label);
 			  final IEquipmentStatsOption specialtyOption = new EquipmentSpecialtyOption(specialty, weaponStats.getTraitType());
 			  final IEquipmentStats baseStat = model.getStat(stats.getId());
-			  booleanModel.setValue(dataProvider.isStatOptionEnabled(model, baseStat, specialtyOption));
+			  booleanModel.setValue(characterOptionProvider.isStatOptionEnabled(model, baseStat, specialtyOption));
 		      booleanModel.addChangeListener(new IChangeListener() {
-		        public void stateChanged()
+		        @Override
+                public void stateChanged()
 		        {
 		        	if (booleanModel.getValue())
-		        		dataProvider.enableStatOption(model, baseStat, specialtyOption);
+                      characterOptionProvider.enableStatOption(model, baseStat, specialtyOption);
 		        	else
-		        		dataProvider.disableStatOption(model, baseStat, specialtyOption);
+                      characterOptionProvider.disableStatOption(model, baseStat, specialtyOption);
 		        }
 		      });
 		  }
@@ -152,15 +163,6 @@ public class EquipmentObjectPresenter implements Presenter {
   private boolean viewFilter(IEquipmentStats equipment)
   {
 	  boolean match;
-	  if (model.getMaterialComposition() == MaterialComposition.Variable &&
-		  equipment.getApplicableMaterials() != null)
-	  {
-		  match = false;
-		  for (Object matObj : equipment.getApplicableMaterials())
-			  if (model.getMaterial() == matObj)
-				  match = true;
-		  if (!match) return false;
-	  }
 	  if (equipment instanceof IArtifactStats)
 	  {
 		  IArtifactStats stats = (IArtifactStats)equipment;

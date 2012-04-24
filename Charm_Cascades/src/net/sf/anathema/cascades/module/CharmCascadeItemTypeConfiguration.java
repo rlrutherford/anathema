@@ -38,7 +38,8 @@ public final class CharmCascadeItemTypeConfiguration extends AbstractNonPersista
         CharmCascadeModuleView view = new CharmCascadeModuleView(printName, icon);
         ICharacterGenerics characterGenerics = CharacterGenericsExtractor.getGenerics(anathemaModel);
         MagicDescriptionProvider magicDescriptionProvider = getCharmDescriptionProvider();
-        new CascadePresenter(resources, characterGenerics, view, magicDescriptionProvider).initPresentation();
+        new CascadePresenter(resources, characterGenerics,
+        		view, magicDescriptionProvider).initPresentation();
         return view;
       }
 

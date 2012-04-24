@@ -3,16 +3,17 @@ package net.sf.anathema.character.equipment.modification;
 import net.sf.anathema.character.equipment.MagicalMaterial;
 import net.sf.anathema.character.equipment.impl.character.model.stats.modification.WeaponStatsType;
 import net.sf.anathema.character.generic.health.HealthType;
-import net.sf.anathema.character.generic.impl.rules.ExaltedRuleSet;
-import net.sf.anathema.character.generic.rules.IExaltedRuleSet;
-
 import org.junit.Test;
 
 public class SecondEditionOrichalcumModificationTest extends AbstractEquipmentModificationTest {
 
   @Test
-  public void addsOneToAccuracy() throws Exception {
-    assertAccuracyModification(2, 1, WeaponStatsType.Melee);
+  public void addsTwoToMeleeAccuracy() throws Exception {
+    assertAccuracyModification(3, 1, WeaponStatsType.Melee);
+  }
+
+  @Test
+  public void addsOneToRangedAccuracy() throws Exception {
     assertAccuracyModification(2, 1, WeaponStatsType.Bow);
     assertAccuracyModification(2, 1, WeaponStatsType.Thrown);
     assertAccuracyModification(2, 1, WeaponStatsType.Thrown_BowBonuses);
@@ -21,7 +22,7 @@ public class SecondEditionOrichalcumModificationTest extends AbstractEquipmentMo
 
   @Test
   public void addsOneToDefense() throws Exception {
-    assertDefenseModification(2, 1, WeaponStatsType.Melee);
+    assertDefenseModification(2, 1);
   }
 
   @Test
@@ -31,6 +32,11 @@ public class SecondEditionOrichalcumModificationTest extends AbstractEquipmentMo
     assertRateModification(1, 1, WeaponStatsType.Thrown);
     assertRateModification(1, 1, WeaponStatsType.Thrown_BowBonuses);
     assertRateModification(1, 1, WeaponStatsType.Flame);
+  }
+
+  @Test
+  public void rateCannotRisePast5() throws Exception {
+    assertRateModification(5, 5, WeaponStatsType.Melee);
   }
 
   @Test
@@ -75,11 +81,6 @@ public class SecondEditionOrichalcumModificationTest extends AbstractEquipmentMo
   @Test
   public void fatigueUnmodified() {
     assertFatigueUnmodified();
-  }
-
-  @Override
-  protected IExaltedRuleSet getRuleSet() {
-    return ExaltedRuleSet.SecondEdition;
   }
 
   @Override

@@ -1,9 +1,9 @@
 package net.sf.anathema.character.equipment.impl.character.model.stats;
 
 import net.sf.anathema.character.equipment.MagicalMaterial;
+import net.sf.anathema.character.equipment.impl.character.model.ModifierFactory;
+import net.sf.anathema.character.equipment.impl.character.model.stats.modification.ReactiveBaseMaterial;
 import net.sf.anathema.character.generic.equipment.weapon.IWeaponStats;
-import net.sf.anathema.character.generic.impl.rules.ExaltedRuleSet;
-import net.sf.anathema.character.generic.rules.IExaltedRuleSet;
 import net.sf.anathema.lib.util.IIdentificate;
 import net.sf.anathema.lib.util.Identificate;
 import org.junit.Test;
@@ -21,7 +21,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ProxyWeaponStats_AdamantTagsTest {
-  IExaltedRuleSet rules = ExaltedRuleSet.SecondEdition;
   IWeaponStats original = mock(IWeaponStats.class);
 
   @Test
@@ -39,14 +38,6 @@ public class ProxyWeaponStats_AdamantTagsTest {
   }
 
   @Test
-  public void doesNotAddPiercingToFirstEditionItems() throws Exception {
-    setRulesToFirstEdition();
-    setOriginalTags();
-    List<IIdentificate> tags = getModifiedTags(Adamant);
-    assertThat(tags.size(), is(0));
-  }
-
-  @Test
   public void addsSpecialPiercingTagIfItIsAlreadyPiercing() throws Exception {
     setOriginalTags(Piercing);
     List<IIdentificate> tags = getModifiedTags(Adamant);
@@ -54,15 +45,12 @@ public class ProxyWeaponStats_AdamantTagsTest {
   }
 
   private List<IIdentificate> getModifiedTags(MagicalMaterial material) {
-    ProxyWeaponStats stats = new ProxyWeaponStats(original, material, rules);
+    ModifierFactory modifiers = new NullModifierFactory();
+    ProxyWeaponStats stats = new ProxyWeaponStats(original, new ReactiveBaseMaterial(material), modifiers);
     return Arrays.asList(stats.getTags());
   }
 
   private void setOriginalTags(IIdentificate... tags) {
     when(original.getTags()).thenReturn(tags);
-  }
-
-  private void setRulesToFirstEdition() {
-    rules = ExaltedRuleSet.PowerCombat;
   }
 }

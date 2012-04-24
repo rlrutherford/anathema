@@ -16,15 +16,11 @@ public class MutationsEncoderFactory extends AbstractEncoderFactory {
 
   @Override
   public ContentEncoder create(IResources resources, BasicContent content) {
-    return encoder();
-  }
-
-  private MutationsEncoder encoder() {
     return new MutationsEncoder();
   }
 
   @Override
   public boolean supports(BasicContent content) {
-    return content.isSecondEdition();
+    return true;
   }
 }

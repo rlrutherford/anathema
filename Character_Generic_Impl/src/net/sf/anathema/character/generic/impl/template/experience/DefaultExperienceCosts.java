@@ -14,6 +14,7 @@ import net.sf.anathema.character.generic.template.experience.IExperiencePointCos
 
 public class DefaultExperienceCosts implements IExperiencePointCosts {
 
+  @Override
   public ICurrentRatingCosts getAbilityCosts(boolean favored) {
     if (favored) {
       return new MultiplyRatingCosts(2, 3, -1);
@@ -21,6 +22,7 @@ public class DefaultExperienceCosts implements IExperiencePointCosts {
     return new MultiplyRatingCosts(2, 3);
   }
 
+  @Override
   public ICurrentRatingCosts getAttributeCosts(boolean favored)
   {
 	  return favored ? new MultiplyRatingCosts(3) : new MultiplyRatingCosts(4);
@@ -47,10 +49,12 @@ public class DefaultExperienceCosts implements IExperiencePointCosts {
 	
   }
 
+  @Override
   public int getSpellCosts(ISpell spell, IBasicCharacterData basicCharacter, IGenericTraitCollection traitCollection) {
     return getCharmCosts(spell.isFavored(basicCharacter, traitCollection), null);
   }
 
+  @Override
   public int getCharmCosts(ICharm charm, ICostAnalyzer costMapping) {
     return getCharmCosts(costMapping.isMagicFavored(charm), costMapping.getMartialArtsLevel(charm));
   }
@@ -62,27 +66,27 @@ public class DefaultExperienceCosts implements IExperiencePointCosts {
     return favored ? 8 : 10;
   }
 
-  public int getComboCosts(ICharm[] comboCharms) {
-    return new ComboCostCalculator().getComboCosts(comboCharms);
-  }
-  
   @Override
   public int getBackgroundCost() {
     return 3;
   }
 
+  @Override
   public ICurrentRatingCosts getEssenceCosts() {
     return new MultiplyRatingCosts(8);
   }
 
+  @Override
   public int getSpecialtyCosts(boolean favored) {
     return 3;
   }
 
+  @Override
   public ICurrentRatingCosts getVirtueCosts() {
     return new MultiplyRatingCosts(3);
   }
 
+  @Override
   public ICurrentRatingCosts getWillpowerCosts() {
     return new MultiplyRatingCosts(2);
   }

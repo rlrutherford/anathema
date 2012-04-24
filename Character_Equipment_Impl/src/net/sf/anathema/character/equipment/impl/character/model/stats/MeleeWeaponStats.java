@@ -6,13 +6,9 @@ import net.sf.anathema.character.generic.equipment.weapon.IEquipmentStats;
 import net.sf.anathema.character.generic.traits.types.AbilityType;
 
 public class MeleeWeaponStats extends AbstractWeaponStats {
-
+	
   public MeleeWeaponStats(ICollectionFactory collectionFactory) {
     super(collectionFactory);
-  }
-
-  public MeleeWeaponStats(ICollectionFactory collectionFactory, MeleeWeaponStats stats) {
-    super(collectionFactory, stats);
   }
 
   @Override
@@ -22,6 +18,13 @@ public class MeleeWeaponStats extends AbstractWeaponStats {
 
   private boolean isMartialArtsOnlyWeapon() {
     return hasTag(WeaponTag.Natural) || hasTag(WeaponTag.ClinchEnhancer);
+  }
+  
+  @Override
+  public int getMobilityPenalty() {
+	  if (hasTag(WeaponTag.Shield1)) return -1;
+	  if (hasTag(WeaponTag.Shield2)) return -2;
+	  return 0;
   }
 
   @Override

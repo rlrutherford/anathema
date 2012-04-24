@@ -17,7 +17,7 @@ public class AboutDialogPage extends AbstractDialogPage {
   private final IResources resources;
 
   public AboutDialogPage(IResources resources) {
-    super(resources.getString("Help.AboutDialog.CreatedLabel")); //$NON-NLS-1$
+    super(resources.getString("Help.AboutDialog.CreatedLabel")+"\n\n"+resources.getString("Help.AboutDialog.LicenseLabel")); //$NON-NLS-1$
     this.resources = resources;
   }
 
@@ -52,6 +52,8 @@ public class AboutDialogPage extends AbstractDialogPage {
     addCredit(panel, "Help.AboutDialog.CharmDescriptions", "Official Exalted Wiki"); //$NON-NLS-1$//$NON-NLS-2$
     addCredit(panel, "Help.AboutDialog.CharacterSheet", "voidstate"); //$NON-NLS-1$//$NON-NLS-2$
     addCredit(panel, "Help.AboutDialog.NameTokenDatabase", "voidstate"); //$NON-NLS-1$//$NON-NLS-2$
+    addCredit(panel, "Help.AboutDialog.CharmCards", "Martin 'Democritus' Nerurkar, David J. Prokopetz, and James 'Bazzalisk' Barrett"); //$NON-NLS-1$//$NON-NLS-2$
+    addCredit(panel, "Help.AboutDialog.CharmCards.Additional", "Raiya and feminaexlux"); //$NON-NLS-1$//$NON-NLS-2$
     return panel;
   }
 

@@ -3,33 +3,37 @@ package net.sf.anathema.character.generic.framework.additionaltemplate.model;
 import net.sf.anathema.character.generic.IBasicCharacterData;
 import net.sf.anathema.character.generic.additionalrules.IAdditionalRules;
 import net.sf.anathema.character.generic.additionaltemplate.IAdditionalModel;
-import net.sf.anathema.character.generic.character.IMagicCollection;
 import net.sf.anathema.character.generic.character.IGenericTraitCollection;
+import net.sf.anathema.character.generic.character.IMagicCollection;
 import net.sf.anathema.character.generic.template.presentation.IPresentationProperties;
+
+import java.util.List;
 
 public interface ICharacterModelContext {
 
-  public IAdditionalRules getAdditionalRules();
+  IAdditionalRules getAdditionalRules();
 
-  public IBasicCharacterData getBasicCharacterContext();
-  
-  public IPresentationProperties getPresentationProperties();
+  IBasicCharacterData getBasicCharacterContext();
 
-  public ICharacterListening getCharacterListening();
+  IPresentationProperties getPresentationProperties();
 
-  public ICharmContext getCharmContext();
+  ICharacterListening getCharacterListening();
 
-  public IMagicCollection getMagicCollection();
+  ICharmContext getCharmContext();
 
-  public IGenericTraitCollection getTraitCollection();
+  IMagicCollection getMagicCollection();
 
-  public ITraitContext getTraitContext();
-  
-  public IGenericSpecialtyContext getSpecialtyContext();
+  IGenericTraitCollection getTraitCollection();
 
-  public IAdditionalModel getAdditionalModel(String id);
-  
-  public boolean isFullyLoaded();
-  
-  public void setFullyLoaded(boolean loaded);
+  ITraitContext getTraitContext();
+
+  IGenericSpecialtyContext getSpecialtyContext();
+
+  IAdditionalModel getAdditionalModel(String id);
+
+  boolean isFullyLoaded();
+
+  void setFullyLoaded(boolean loaded);
+
+  <T> List<T> getAllRegistered(Class<T> interfaceClass);
 }

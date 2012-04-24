@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import net.disy.commons.core.util.Ensure;
-import net.sf.anathema.character.generic.rules.IExaltedEdition;
 import net.sf.anathema.character.generic.template.ITemplateType;
 import net.sf.anathema.character.generic.traits.LowerableState;
 
@@ -29,10 +28,12 @@ public class TemplateTypeBackgroundTemplate extends AbstractBackgroundTemplate {
     types.addAll(template.types);
   }
 
-  public boolean acceptsTemplate(ITemplateType templateType, IExaltedEdition edition) {
+  @Override
+  public boolean acceptsTemplate(ITemplateType templateType) {
     return this.types.contains(templateType);
   }
 
+  @Override
   public LowerableState getExperiencedState() {
     return experiencedState;
   }

@@ -1,7 +1,7 @@
 package net.sf.anathema.character.reporting.pdf.layout;
 
 import com.itextpdf.text.DocumentException;
-import net.sf.anathema.character.reporting.pdf.content.ReportContent;
+import net.sf.anathema.character.reporting.pdf.content.ReportSession;
 import net.sf.anathema.character.reporting.pdf.layout.field.LayoutField;
 import net.sf.anathema.character.reporting.pdf.rendering.boxes.EncoderRegistry;
 import net.sf.anathema.character.reporting.pdf.rendering.boxes.EncodingMetrics;
@@ -22,21 +22,29 @@ public class RegisteredEncoderList {
     this.encoderRegistry = encoderRegistry;
   }
 
-  public LayoutField encodeBox(SheetGraphics graphics, ReportContent content, LayoutField layout, String... encoderIds) {
+  public LayoutField encodeBox(SheetGraphics graphics, ReportSession session, LayoutField layout, String... encoderIds) {
     GraphicsTemplate template = layout.createRenderTemplate(graphics);
-    encodeBox(template.getTemplateGraphics(), content, layout.createRenderBounds(), encoderIds);
+    encodeBox(template.getTemplateGraphics(), session, layout.createRenderBounds(), encoderIds);
     layout.addTemplateToParent(template);
     return layout;
   }
 
-  public float encodeBox(SheetGraphics graphics, ReportContent content, Bounds bounds, String... encoderIds) {
+  public float encodeBox(SheetGraphics graphics, ReportSession session, Bounds bounds, String... encoderIds) {
     try {
-      ContentEncoder encoder = encoderRegistry.createEncoder(resources, content, encoderIds);
-      boxEncoder.encodeBox(content, graphics, encoder, bounds);
+      ContentEncoder encoder = encoderRegistry.createEncoder(resources, session, encoderIds);
+      boxEncoder.encodeBox(session, graphics, encoder, bounds);
       return bounds.getHeight();
     } catch (DocumentException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public boolean hasContentFor(ReportSession session, String encoderId) {
+    if (!encoderRegistry.hasEncoder(encoderId, session)) {
+      return false;
+    }
+    ContentEncoder encoder = encoderRegistry.createEncoder(resources, session, encoderId);
+    return encoder.hasContent(session);
   }
 
   public float getPreferredEncoderHeight(EncodingMetrics metrics, float width, String... encoderIds) {

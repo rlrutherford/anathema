@@ -7,12 +7,9 @@ import net.sf.anathema.character.equipment.creation.model.stats.IArtifactStatist
 import net.sf.anathema.character.equipment.creation.model.stats.ICloseCombatStatsticsModel;
 import net.sf.anathema.character.equipment.creation.model.stats.IEquipmentStatisticsCreationModel;
 import net.sf.anathema.character.equipment.creation.model.stats.IRangedCombatStatisticsModel;
-import net.sf.anathema.character.equipment.creation.model.stats.IShieldStatisticsModel;
 import net.sf.anathema.character.equipment.creation.model.stats.ITraitModifyingStatisticsModel;
 import net.sf.anathema.character.equipment.creation.model.stats.IWeaponTagsModel;
 import net.sf.anathema.character.equipment.item.model.EquipmentStatisticsType;
-import net.sf.anathema.character.generic.rules.IExaltedRuleSet;
-import net.sf.anathema.character.generic.rules.IRuleSetVisitor;
 import net.sf.anathema.lib.control.change.ChangeControl;
 import net.sf.anathema.lib.control.change.IChangeListener;
 import net.sf.anathema.lib.data.Range;
@@ -23,7 +20,6 @@ public class EquipmentStatisticsCreationModel implements IEquipmentStatisticsCre
 
   private final ICloseCombatStatsticsModel closeCombatStatisticsModel;
   private final IRangedCombatStatisticsModel rangedWeaponStatisticsModel;
-  private final IShieldStatisticsModel shieldStatisticsModel = new ShieldStatisticsModel();
   private final IArmourStatisticsModel armourStatisticsModel = new ArmourStatsticsModel();
   private final IArtifactStatisticsModel artifactStatisticsModel = new ArtifactStatisticsModel();
   private final ITraitModifyingStatisticsModel traitModifyingStatisticsModel = new TraitModifyingStatisticsModel();
@@ -33,30 +29,17 @@ public class EquipmentStatisticsCreationModel implements IEquipmentStatisticsCre
   private EquipmentStatisticsType statisticsType;
   private final String[] existingNames;
 
-  public EquipmentStatisticsCreationModel(String[] existingNames, IExaltedRuleSet ruleset) {
+  public EquipmentStatisticsCreationModel(String[] existingNames) {
     this.existingNames = existingNames;
-    this.closeCombatStatisticsModel = new CloseCombatStatsticsModel(createOffensiveSpeedModel(ruleset), ruleset);
-    this.rangedWeaponStatisticsModel = new RangedWeaponStatisticsModel(createOffensiveSpeedModel(ruleset));
+    this.closeCombatStatisticsModel = new CloseCombatStatsticsModel(createOffensiveSpeedModel());
+    this.rangedWeaponStatisticsModel = new RangedWeaponStatisticsModel(createOffensiveSpeedModel());
   }
 
-  private IIntValueModel createOffensiveSpeedModel(IExaltedRuleSet ruleset) {
-    final IIntValueModel[] speedModel = new IIntValueModel[1];
-    ruleset.accept(new IRuleSetVisitor() {
-      public void visitCoreRules(IExaltedRuleSet set) {
-        speedModel[0] = new RangedIntValueModel(new Range(Integer.MIN_VALUE, Integer.MAX_VALUE), 1);
-      }
-
-      public void visitPowerCombat(IExaltedRuleSet set) {
-        speedModel[0] = new RangedIntValueModel(new Range(Integer.MIN_VALUE, Integer.MAX_VALUE), 1);
-      }
-
-      public void visitSecondEdition(IExaltedRuleSet set) {
-        speedModel[0] = new RangedIntValueModel(new Range(1, Integer.MAX_VALUE), 1);
-      }
-    });
-    return speedModel[0];
+  private IIntValueModel createOffensiveSpeedModel() {
+    return new RangedIntValueModel(new Range(1, Integer.MAX_VALUE), 1);
   }
 
+  @Override
   public void setEquipmentType(EquipmentStatisticsType statisticsType) {
     if (this.statisticsType == statisticsType) {
       return;
@@ -71,51 +54,58 @@ public class EquipmentStatisticsCreationModel implements IEquipmentStatisticsCre
     equpimentTypeChangeControl.fireChangedEvent();
   }
 
+  @Override
   public ICloseCombatStatsticsModel getCloseCombatStatsticsModel() {
     return closeCombatStatisticsModel;
   }
 
+  @Override
   public void addEquipmentTypeChangeListener(IChangeListener changeListener) {
     equpimentTypeChangeControl.addChangeListener(changeListener);
   }
 
+  @Override
   public boolean isEquipmentTypeSelected(EquipmentStatisticsType type) {
     return this.statisticsType == type;
   }
 
+  @Override
   public IWeaponTagsModel getWeaponTagsModel() {
     return weaponTagsModel;
   }
 
+  @Override
   public IRangedCombatStatisticsModel getRangedWeaponStatisticsModel() {
     return rangedWeaponStatisticsModel;
   }
 
-  public IShieldStatisticsModel getShieldStatisticsModel() {
-    return shieldStatisticsModel;
-  }
-
+  @Override
   public IArmourStatisticsModel getArmourStatisticsModel() {
     return armourStatisticsModel;
   }
   
+  @Override
   public IArtifactStatisticsModel getArtifactStatisticsModel() {
 	    return artifactStatisticsModel;
 	  }
   
+  @Override
   public ITraitModifyingStatisticsModel getTraitModifyingStatisticsModel() {
 	    return traitModifyingStatisticsModel;
 	  }
   
+  @Override
   public IApplicableMaterialsModel getApplicableMaterialsModel()
   {
 	  return applicableMaterialsModel;
   }
 
+  @Override
   public EquipmentStatisticsType getEquipmentType() {
     return statisticsType;
   }
 
+  @Override
   public boolean isNameUnique(String name) {
     return !ArrayUtilities.containsValue(existingNames, name);
   }

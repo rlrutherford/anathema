@@ -1,15 +1,10 @@
 package net.sf.anathema.character.impl.persistence;
 
-import static net.sf.anathema.character.impl.persistence.ICharacterXmlConstants.ATTRIB_EXPERIENCED;
-import static net.sf.anathema.character.impl.persistence.ICharacterXmlConstants.ATTRIB_SUB_TYPE;
-import static net.sf.anathema.character.impl.persistence.ICharacterXmlConstants.TAG_CHARACTER_TYPE;
-import static net.sf.anathema.character.impl.persistence.ICharacterXmlConstants.TAG_STATISTICS;
 import net.disy.commons.core.util.Ensure;
 import net.sf.anathema.character.generic.caste.ICasteCollection;
 import net.sf.anathema.character.generic.framework.ICharacterGenerics;
 import net.sf.anathema.character.generic.impl.magic.SpellException;
 import net.sf.anathema.character.generic.magic.charms.CharmException;
-import net.sf.anathema.character.generic.rules.IExaltedRuleSet;
 import net.sf.anathema.character.generic.template.ICharacterTemplate;
 import net.sf.anathema.character.generic.template.ITemplateType;
 import net.sf.anathema.character.generic.template.TemplateType;
@@ -24,8 +19,12 @@ import net.sf.anathema.lib.exception.PersistenceException;
 import net.sf.anathema.lib.util.IIdentificate;
 import net.sf.anathema.lib.util.Identificate;
 import net.sf.anathema.lib.xml.ElementUtilities;
-
 import org.dom4j.Element;
+
+import static net.sf.anathema.character.impl.persistence.ICharacterXmlConstants.ATTRIB_EXPERIENCED;
+import static net.sf.anathema.character.impl.persistence.ICharacterXmlConstants.ATTRIB_SUB_TYPE;
+import static net.sf.anathema.character.impl.persistence.ICharacterXmlConstants.TAG_CHARACTER_TYPE;
+import static net.sf.anathema.character.impl.persistence.ICharacterXmlConstants.TAG_STATISTICS;
 
 public class CharacterStatisticPersister {
 
@@ -36,7 +35,7 @@ public class CharacterStatisticPersister {
   private final VirtueConfigurationPersister virtuePersister = new VirtueConfigurationPersister();
   private final BackgroundConfigurationPersister backgroundPersister;
   private final WillpowerConfigurationPersister willpowerPersister = new WillpowerConfigurationPersister();
-  private final CharmConfigurationPersister charmPersister = new CharmConfigurationPersister();
+  private final CharmConfigurationPersister charmPersister;
   private final SpellConfigurationPersister spellPersister = new SpellConfigurationPersister();
   private final ExperiencePointsPersister experiencePersister = new ExperiencePointsPersister();
   private final RulesPersister rulesPersister = new RulesPersister();
@@ -46,6 +45,7 @@ public class CharacterStatisticPersister {
   public CharacterStatisticPersister(ICharacterGenerics generics, IAnathemaMessaging messaging) {
     this.generics = generics;
     this.backgroundPersister = new BackgroundConfigurationPersister(generics.getBackgroundRegistry());
+    this.charmPersister = new CharmConfigurationPersister(messaging);
     this.additonalModelPersister = new AdditionalModelPersister(
         generics.getAdditonalPersisterFactoryRegistry(),
         messaging);
@@ -54,7 +54,7 @@ public class CharacterStatisticPersister {
   public void save(Element parent, ICharacterStatistics statistics) {
     Ensure.ensureNotNull("Statistics must not be null", statistics); //$NON-NLS-1$
     Element statisticsElement = parent.addElement(TAG_STATISTICS);
-    rulesPersister.save(statisticsElement, statistics.getRules());
+    rulesPersister.save(statisticsElement);
     statisticsElement.addAttribute(ATTRIB_EXPERIENCED, String.valueOf(statistics.isExperienced()));
     ICharacterTemplate template = statistics.getCharacterTemplate();
     Element characterTypeElement = statisticsElement.addElement(TAG_CHARACTER_TYPE);
@@ -81,9 +81,8 @@ public class CharacterStatisticPersister {
       }
       ITemplateType templateType = loadTemplateType(statisticsElement);
       boolean experienced = ElementUtilities.getBooleanAttribute(statisticsElement, ATTRIB_EXPERIENCED, false);
-      IExaltedRuleSet rules = rulesPersister.load(statisticsElement);
-      ICharacterTemplate template = generics.getTemplateRegistry().getTemplate(templateType, rules.getEdition());
-      ICharacterStatistics statistics = character.createCharacterStatistics(template, generics, rules);
+      ICharacterTemplate template = generics.getTemplateRegistry().getTemplate(templateType);
+      ICharacterStatistics statistics = character.createCharacterStatistics(template, generics);
       ICasteCollection casteCollection = template.getCasteCollection();
       characterConceptPersister.load(
           statisticsElement,

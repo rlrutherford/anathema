@@ -3,7 +3,7 @@ package net.sf.anathema.charmtree.edit;
 import net.sf.anathema.framework.extension.IAnathemaExtension;
 import net.sf.anathema.initialization.Extension;
 import net.sf.anathema.initialization.InitializationException;
-import net.sf.anathema.initialization.Instantiater;
+import net.sf.anathema.initialization.reflections.AnathemaReflections;
 import net.sf.anathema.initialization.repository.IDataFileProvider;
 import net.sf.anathema.lib.resources.IResources;
 
@@ -15,7 +15,9 @@ public class CharmEditionExtension implements CharmEditor, IAnathemaExtension {
   private CharmEditor editor = new NullCharmEditor();
 
   @Override
-  public void initialize(IResources resources, IDataFileProvider dataFileProvider, Instantiater instantiater) throws InitializationException {
+  public void initialize(IResources resources,
+		  IDataFileProvider dataFileProvider,
+		  AnathemaReflections reflections) throws InitializationException {
     // nothing to do
   }
 

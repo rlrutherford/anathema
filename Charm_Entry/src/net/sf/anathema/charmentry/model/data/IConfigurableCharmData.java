@@ -5,7 +5,6 @@ import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.IExtendedCharmData;
 import net.sf.anathema.character.generic.magic.charms.ICharmAttribute;
 import net.sf.anathema.character.generic.magic.charms.duration.IDuration;
-import net.sf.anathema.character.generic.rules.IExaltedEdition;
 import net.sf.anathema.character.generic.rules.IExaltedSourceBook;
 import net.sf.anathema.character.generic.traits.IGenericTrait;
 import net.sf.anathema.character.generic.type.ICharacterType;
@@ -15,15 +14,13 @@ public interface IConfigurableCharmData extends IExtendedCharmData {
 
   public ITextualDescription getName();
 
+  @Override
   public IConfigurableCostList getTemporaryCost();
 
-  public IExaltedEdition getEdition();
-
+  @Override
   public CharmTypeModel getCharmTypeModel();
 
   public void setCharacterType(ICharacterType type);
-
-  public void setEdition(IExaltedEdition edition);
 
   public void setEssencePrerequisite(IGenericTrait type);
 

@@ -1,52 +1,52 @@
 package net.sf.anathema.character.generic.impl.template;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.sf.anathema.character.generic.impl.rules.ExaltedEdition;
-import net.sf.anathema.character.generic.rules.IExaltedEdition;
 import net.sf.anathema.character.generic.template.ICharacterExternalsTemplate;
 import net.sf.anathema.character.generic.template.ICharacterTemplate;
 import net.sf.anathema.character.generic.template.ITemplateRegistry;
 import net.sf.anathema.character.generic.template.ITemplateType;
-import net.sf.anathema.character.generic.template.IUnsupportedTemplate;
 import net.sf.anathema.character.generic.template.TemplateType;
 import net.sf.anathema.character.generic.type.ICharacterType;
-import net.sf.anathema.lib.collection.Table;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class TemplateRegistry implements ITemplateRegistry {
 
-  private final Table<ITemplateType, IExaltedEdition, ICharacterTemplate> table = new Table<ITemplateType, IExaltedEdition, ICharacterTemplate>();
+  private final HashMap<ITemplateType, ICharacterTemplate> templatesByType = new HashMap<ITemplateType, ICharacterTemplate>();
 
+  @Override
   public ICharacterExternalsTemplate[] getAllSupportedTemplates(ICharacterType type) {
     List<ICharacterTemplate> typeTemplates = new ArrayList<ICharacterTemplate>();
-    for (ITemplateType templateType : table.getPrimaryKeys()) {
+    for (ITemplateType templateType : templatesByType.keySet()) {
       if (templateType.getCharacterType().equals(type)) {
-        for (IExaltedEdition edition : ExaltedEdition.values()) {
-          ICharacterTemplate template = getTemplate(templateType, edition);
-          if (template != null && !(template instanceof IUnsupportedTemplate)) {
-            typeTemplates.add(template);
-          }
+        ICharacterTemplate template = getTemplate(templateType);
+        if (template != null) {
+          typeTemplates.add(template);
         }
       }
     }
     return typeTemplates.toArray(new ICharacterTemplate[typeTemplates.size()]);
   }
 
-  public ICharacterTemplate getDefaultTemplate(ICharacterType type, IExaltedEdition edition) {
+  @Override
+  public ICharacterTemplate getDefaultTemplate(ICharacterType type) {
     ITemplateType templateType = new TemplateType(type);
-    return getTemplate(templateType, edition);
+    return getTemplate(templateType);
   }
 
+  @Override
   public ICharacterTemplate getTemplate(ICharacterExternalsTemplate template) {
-    return table.get(template.getTemplateType(), template.getEdition());
+    return templatesByType.get(template.getTemplateType());
   }
 
-  public ICharacterTemplate getTemplate(ITemplateType type, IExaltedEdition edition) {
-    return table.get(type, edition);
+  @Override
+  public ICharacterTemplate getTemplate(ITemplateType type) {
+    return templatesByType.get(type);
   }
 
+  @Override
   public void register(ICharacterTemplate template) {
-    table.add(template.getTemplateType(), template.getEdition(), template);
+    templatesByType.put(template.getTemplateType(), template);
   }
 }

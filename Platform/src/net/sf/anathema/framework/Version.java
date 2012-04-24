@@ -16,18 +16,22 @@ public class Version implements Comparable<Version> {
   }
 
   public Version(IResources resources) {
+    this(resources.getString("Anathema.Version.Numeric"));
+  }
+
+  public Version(String versionString) {
     try {
-      parseVersion(resources);
+      parseVersion(versionString);
     } catch (NumberFormatException e) {
-      Logger.getLogger(Version.class).warn("Could not parse version. Setting to max.");
+      Logger.getLogger(Version.class).warn("Could not parse version. Assuming max.");
       this.majorVersion = Integer.MAX_VALUE;
       this.minorVersion = Integer.MAX_VALUE;
       this.revision = Integer.MAX_VALUE;
     }
   }
 
-  private void parseVersion(IResources resources) {
-    String[] split = resources.getString("Anathema.Version.Numeric").split("\\."); //$NON-NLS-1$ //$NON-NLS-2$
+  private void parseVersion(String string) {
+    String[] split = string.split("\\."); //$NON-NLS-1$ //$NON-NLS-2$
     majorVersion = Integer.valueOf(split[0]);
     minorVersion = Integer.valueOf(split[1]);
     if (split.length > 2) {
@@ -35,18 +39,6 @@ public class Version implements Comparable<Version> {
     } else {
       revision = 0;
     }
-  }
-
-  public int getMajorVersion() {
-    return majorVersion;
-  }
-
-  public int getMinorVersion() {
-    return minorVersion;
-  }
-
-  public int getRevision() {
-    return revision;
   }
 
   public void updateTo(Version version) {
@@ -62,7 +54,7 @@ public class Version implements Comparable<Version> {
     if (version.getClass() != getClass()) {
       throw new ClassCastException("Uncomparable objects.");
     }
-    
+
     if (majorVersion != version.majorVersion) {
       return majorVersion - version.majorVersion;
     }
@@ -80,12 +72,20 @@ public class Version implements Comparable<Version> {
     if (obj == null || obj.getClass() != getClass()) {
       return false;
     }
-    
-    return compareTo((Version)obj) == 0;
+
+    return compareTo((Version) obj) == 0;
   }
 
   @Override
   public int hashCode() {
     return majorVersion * 3 + minorVersion * 7 + revision * 13;
+  }
+
+  public boolean isLargerThan(Version otherVersion) {
+    return otherVersion == null || compareTo(otherVersion) > 0;
+  }
+
+  public String asString() {
+    return majorVersion + "." + minorVersion + "." + revision;
   }
 }

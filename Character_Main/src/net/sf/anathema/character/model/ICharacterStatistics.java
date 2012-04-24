@@ -1,7 +1,6 @@
 package net.sf.anathema.character.model;
 
 import net.sf.anathema.character.generic.framework.additionaltemplate.model.ICharacterModelContext;
-import net.sf.anathema.character.generic.rules.IExaltedRuleSet;
 import net.sf.anathema.character.generic.template.ICharacterTemplate;
 import net.sf.anathema.character.model.advance.IExperiencePointConfiguration;
 import net.sf.anathema.character.model.charm.ICharmConfiguration;
@@ -13,32 +12,29 @@ import net.sf.anathema.character.model.traits.essence.IEssencePoolConfiguration;
 
 public interface ICharacterStatistics {
 
-  public ICoreTraitConfiguration getTraitConfiguration();
+  ICoreTraitConfiguration getTraitConfiguration();
 
-  public ICharacterConcept getCharacterConcept();
+  ICharacterConcept getCharacterConcept();
 
-  public ICharacterTemplate getCharacterTemplate();
+  ICharacterTemplate getCharacterTemplate();
 
-  public IEssencePoolConfiguration getEssencePool();
+  IEssencePoolConfiguration getEssencePool();
 
-  public IExperiencePointConfiguration getExperiencePoints();
+  IExperiencePointConfiguration getExperiencePoints();
 
-  public IExtendedConfiguration getExtendedConfiguration();
+  IExtendedConfiguration getExtendedConfiguration();
 
-  public IHealthConfiguration getHealth();
+  IHealthConfiguration getHealth();
 
-  public IExaltedRuleSet getRules();
+  boolean isExperienced();
 
-  public boolean isExperienced();
+  void setExperienced(boolean experienced);
 
-  public void setExperienced(boolean experienced);
+  ICharmConfiguration getCharms();
 
-  // todo vom (24.12.2005) (sieroux): IMagicConfiguration herausziehen 
-  public ICharmConfiguration getCharms();
+  IComboConfiguration getCombos();
 
-  public IComboConfiguration getCombos();
+  ISpellConfiguration getSpells();
 
-  public ISpellConfiguration getSpells();
-
-  public ICharacterModelContext getCharacterContext();
+  ICharacterModelContext getCharacterContext();
 }

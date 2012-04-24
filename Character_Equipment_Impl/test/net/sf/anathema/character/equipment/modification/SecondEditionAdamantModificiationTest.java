@@ -2,8 +2,6 @@ package net.sf.anathema.character.equipment.modification;
 
 import net.sf.anathema.character.equipment.MagicalMaterial;
 import net.sf.anathema.character.generic.health.HealthType;
-import net.sf.anathema.character.generic.impl.rules.ExaltedRuleSet;
-import net.sf.anathema.character.generic.rules.IExaltedRuleSet;
 import org.junit.Test;
 
 public class SecondEditionAdamantModificiationTest extends AbstractEquipmentModificationTest {
@@ -56,7 +54,7 @@ public class SecondEditionAdamantModificiationTest extends AbstractEquipmentModi
 
   @Test
   public void mobilityDecreasedByOne() {
-    assertMobilityPenaltyModification(1, 2);
+    assertMobilityPenaltyModification(-1, -2);
   }
 
   @Test
@@ -67,10 +65,5 @@ public class SecondEditionAdamantModificiationTest extends AbstractEquipmentModi
   @Override
   protected MagicalMaterial getMagicMaterial() {
     return MagicalMaterial.Adamant;
-  }
-
-  @Override
-  protected IExaltedRuleSet getRuleSet() {
-    return ExaltedRuleSet.SecondEdition;
   }
 }

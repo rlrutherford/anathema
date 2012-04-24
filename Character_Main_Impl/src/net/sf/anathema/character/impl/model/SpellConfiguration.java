@@ -1,10 +1,9 @@
 package net.sf.anathema.character.impl.model;
 
 import net.sf.anathema.character.generic.impl.magic.SpellException;
-import net.sf.anathema.character.generic.impl.magic.persistence.SpellBuilder;
+import net.sf.anathema.character.generic.impl.magic.persistence.ISpellCache;
 import net.sf.anathema.character.generic.magic.ISpell;
 import net.sf.anathema.character.generic.magic.spells.CircleType;
-import net.sf.anathema.character.generic.rules.IExaltedEdition;
 import net.sf.anathema.character.generic.template.ICharacterTemplate;
 import net.sf.anathema.character.generic.template.magic.ISpellMagicTemplate;
 import net.sf.anathema.character.model.IMagicLearnListener;
@@ -32,19 +31,19 @@ public class SpellConfiguration implements ISpellConfiguration {
   private final ICharmConfiguration charms;
   private final ISpellLearnStrategy strategy;
   private final ICharacterTemplate characterTemplate;
-  private final IExaltedEdition edition;
   private final ISpellMapper spellMapper;
 
-  public SpellConfiguration(ICharmConfiguration charms, ISpellLearnStrategy strategy, ICharacterTemplate template,
-                            IExaltedEdition edition) throws SpellException {
+  public SpellConfiguration(ICharmConfiguration charms,
+		  ISpellLearnStrategy strategy,
+		  ICharacterTemplate template,
+		  ISpellCache cache) throws SpellException {
     this.charms = charms;
     this.strategy = strategy;
     this.characterTemplate = template;
-    this.edition = edition;
     for (CircleType type : CircleType.values()) {
       spellsByCircle.put(type, new ArrayList<ISpell>());
     }
-    for (ISpell spell : new SpellBuilder(edition).getSpells()) {
+    for (ISpell spell : cache.getSpells()) {
       spellsByCircle.get(spell.getCircleType()).add(spell);
     }
     spellMapper = new SpellMapper();
@@ -158,7 +157,7 @@ public class SpellConfiguration implements ISpellConfiguration {
 
   @Override
   public ISpell getSpellById(String id) {
-    String correctedId = spellMapper.getId(id, edition);
+    String correctedId = spellMapper.getId(id);
     for (ISpell spell : getAllSpells()) {
       if (spell.getId().equals(correctedId)) {
         return spell;

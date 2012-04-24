@@ -2,7 +2,7 @@ package net.sf.anathema.character.equipment.character;
 
 import net.disy.commons.core.exception.UnreachableCodeReachedException;
 import net.sf.anathema.character.equipment.character.model.IEquipmentItem;
-import net.sf.anathema.character.generic.equipment.ArtifactAttuneType;
+import net.sf.anathema.lib.util.IIdentificate;
 import net.sf.anathema.character.generic.equipment.IArtifactStats;
 import net.sf.anathema.character.generic.equipment.ITraitModifyingStats;
 import net.sf.anathema.character.generic.equipment.weapon.IArmourStats;
@@ -42,6 +42,8 @@ public class EquipmentStringBuilder implements IEquipmentStringBuilder {
     stringBuilder.append(getStatsString("Defence", weapon.getDefence(), true)); //$NON-NLS-1$
     stringBuilder.append(getStatsString("Range", weapon.getRange(), false)); //$NON-NLS-1$
     stringBuilder.append(getStatsString("Rate", weapon.getRate(), false)); //$NON-NLS-1$
+    stringBuilder.append( getTagsString( weapon.getTags() ) );
+    
     return stringBuilder.toString();
   }
 
@@ -52,14 +54,20 @@ public class EquipmentStringBuilder implements IEquipmentStringBuilder {
     String signum = printSignum && value >= 0 ? "+" : ""; //$NON-NLS-1$ //$NON-NLS-2$
     return createtNewStatsStart(keyPart) + signum + value;
   }
+  
+  private String getTagsString( IIdentificate[] tags ) {
+      StringBuilder result = new StringBuilder();
+      for( IIdentificate tag : tags ) {
+          result.append( " " + tag.getId() );
+      }
+      return result.toString();
+  }
 
   private String createtNewStatsStart(String keyPart) {
     return " " + resources.getString("Equipment.Stats.Short." + keyPart) + ":"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
   }
 
   public String createString(IEquipmentItem item, IEquipmentStats equipment) {
-    if (item != null && equipment != null)
-      equipment.setUseAttunementModifiers(checkAttunement(item.getAttunementState()));
     if (equipment instanceof IWeaponStats) {
       return createWeaponString(item, (IWeaponStats) equipment);
     }
@@ -74,19 +82,6 @@ public class EquipmentStringBuilder implements IEquipmentStringBuilder {
     if (equipment instanceof ITraitModifyingStats)
       return createTraitModifyingString((ITraitModifyingStats) equipment);
     throw new UnreachableCodeReachedException("All subclasses covered. Something appears to be wrong."); //$NON-NLS-1$
-  }
-
-  private boolean checkAttunement(ArtifactAttuneType state) {
-    switch (state) {
-      case Unattuned:
-      case PartiallyAttuned:
-      case ExpensivePartiallyAttuned:
-        return false;
-      default:
-      case FullyAttuned:
-      case UnharmoniouslyAttuned:
-        return true;
-    }
   }
 
   private String createArtifactString(IArtifactStats stats) {
@@ -111,14 +106,14 @@ public class EquipmentStringBuilder implements IEquipmentStringBuilder {
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(stats.getName().getId());
     stringBuilder.append(":");
-    if (stats.getDDVMod() != 0)
-      stringBuilder.append(getStatsString("DDV", stats.getDDVMod(), true));
-    if (stats.getPDVMod() != 0)
-      stringBuilder.append(getStatsString("PDV", stats.getPDVMod(), true));
-    if (stats.getMDDVMod() != 0)
-      stringBuilder.append(getStatsString("MDDV", stats.getMDDVMod(), true));
-    if (stats.getMPDVMod() != 0)
-      stringBuilder.append(getStatsString("MPDV", stats.getMPDVMod(), true));
+    if (stats.getDDVPoolMod() != 0)
+      stringBuilder.append(getStatsString("DDV", stats.getDDVPoolMod(), true));
+    if (stats.getPDVPoolMod() != 0)
+      stringBuilder.append(getStatsString("PDV", stats.getPDVPoolMod(), true));
+    if (stats.getMDDVPoolMod() != 0)
+      stringBuilder.append(getStatsString("MDDV", stats.getMDDVPoolMod(), true));
+    if (stats.getMPDVPoolMod() != 0)
+      stringBuilder.append(getStatsString("MPDV", stats.getMPDVPoolMod(), true));
     if (stats.getMeleeSpeedMod() != 0)
       stringBuilder.append(getStatsString("MeleeSpeed", stats.getMeleeSpeedMod(), true));
     if (stats.getMeleeAccuracyMod() != 0)

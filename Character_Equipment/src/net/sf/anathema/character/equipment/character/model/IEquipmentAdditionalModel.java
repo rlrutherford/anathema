@@ -3,21 +3,31 @@ package net.sf.anathema.character.equipment.character.model;
 import net.sf.anathema.character.equipment.MagicalMaterial;
 import net.sf.anathema.character.equipment.MaterialComposition;
 import net.sf.anathema.character.equipment.character.IEquipmentCharacterDataProvider;
+import net.sf.anathema.character.equipment.character.IEquipmentCharacterOptionProvider;
+import net.sf.anathema.character.equipment.item.model.IEquipmentTemplateProvider;
 import net.sf.anathema.character.generic.additionaltemplate.IAdditionalModel;
+import net.sf.anathema.character.generic.character.IGenericCharacter;
+import net.sf.anathema.character.generic.equipment.ICharacterStatsModifiers;
+import net.sf.anathema.character.model.traits.essence.IEssencePoolModifier;
 
-public interface IEquipmentAdditionalModel extends IAdditionalModel, IEquipmentItemCollection {
+public interface IEquipmentAdditionalModel extends IAdditionalModel, IEquipmentItemCollection,
+	IEquipmentTemplateProvider, IEssencePoolModifier{
 
-  public MagicalMaterial getDefaultMaterial();
+  MagicalMaterial getDefaultMaterial();
+
+  MaterialComposition getMaterialComposition(String templateId);
+
+  MagicalMaterial getMagicalMaterial(String templateId);
+
+  IEquipmentPrintModel getPrintModel();
+
+  IEquipmentCharacterDataProvider getCharacterDataProvider();
   
-  public MaterialComposition getMaterialComposition(String templateId);
+  void updateItem(IEquipmentItem item);
 
-  public MagicalMaterial getMagicalMaterial(String templateId);
-  
-  public int getTotalAttunementCost();
+  void refreshItems();
 
-  public IEquipmentPrintModel getPrintModel();
-  
-  public IEquipmentCharacterDataProvider getCharacterDataProvider();
+  IEquipmentCharacterOptionProvider getCharacterOptionProvider();
 
-  public void refreshItems();
+  ICharacterStatsModifiers createStatsModifiers(IGenericCharacter character);
 }

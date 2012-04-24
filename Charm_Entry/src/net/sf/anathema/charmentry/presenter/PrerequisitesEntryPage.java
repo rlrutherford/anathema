@@ -2,23 +2,24 @@ package net.sf.anathema.charmentry.presenter;
 
 import net.disy.commons.core.message.IBasicMessage;
 import net.disy.commons.swing.dialog.core.IPageContent;
-import net.sf.anathema.character.generic.impl.rules.ExaltedEdition;
 import net.sf.anathema.character.generic.impl.traits.EssenceTemplate;
 import net.sf.anathema.character.generic.traits.IGenericTrait;
 import net.sf.anathema.character.generic.traits.ITraitType;
+import net.sf.anathema.character.generic.framework.intvalue.ISelectableIntValueView;
 import net.sf.anathema.charmentry.module.ICharmEntryViewFactory;
 import net.sf.anathema.charmentry.presenter.model.ICharmEntryModel;
 import net.sf.anathema.charmentry.presenter.model.IPrerequisitesModel;
 import net.sf.anathema.charmentry.presenter.view.IPrerequisitesEntryView;
-import net.sf.anathema.charmentry.presenter.view.ISelectableTraitView;
 import net.sf.anathema.charmentry.properties.PrerequisitePageProperties;
 import net.sf.anathema.framework.value.IIntValueView;
 import net.sf.anathema.lib.control.change.IChangeListener;
 import net.sf.anathema.lib.control.intvalue.IIntValueChangedListener;
+import net.sf.anathema.lib.gui.selection.ISelectionIntValueChangedListener;
 import net.sf.anathema.lib.gui.wizard.AbstractAnathemaWizardPage;
 import net.sf.anathema.lib.gui.wizard.workflow.CheckInputListener;
 import net.sf.anathema.lib.gui.wizard.workflow.ICondition;
 import net.sf.anathema.lib.resources.IResources;
+import net.sf.anathema.lib.util.IIdentificate;
 
 public class PrerequisitesEntryPage extends AbstractAnathemaWizardPage {
 
@@ -38,25 +39,19 @@ public class PrerequisitesEntryPage extends AbstractAnathemaWizardPage {
   @Override
   protected void addFollowUpPages(CheckInputListener inputListener) {
     addFollowupPage(new CostEntryPage(resources, model, viewFactory), inputListener, new ICondition() {
+      @Override
       public boolean isFulfilled() {
         return isPrerequisiteSelected() && !isPermanentCharm();
-      }
-    });
-    addFollowupPage(new PrerequisiteCharmsPage(resources, model, viewFactory), inputListener, new ICondition() {
-      public boolean isFulfilled() {
-        return isPrerequisiteSelected()
-            && isPermanentCharm()
-            && getPageModel().getEdition() == ExaltedEdition.FirstEdition;
       }
     });
     addFollowupPage(
         new SecondEditionPrerequisiteCharmsPage(resources, model, viewFactory),
         inputListener,
         new ICondition() {
+          @Override
           public boolean isFulfilled() {
             return isPrerequisiteSelected()
-                && isPermanentCharm()
-                && getPageModel().getEdition() == ExaltedEdition.SecondEdition;
+                && isPermanentCharm();
           }
         });
 
@@ -83,17 +78,21 @@ public class PrerequisitesEntryPage extends AbstractAnathemaWizardPage {
   }
 
   private void initPrimaryPrerequistePresentation() {
-    final ISelectableTraitView primaryView = view.addSelectablePrerequisiteView(
+    final ISelectableIntValueView<IIdentificate> primaryView = view.addSelectablePrerequisiteView(
         properties.getPrimaryPrerequisiteLabel(),
-        getPageModel().getPrimaryPrerequisiteTypes());
-    primaryView.addTraitSelectionListener(new ITraitSelectionChangedListener() {
-      public void selectionChanged(Object type, int value) {
+        getPageModel().getPrimaryPrerequisiteTypes(),
+        1,
+        EssenceTemplate.SYSTEM_ESSENCE_MAX);
+    primaryView.addSelectionChangedListener(new ISelectionIntValueChangedListener<IIdentificate>() {
+      @Override
+      public void valueChanged(IIdentificate type, int value) {
         getPageModel().setPrimaryPrerequisite((ITraitType) type, value);
       }
     });
     getPageModel().addModelListener(new IChangeListener() {
+      @Override
       public void changeOccurred() {
-        primaryView.setSelectableTraits(getPageModel().getPrimaryPrerequisiteTypes());
+        primaryView.setSelectableValues(getPageModel().getPrimaryPrerequisiteTypes());
         if (getPageModel().getPrimaryPrerequisite() != null) {
           primaryView.setValue(getPageModel().getPrimaryPrerequisite().getCurrentValue());
         }
@@ -108,11 +107,13 @@ public class PrerequisitesEntryPage extends AbstractAnathemaWizardPage {
         1,
         EssenceTemplate.SYSTEM_ESSENCE_MAX);
     traitView.addIntValueChangedListener(new IIntValueChangedListener() {
+      @Override
       public void valueChanged(int newValue) {
         getPageModel().setEssenceMinimum(newValue);
       }
     });
     getPageModel().addModelListener(new IChangeListener() {
+      @Override
       public void changeOccurred() {
         traitView.setValue(getPageModel().getEssenceMinimum());
       }
@@ -120,14 +121,17 @@ public class PrerequisitesEntryPage extends AbstractAnathemaWizardPage {
     traitView.setValue(1);
   }
 
+  @Override
   public boolean canFinish() {
     return prerequisitesSelected();
   }
 
+  @Override
   public String getDescription() {
     return properties.getPageTitle();
   }
 
+  @Override
   public IBasicMessage getMessage() {
     if (getPageModel().getPrimaryPrerequisite() == null) {
       return properties.getPrimaryMissingMessage();
@@ -135,6 +139,7 @@ public class PrerequisitesEntryPage extends AbstractAnathemaWizardPage {
     return properties.getPrerequisitesMessage();
   }
 
+  @Override
   public IPageContent getPageContent() {
     return view;
   }

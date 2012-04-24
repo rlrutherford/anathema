@@ -26,7 +26,7 @@ import net.sf.anathema.character.generic.framework.xml.rules.AdditionalRulesTemp
 import net.sf.anathema.character.generic.framework.xml.rules.GenericAdditionalRules;
 import net.sf.anathema.character.generic.framework.xml.trait.GenericTraitTemplateFactory;
 import net.sf.anathema.character.generic.framework.xml.trait.GenericTraitTemplateFactoryParser;
-import net.sf.anathema.character.generic.impl.rules.ExaltedEdition;
+import net.sf.anathema.character.generic.impl.magic.persistence.ICharmCache;
 import net.sf.anathema.character.generic.impl.template.magic.ICharmProvider;
 import net.sf.anathema.character.generic.template.ITemplateType;
 import net.sf.anathema.character.generic.template.additional.IAdditionalTemplate;
@@ -60,30 +60,30 @@ public class CharacterTemplateParser extends AbstractXmlTemplateParser<GenericCh
   private static final String TAG_PRESENTATION_TEMPLATE = "presentation"; //$NON-NLS-1$
   private static final String TAG_ADDITIONAL_TEMPLATES = "additionalTemplates"; //$NON-NLS-1$
   private static final String TAG_TEMPLATE = "template"; //$NON-NLS-1$
-  private static final String TAG_LEGACY = "isLegacy"; //$NON-NLS-1$
   private static final String ATTRIB_ID = "id"; //$NON-NLS-1$
   private static final String TAG_HEALTH_TEMPLATE = "healthTemplate"; //$NON-NLS-1$
   private static final String TAG_ADDITIONAL_RULES = "additionalRules"; //$NON-NLS-1$
-  private static final String TAG_EDITION = "edition"; //$NON-NLS-1$
-  private static final String ATTRIB_EDITION = "edition"; //$NON-NLS-1$
   private static final String TAG_NPC_ONLY = "npcOnly";
 
   private final ICharacterTemplateRegistryCollection registryCollection;
   private final IRegistry<ICharacterType, ICasteCollection> casteCollectionRegistry;
   private final IRegistry<String, IAdditionalTemplateParser> additionModelTemplateParserRegistry;
-  private final ICharmProvider provider;
   private final IIdentificateRegistry<IBackgroundTemplate> backgroundRegistry;
+  private final ICharmProvider provider;
+  private final ICharmCache cache;
 
   public CharacterTemplateParser(
       ICharacterTemplateRegistryCollection registryCollection,
       IRegistry<ICharacterType, ICasteCollection> casteCollectionRegistry,
       ICharmProvider provider,
+      ICharmCache cache,
       IIdentificateRegistry<IBackgroundTemplate> backgroundRegistry,
       IRegistry<String, IAdditionalTemplateParser> additionModelTemplateParser) {
     super(registryCollection.getCharacterTemplateRegistry());
     this.registryCollection = registryCollection;
     this.casteCollectionRegistry = casteCollectionRegistry;
     this.provider = provider;
+    this.cache = cache;
     this.backgroundRegistry = backgroundRegistry;
     this.additionModelTemplateParserRegistry = additionModelTemplateParser;
   }
@@ -124,9 +124,6 @@ public class CharacterTemplateParser extends AbstractXmlTemplateParser<GenericCh
       throws PersistenceException {
     ITemplateType templateType = new TemplateTypeParser().parse(element);
     characterTemplate.setTemplateType(templateType);
-    
-    boolean isLegacy = ElementUtilities.getBooleanAttribute(element, TAG_LEGACY, false);
-    characterTemplate.setLegacy(isLegacy);
     
     ICasteCollection casteCollection = casteCollectionRegistry.get(templateType.getCharacterType());
     if (casteCollection != null)
@@ -241,7 +238,6 @@ public class CharacterTemplateParser extends AbstractXmlTemplateParser<GenericCh
       return;
     }
     setNpcOnly(generalElement, characterTemplate);
-    setEdition(generalElement, characterTemplate);
     setAbilityGroups(generalElement, characterTemplate);
     setAttributeGroups(generalElement, characterTemplate);
     setEssenceTemplate(generalElement, characterTemplate);
@@ -262,15 +258,6 @@ public class CharacterTemplateParser extends AbstractXmlTemplateParser<GenericCh
     characterTemplate.setNpcOnly();
   }
 
-  private void setEdition(Element generalElement, GenericCharacterTemplate characterTemplate) {
-    Element element = generalElement.element(TAG_EDITION);
-    if (element == null) {
-      return;
-    }
-    String edition = element.attributeValue(ATTRIB_EDITION);
-    characterTemplate.setEdition(ExaltedEdition.valueOf(edition));
-  }
-
   private void setAdditionalRules(Element generalElement, GenericCharacterTemplate characterTemplate)
       throws PersistenceException {
     Element element = generalElement.element(TAG_ADDITIONAL_RULES);
@@ -280,8 +267,7 @@ public class CharacterTemplateParser extends AbstractXmlTemplateParser<GenericCh
     AdditionalRulesTemplateParser parser = new AdditionalRulesTemplateParser(
         registryCollection.getAdditionalRulesRegistry(),
         provider.getSpecialCharms(
-            characterTemplate.getTemplateType().getCharacterType(),
-            characterTemplate.getEdition()),
+            characterTemplate.getTemplateType().getCharacterType()),
         backgroundRegistry);
     GenericAdditionalRules rules = parser.parseTemplate(element);
     characterTemplate.setAdditionalRules(rules);
@@ -333,7 +319,8 @@ public class CharacterTemplateParser extends AbstractXmlTemplateParser<GenericCh
     }
     GenericMagicTemplateParser parser = new GenericMagicTemplateParser(
         registryCollection.getMagicTemplateRegistry(),
-        characterTemplate);
+        characterTemplate,
+        cache);
     GenericMagicTemplate template = parser.parseTemplate(magicTemplateElement);
     characterTemplate.setMagicTemplate(template);
   }

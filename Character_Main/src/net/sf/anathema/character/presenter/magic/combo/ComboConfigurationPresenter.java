@@ -66,17 +66,11 @@ public class ComboConfigurationPresenter implements IContentPresenter {
     initComboConfigurationListening(view);
     comboModel.addCharacterChangeListener(new DedicatedCharacterChangeAdapter() {
       @Override
-      public void experiencedChanged(boolean experienced) {
-        updateComboButtons();
-      }
-
-      @Override
       public void casteChanged() {
         enableCrossPrerequisiteTypeCombos();
       }
     });
     enableCrossPrerequisiteTypeCombos();
-    updateComboButtons();
   }
 
   @Override
@@ -121,7 +115,7 @@ public class ComboConfigurationPresenter implements IContentPresenter {
       }
 
     });
-    for (ICombo combo : comboConfiguration.getCurrentCombos()) {
+    for (ICombo combo : comboConfiguration.getAllCombos()) {
       addComboToView(comboView, combo);
     }
   }
@@ -154,7 +148,6 @@ public class ComboConfigurationPresenter implements IContentPresenter {
   private void addComboToView(final IComboConfigurationView comboConfigurationView, final ICombo combo) {
     SmartAction deleteAction = new SmartAction(
             resources.getString("CardView.CharmConfiguration.ComboCreation.DeleteLabel"), new BasicUi(resources).getClearIcon()) { //$NON-NLS-1$
-      private static final long serialVersionUID = 3964418545450534344L;
 
       @Override
       protected void execute(Component parentComponent) {
@@ -163,7 +156,6 @@ public class ComboConfigurationPresenter implements IContentPresenter {
     };
     SmartAction editAction = new SmartAction(
             resources.getString("CardView.CharmConfiguration.ComboCreation.EditLabel"), new BasicUi(resources).getEditIcon()) {//$NON-NLS-1$
-      private static final long serialVersionUID = -7491597143093367976L;
 
       @Override
       protected void execute(Component parentComponent) {
@@ -238,13 +230,6 @@ public class ComboConfigurationPresenter implements IContentPresenter {
       }
 
       @Override
-      public void comboFinalizedXP() {
-        String comboName = comboConfiguration.getEditCombo().getName().getText();
-        comboName = comboName == null ? resources.getString("CardView.CharmConfiguration.ComboCreation.Combo") : "\"" + comboName + "\"";
-        comboConfiguration.finalizeComboUpgrade(comboName);
-      }
-
-      @Override
       public void comboCleared() {
         comboConfiguration.clearCombo();
       }
@@ -265,14 +250,6 @@ public class ComboConfigurationPresenter implements IContentPresenter {
       IComboView comboView = viewsByCombo.get(currentCombo);
       comboView.setEditText(resources.getString("CardView.CharmConfiguration.ComboCreation.EditLabel")); //$NON-NLS-1$
       comboView.updateCombo(createComboNameString(currentCombo), convertToHtml(currentCombo));
-    }
-  }
-
-  private void updateComboButtons() {
-    for (ICombo combo : comboConfiguration.getCurrentCombos()) {
-      IComboView comboView = viewsByCombo.get(combo);
-      boolean disabled = comboConfiguration.isLearnedOnCreation(combo) && comboModel.isExperienced();
-      comboView.setEditButtonsVisible(!disabled);
     }
   }
 }

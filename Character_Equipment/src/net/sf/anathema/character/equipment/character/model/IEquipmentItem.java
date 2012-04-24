@@ -1,5 +1,6 @@
 package net.sf.anathema.character.equipment.character.model;
 
+import net.sf.anathema.character.equipment.ItemCost;
 import net.sf.anathema.character.equipment.MagicalMaterial;
 import net.sf.anathema.character.equipment.MaterialComposition;
 import net.sf.anathema.character.generic.equipment.ArtifactAttuneType;
@@ -8,29 +9,39 @@ import net.sf.anathema.lib.control.change.IChangeListener;
 
 public interface IEquipmentItem {
 
-  public String getTemplateId();
-
-  public String getDescription();
-
-  public IEquipmentStats[] getStats();
+  String getTitle();
   
-  public IEquipmentStats getStat(String name);
+  String getDescription();
+	
+  String getTemplateId();
 
-  public void setPrintEnabled(IEquipmentStats equipment, boolean enabled);
-
-  public boolean isPrintEnabled(IEquipmentStats stats);
-
-  public void setUnprinted();
-
-  public void setPrinted(String printedStatId);
-
-  public MagicalMaterial getMaterial();
-
-  public MaterialComposition getMaterialComposition();
+  String getBaseDescription();
   
-  public ArtifactAttuneType getAttunementState();
+  void setPersonalization(String title, String description);
+  
+  void setPersonalization(IEquipmentItem item);
+  
+  ItemCost getCost();
 
-  public void addChangeListener(IChangeListener listener);
+  IEquipmentStats[] getStats();
+  
+  IEquipmentStats getStat(String name);
 
-  public void removeChangeListener(IChangeListener listener);
+  void setPrintEnabled(IEquipmentStats equipment, boolean enabled);
+
+  boolean isPrintEnabled(IEquipmentStats stats);
+
+  void setUnprinted();
+
+  void setPrinted(String printedStatId);
+
+  MagicalMaterial getMaterial();
+
+  MaterialComposition getMaterialComposition();
+  
+  ArtifactAttuneType getAttunementState();
+
+  void addChangeListener(IChangeListener listener);
+
+  void removeChangeListener(IChangeListener listener);
 }

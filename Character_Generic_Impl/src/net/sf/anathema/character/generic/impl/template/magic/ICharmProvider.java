@@ -3,25 +3,13 @@ package net.sf.anathema.character.generic.impl.template.magic;
 import net.sf.anathema.character.generic.magic.charms.ICharmIdMap;
 import net.sf.anathema.character.generic.magic.charms.ICharmLearnableArbitrator;
 import net.sf.anathema.character.generic.magic.charms.special.ISpecialCharm;
-import net.sf.anathema.character.generic.rules.IExaltedEdition;
-import net.sf.anathema.character.generic.rules.IExaltedRuleSet;
-import net.sf.anathema.character.generic.type.ICharacterType;
+import net.sf.anathema.lib.util.IIdentificate;
 
 public interface ICharmProvider {
-	
-  ISpecialCharm[] getSpecialMartialArtsCharms(IExaltedEdition edition);
 
-  ISpecialCharm[] getSpecialCharms(ICharacterType characterType, IExaltedEdition edition);
+  ISpecialCharm[] getSpecialCharms(IIdentificate type);
 
-  ISpecialCharm[] getSpecialCharms(
-      IExaltedEdition edition,
-      ICharmLearnableArbitrator arbitrator,
-      ICharmIdMap map,
-      ICharacterType preferredCharacterType);
+  ISpecialCharm[] getSpecialCharms(ICharmLearnableArbitrator arbitrator, ICharmIdMap map, IIdentificate preferredType);
 
-  void addMartialArtsSpecialCharm(IExaltedEdition edition, ISpecialCharm charm);
-
-  void setSpecialCharms(ICharacterType type, IExaltedEdition edition, ISpecialCharm... charms);
-  
-  String getCharmRename(IExaltedRuleSet rules, String name);
+  String getCharmRename(String name);
 }

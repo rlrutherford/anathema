@@ -3,6 +3,7 @@ package net.sf.anathema.character.equipment.dummy;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.anathema.character.equipment.ItemCost;
 import net.sf.anathema.character.equipment.MagicalMaterial;
 import net.sf.anathema.character.equipment.MaterialComposition;
 import net.sf.anathema.character.equipment.character.model.IEquipmentItem;
@@ -36,6 +37,18 @@ public class DummyEquipmentObject extends AbstractStats implements IEquipmentIte
   
   public String getDescription() {
     return description;
+  }
+  
+  public ItemCost getCost() {
+	return null;
+  }
+  
+  public void setPersonalization(String title, String description) {
+	  // nothing to do
+  }
+  
+  public void setPersonalization(IEquipmentItem item) {
+	  // nothing to do
   }
 
   public void setPrintEnabled(IEquipmentStats equipment, boolean enabled) {
@@ -87,5 +100,15 @@ public class DummyEquipmentObject extends AbstractStats implements IEquipmentIte
   @Override
   public boolean representsItemForUseInCombat() {
     return false;
+  }
+
+  @Override
+  public String getBaseDescription() {
+	return getDescription();
+  }
+
+  @Override
+  public String getTitle() {
+	return getTemplateId();
   }
 }

@@ -1,61 +1,71 @@
 package net.sf.anathema.character.equipment.impl.character.model.stats;
 
 import net.disy.commons.core.util.ObjectUtilities;
-import net.sf.anathema.character.equipment.MagicalMaterial;
+import net.sf.anathema.character.equipment.impl.character.model.stats.modification.BaseMaterial;
 import net.sf.anathema.character.equipment.impl.character.model.stats.modification.FatigueModification;
 import net.sf.anathema.character.equipment.impl.character.model.stats.modification.HardnessModification;
-import net.sf.anathema.character.equipment.impl.character.model.stats.modification.IArmourStatsModification;
 import net.sf.anathema.character.equipment.impl.character.model.stats.modification.MobilityPenaltyModification;
 import net.sf.anathema.character.equipment.impl.character.model.stats.modification.SoakModification;
+import net.sf.anathema.character.equipment.impl.character.model.stats.modification.StatModifier;
+import net.sf.anathema.character.equipment.impl.character.model.stats.modification.StatsModification;
+import net.sf.anathema.character.equipment.impl.character.model.stats.modification.material.MaterialFatigueModifier;
+import net.sf.anathema.character.equipment.impl.character.model.stats.modification.material.MaterialHardnessModifier;
+import net.sf.anathema.character.equipment.impl.character.model.stats.modification.material.MaterialMobilityPenaltyModifier;
+import net.sf.anathema.character.equipment.impl.character.model.stats.modification.material.MaterialSoakModifier;
+import net.sf.anathema.character.equipment.impl.character.model.stats.modification.modifier.AttunementModifier;
 import net.sf.anathema.character.generic.equipment.weapon.IArmourStats;
 import net.sf.anathema.character.generic.health.HealthType;
-import net.sf.anathema.character.generic.rules.IExaltedRuleSet;
 import net.sf.anathema.character.generic.util.IProxy;
 import net.sf.anathema.lib.util.IIdentificate;
 
 public class ProxyArmourStats extends AbstractStats implements IArmourStats, IProxy<IArmourStats> {
 
   private final IArmourStats delegate;
-  private final MagicalMaterial material;
-  private final IExaltedRuleSet ruleSet;
+  private final BaseMaterial material;
 
-  public ProxyArmourStats(IArmourStats stats, MagicalMaterial material, IExaltedRuleSet ruleSet) {
+  public ProxyArmourStats(IArmourStats stats, BaseMaterial material) {
     this.delegate = stats;
     this.material = material;
-    this.ruleSet = ruleSet;
   }
 
+  @Override
   public IArmourStats getUnderlying() {
     return this.delegate;
   }
 
+  @Override
   public Integer getFatigue() {
     Integer fatigue = delegate.getFatigue();
-    return getModifiedValue(new FatigueModification(material), fatigue);
+    StatModifier modifier = createAttunementModifier(new MaterialFatigueModifier(material, fatigue));
+    return getModifiedValue(new FatigueModification(modifier), fatigue);
   }
 
+  @Override
   public Integer getHardness(HealthType type) {
     Integer hardness = delegate.getHardness(type);
-    return getModifiedValue(new HardnessModification(material, ruleSet), hardness);
+    StatModifier modifier = createAttunementModifier(new MaterialHardnessModifier(material));
+    return getModifiedValue(new HardnessModification(modifier), hardness);
   }
 
-  private Integer getModifiedValue(IArmourStatsModification modification, Integer original) {
-    if (original == null) {
-      return null;
-    }
-    return !useAttunementModifiers() ? original : modification.getModifiedValue(original);
-  }
-
+  @Override
   public Integer getMobilityPenalty() {
     Integer mobilityPenalty = delegate.getMobilityPenalty();
-    return getModifiedValue(new MobilityPenaltyModification(material, ruleSet), mobilityPenalty);
+    StatModifier modifier = createAttunementModifier(new MaterialMobilityPenaltyModifier(material, mobilityPenalty));
+    return getModifiedValue(new MobilityPenaltyModification(modifier), mobilityPenalty);
   }
 
+  @Override
   public Integer getSoak(HealthType type) {
     Integer soak = delegate.getSoak(type);
-    return getModifiedValue(new SoakModification(material, ruleSet, type), soak);
+    StatModifier modifier = createAttunementModifier(new MaterialSoakModifier(material, type));
+    return getModifiedValue(new SoakModification(modifier), soak);
   }
 
+  private AttunementModifier createAttunementModifier(StatModifier modifier) {
+    return new AttunementModifier(modifier);
+  }
+
+  @Override
   public IIdentificate getName() {
     return delegate.getName();
   }
@@ -66,8 +76,7 @@ public class ProxyArmourStats extends AbstractStats implements IArmourStats, IPr
       return false;
     }
     ProxyArmourStats other = (ProxyArmourStats) obj;
-    return ObjectUtilities.equals(delegate, other.delegate) && ObjectUtilities.equals(material,
-            other.material) && ObjectUtilities.equals(ruleSet, other.ruleSet);
+    return ObjectUtilities.equals(delegate, other.delegate) && ObjectUtilities.equals(material, other.material);
   }
 
   @Override
@@ -81,12 +90,14 @@ public class ProxyArmourStats extends AbstractStats implements IArmourStats, IPr
   }
 
   @Override
-  public Object[] getApplicableMaterials() {
-    return delegate.getApplicableMaterials();
-  }
-
-  @Override
   public boolean representsItemForUseInCombat() {
     return delegate.representsItemForUseInCombat();
+  }
+
+  private Integer getModifiedValue(StatsModification modification, Integer original) {
+    if (original == null) {
+      return null;
+    }
+    return modification.getModifiedValue(original);
   }
 }

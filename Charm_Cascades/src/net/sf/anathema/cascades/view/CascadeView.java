@@ -2,25 +2,20 @@ package net.sf.anathema.cascades.view;
 
 import net.disy.commons.swing.layout.grid.GridDialogLayout;
 import net.disy.commons.swing.layout.grid.GridDialogLayoutData;
-import net.disy.commons.swing.layout.grid.GridDialogLayoutDataFactory;
 import net.sf.anathema.cascades.presenter.view.ICascadeView;
-import net.sf.anathema.character.generic.rules.IExaltedRuleSet;
 import net.sf.anathema.charmtree.AbstractCascadeSelectionView;
-import net.sf.anathema.lib.control.objectvalue.IObjectValueChangedListener;
 import net.sf.anathema.lib.gui.IView;
-import net.sf.anathema.lib.gui.widgets.ChangeableJComboBox;
-import net.sf.anathema.lib.gui.widgets.IChangeableJComboBox;
 import net.sf.anathema.platform.svgtree.presenter.view.ISvgTreeViewProperties;
 
-import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import java.awt.*;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import java.awt.Color;
+
+import static net.disy.commons.swing.layout.grid.GridDialogLayoutDataFactory.createHorizontalSpanData;
 
 public class CascadeView extends AbstractCascadeSelectionView implements ICascadeView, IView {
 
-  private JPanel content = new JPanel(new GridDialogLayout(2, false));
-  private final JPanel rulesPanel = new JPanel();
-  private IChangeableJComboBox<IExaltedRuleSet> rulesComboBox;
+  private JPanel content = new JPanel(new GridDialogLayout(1, false));
 
   public CascadeView(ISvgTreeViewProperties treeProperties) {
     super(treeProperties);
@@ -31,31 +26,12 @@ public class CascadeView extends AbstractCascadeSelectionView implements ICascad
     return content;
   }
 
+  @Override
   public void initGui() {
     content.add(getSelectionComponent());
-    content.add(rulesPanel, GridDialogLayoutData.RIGHT);
     JComponent treeViewComponent = getCharmTreeView().getComponent();
     treeViewComponent.setBackground(Color.WHITE);
-    content.add(treeViewComponent, GridDialogLayoutDataFactory.createHorizontalSpanData(2, GridDialogLayoutData.FILL_BOTH));
-  }
-
-
-  @Override
-  public void addRuleSetComponent(IExaltedRuleSet[] elements, ListCellRenderer renderer, String borderTitle) {
-    rulesComboBox = new ChangeableJComboBox<IExaltedRuleSet>(elements, false);
-    rulesComboBox.setRenderer(renderer); //$NON-NLS-1$
-    rulesPanel.add(rulesComboBox.getComponent());
-    rulesPanel.setBorder(new TitledBorder(borderTitle));
-  }
-
-  @Override
-  public void addRuleChangeListener(IObjectValueChangedListener<IExaltedRuleSet> rulesChangedListener) {
-    rulesComboBox.addObjectSelectionChangedListener(rulesChangedListener);
-  }
-
-  @Override
-  public void selectRules(IExaltedRuleSet ruleSet) {
-    rulesComboBox.setSelectedObject(ruleSet);
+    content.add(treeViewComponent, createHorizontalSpanData(1, GridDialogLayoutData.FILL_BOTH));
   }
 
   @Override

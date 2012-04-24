@@ -4,9 +4,8 @@ import com.itextpdf.text.Chunk;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Phrase;
 import net.sf.anathema.character.generic.character.IGenericCharacter;
-import net.sf.anathema.character.generic.rules.IExaltedEdition;
 import net.sf.anathema.character.generic.type.ICharacterType;
-import net.sf.anathema.character.reporting.pdf.content.ReportContent;
+import net.sf.anathema.character.reporting.pdf.content.ReportSession;
 import net.sf.anathema.character.reporting.pdf.rendering.extent.Bounds;
 import net.sf.anathema.character.reporting.pdf.rendering.extent.Position;
 import net.sf.anathema.character.reporting.pdf.rendering.general.HorizontalLineEncoder;
@@ -16,6 +15,8 @@ import net.sf.anathema.character.reporting.pdf.rendering.general.table.ITableEnc
 import net.sf.anathema.character.reporting.pdf.rendering.graphics.SheetGraphics;
 import net.sf.anathema.character.reporting.pdf.rendering.page.IVoidStateFormatConstants;
 import net.sf.anathema.lib.resources.IResources;
+
+import static net.sf.anathema.character.impl.persistence.SecondEdition.SECOND_EDITION;
 
 public class GenericAnimaEncoder implements ContentEncoder {
 
@@ -32,13 +33,13 @@ public class GenericAnimaEncoder implements ContentEncoder {
   }
 
   @Override
-  public void encode(SheetGraphics graphics, ReportContent reportContent, Bounds bounds) throws DocumentException {
+  public void encode(SheetGraphics graphics, ReportSession reportSession, Bounds bounds) throws DocumentException {
     float powerHeight = bounds.getHeight() - AnimaTableEncoder.TABLE_HEIGHT - IVoidStateFormatConstants.TEXT_PADDING / 2f;
     Bounds animaPowerBounds = new Bounds(bounds.getMinX(), bounds.getMaxY() - powerHeight, bounds.getWidth(), powerHeight);
-    encodeAnimaPowers(graphics, reportContent.getCharacter(), animaPowerBounds);
+    encodeAnimaPowers(graphics, reportSession.getCharacter(), animaPowerBounds);
 
     Bounds animaTableBounds = new Bounds(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), AnimaTableEncoder.TABLE_HEIGHT);
-    tableEncoder.encodeTable(graphics, reportContent, animaTableBounds);
+    tableEncoder.encodeTable(graphics, reportSession, animaTableBounds);
   }
 
   private void encodeAnimaPowers(SheetGraphics graphics, IGenericCharacter character, Bounds bounds) throws DocumentException {
@@ -46,9 +47,8 @@ public class GenericAnimaEncoder implements ContentEncoder {
     // Add standard powers for character type
     Chunk symbolChunk = graphics.createSymbolChunk();
     ICharacterType characterType = character.getTemplate().getTemplateType().getCharacterType();
-    IExaltedEdition edition = character.getRules().getEdition();
-    ListUtils.addBulletedListText(resources, symbolChunk, edition, "Sheet.AnimaPower." + characterType.getId(), phrase, false);  //$NON-NLS-1$
-    String casteResourceKey = "Sheet.AnimaPower." + character.getCasteType().getId() + "." + edition.getId(); //$NON-NLS-1$ //$NON-NLS-2$
+    ListUtils.addBulletedListText(resources, symbolChunk, "Sheet.AnimaPower." + characterType.getId(), phrase, false);  //$NON-NLS-1$
+    String casteResourceKey = "Sheet.AnimaPower." + character.getCasteType().getId() + "." + SECOND_EDITION; //$NON-NLS-1$ //$NON-NLS-2$
     if (resources.supportsKey(casteResourceKey)) {
       phrase.add(symbolChunk);
       phrase.add(resources.getString(casteResourceKey) + "\n"); //$NON-NLS-1$
@@ -61,12 +61,12 @@ public class GenericAnimaEncoder implements ContentEncoder {
   }
 
   @Override
-  public boolean hasContent(ReportContent content) {
+  public boolean hasContent(ReportSession session) {
     return true;
   }
 
   @Override
-  public String getHeader(ReportContent content) {
+  public String getHeader(ReportSession session) {
     return resources.getString("Sheet.Header.Anima");
   }
 }

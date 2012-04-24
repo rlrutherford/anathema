@@ -6,7 +6,6 @@ import net.sf.anathema.character.generic.dummy.template.DummyCharmTemplate;
 import net.sf.anathema.character.generic.framework.additionaltemplate.model.ICharmLearnStrategy;
 import net.sf.anathema.character.generic.impl.magic.charm.CharmGroup;
 import net.sf.anathema.character.generic.impl.magic.charm.CharmTree;
-import net.sf.anathema.character.generic.impl.rules.ExaltedRuleSet;
 import net.sf.anathema.character.generic.magic.ICharm;
 import net.sf.anathema.character.generic.magic.charms.ICharmTree;
 import net.sf.anathema.character.generic.traits.IGenericTrait;
@@ -32,11 +31,11 @@ public class LearningCharmGroupTest {
   }
 
   private LearningCharmGroup createSolarGroup(IExtendedCharmLearnableArbitrator learnableArbitrator, String groupId) {
-    ICharmLearnStrategy learnSrategy = new CreationCharmLearnStrategy();
-    CharmTree charmTree = new CharmTree(new DummyCharmTemplate(), ExaltedRuleSet.CoreRules);
-    CharmGroup group = new CharmGroup(CharacterType.SOLAR, groupId, charmTree.getAllCharmsForGroup(groupId).toArray(
-      new ICharm[0]), false);
-    return new LearningCharmGroup(learnSrategy, group, learnableArbitrator, container);
+    ICharmLearnStrategy learnStrategy = new CreationCharmLearnStrategy();
+    CharmTree charmTree = new CharmTree(new DummyCharmTemplate());
+    CharmGroup group = new CharmGroup(CharacterType.SOLAR, groupId,
+            charmTree.getAllCharmsForGroup(groupId).toArray(new ICharm[charmTree.getAllCharmsForGroup(groupId).size()]), false);
+    return new LearningCharmGroup(learnStrategy, group, learnableArbitrator, container);
   }
 
   private LearningCharmGroup createSolarGroup(
@@ -44,8 +43,8 @@ public class LearningCharmGroupTest {
     ICharmTree charmTree,
     String groupId) {
     ICharmLearnStrategy learnSrategy = new CreationCharmLearnStrategy();
-    CharmGroup group = new CharmGroup(CharacterType.SOLAR, groupId, charmTree.getAllCharmsForGroup(groupId).toArray(
-      new ICharm[0]), false);
+    CharmGroup group = new CharmGroup(CharacterType.SOLAR, groupId,
+            charmTree.getAllCharmsForGroup(groupId).toArray(new ICharm[charmTree.getAllCharmsForGroup(groupId).size()]), false);
     return new LearningCharmGroup(learnSrategy, group, learnableArbitrator, container);
   }
 

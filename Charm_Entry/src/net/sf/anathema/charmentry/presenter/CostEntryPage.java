@@ -2,7 +2,6 @@ package net.sf.anathema.charmentry.presenter;
 
 import net.disy.commons.core.message.IBasicMessage;
 import net.disy.commons.swing.dialog.core.IPageContent;
-import net.sf.anathema.character.generic.impl.rules.ExaltedEdition;
 import net.sf.anathema.charmentry.module.ICharmEntryViewFactory;
 import net.sf.anathema.charmentry.presenter.model.ICharmEntryModel;
 import net.sf.anathema.charmentry.presenter.model.ICostEntryModel;
@@ -32,17 +31,13 @@ public class CostEntryPage extends AbstractAnathemaWizardPage {
 
   @Override
   protected void addFollowUpPages(CheckInputListener inputListener) {
-    addFollowupPage(new PrerequisiteCharmsPage(resources, model, viewFactory), inputListener, new ICondition() {
-      public boolean isFulfilled() {
-        return getPageModel().getEdition() == ExaltedEdition.FirstEdition;
-      }
-    });
     addFollowupPage(
         new SecondEditionPrerequisiteCharmsPage(resources, model, viewFactory),
         inputListener,
         new ICondition() {
+          @Override
           public boolean isFulfilled() {
-            return getPageModel().getEdition() == ExaltedEdition.SecondEdition;
+            return true;
           }
         });
   }
@@ -60,11 +55,13 @@ public class CostEntryPage extends AbstractAnathemaWizardPage {
         properties.getCostLabel(),
         properties.getTextLabel());
     essenceView.getValueView().addTextChangedListener(new IObjectValueChangedListener<String>() {
+      @Override
       public void valueChanged(String newValue) {
         getPageModel().setEssenceCostValue(newValue);
       }
     });
     essenceView.getTextView().addTextChangedListener(new IObjectValueChangedListener<String>() {
+      @Override
       public void valueChanged(String newValue) {
         getPageModel().setEssenceCostText(newValue);
       }
@@ -74,11 +71,13 @@ public class CostEntryPage extends AbstractAnathemaWizardPage {
         properties.getCostLabel(),
         properties.getTextLabel());
     willpowerView.getValueView().addTextChangedListener(new IObjectValueChangedListener<String>() {
+      @Override
       public void valueChanged(String newValue) {
         getPageModel().setWillpowerCostValue(newValue);
       }
     });
     willpowerView.getTextView().addTextChangedListener(new IObjectValueChangedListener<String>() {
+      @Override
       public void valueChanged(String newValue) {
         getPageModel().setWillpowerCostText(newValue);
       }
@@ -88,11 +87,13 @@ public class CostEntryPage extends AbstractAnathemaWizardPage {
         properties.getCostLabel(),
         properties.getTextLabel());
     healthView.getValueView().addTextChangedListener(new IObjectValueChangedListener<String>() {
+      @Override
       public void valueChanged(String newValue) {
         getPageModel().setHealthCostValue(newValue);
       }
     });
     healthView.getTextView().addTextChangedListener(new IObjectValueChangedListener<String>() {
+      @Override
       public void valueChanged(String newValue) {
         getPageModel().setHealthCostText(newValue);
       }
@@ -102,11 +103,13 @@ public class CostEntryPage extends AbstractAnathemaWizardPage {
         properties.getCostLabel(),
         properties.getTextLabel());
     experienceView.getValueView().addTextChangedListener(new IObjectValueChangedListener<String>() {
+      @Override
       public void valueChanged(String newValue) {
         getPageModel().setXpCostValue(newValue);
       }
     });
     experienceView.getTextView().addTextChangedListener(new IObjectValueChangedListener<String>() {
+      @Override
       public void valueChanged(String newValue) {
         getPageModel().setXpCostText(newValue);
       }
@@ -117,18 +120,22 @@ public class CostEntryPage extends AbstractAnathemaWizardPage {
     return model.getCostEntryModel();
   }
 
+  @Override
   public boolean canFinish() {
     return true;
   }
 
+  @Override
   public String getDescription() {
     return properties.getCostTitle();
   }
 
+  @Override
   public IBasicMessage getMessage() {
     return properties.getCostMessage();
   }
 
+  @Override
   public IPageContent getPageContent() {
     return view;
   }

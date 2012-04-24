@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 import net.disy.commons.core.model.BooleanModel;
 import net.sf.anathema.character.equipment.character.EquipmentObjectPresenter;
 import net.sf.anathema.character.equipment.character.IEquipmentCharacterDataProvider;
+import net.sf.anathema.character.equipment.character.IEquipmentCharacterOptionProvider;
 import net.sf.anathema.character.equipment.character.IEquipmentStringBuilder;
 import net.sf.anathema.character.equipment.character.model.IEquipmentItem;
 import net.sf.anathema.character.equipment.character.view.IEquipmentObjectView;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.when;
 public class EquipmentItemPresenterTest extends TestCase {
 
   private IEquipmentStringBuilder equipmentStringBuilder = new IEquipmentStringBuilder() {
+    @Override
     public String createString(IEquipmentItem item, IEquipmentStats equipment) {
       if (equipment.getName().getId().equals("Sword")) { //$NON-NLS-1$
         return "Passt!"; //$NON-NLS-1$
@@ -41,8 +43,10 @@ public class EquipmentItemPresenterTest extends TestCase {
 
   private void initPresentation(IEquipmentItem model, IEquipmentObjectView view) {
     IEquipmentCharacterDataProvider dataProvider = mock(IEquipmentCharacterDataProvider.class);
+    IEquipmentCharacterOptionProvider optionProvider = mock(IEquipmentCharacterOptionProvider.class);
     when(dataProvider.getSpecialties(isA(ITraitType.class))).thenReturn(new INamedGenericTrait[0]);
-    new EquipmentObjectPresenter(model, view, equipmentStringBuilder, dataProvider, new AnathemaResources()).initPresentation();
+    new EquipmentObjectPresenter(model, view, equipmentStringBuilder, dataProvider, optionProvider, 
+            new AnathemaResources()).initPresentation();
   }
 
   public void testEquipmentWithoutStats() throws Exception {
@@ -60,7 +64,7 @@ public class EquipmentItemPresenterTest extends TestCase {
     BooleanModel isPrintSelectedModel = new BooleanModel();
     when(view.addStats("Passt!")).thenReturn(isPrintSelectedModel); //$NON-NLS-1$
     DummyEquipmentObject model = new DummyEquipmentObject("Title", null); //$NON-NLS-1$
-    model.addEquipment(new DemoMeleeWeapon(new Identificate("Sword"), 5, 2, 7, 1, HealthType.Lethal, -1, 2)); //$NON-NLS-1$
+    model.addEquipment(new DemoMeleeWeapon(new Identificate("Sword"), 5, 2, 7, 1, HealthType.Lethal, -1, 0, 2)); //$NON-NLS-1$
     initPresentation(model, view);
   }
 
@@ -70,7 +74,7 @@ public class EquipmentItemPresenterTest extends TestCase {
     BooleanModel isPrintSelectedModel = new BooleanModel();
     when(view.addStats("Passt!")).thenReturn(isPrintSelectedModel); //$NON-NLS-1$
     DummyEquipmentObject model = new DummyEquipmentObject("Title", null); //$NON-NLS-1$
-    model.addEquipment(new DemoMeleeWeapon(new Identificate("Sword"), 5, 2, 7, 1, HealthType.Lethal, -1, 2)); //$NON-NLS-1$
+    model.addEquipment(new DemoMeleeWeapon(new Identificate("Sword"), 5, 2, 7, 1, HealthType.Lethal, -1, 0, 2)); //$NON-NLS-1$
     initPresentation(model, view);
     assertFalse(isPrintSelectedModel.getValue());
   }

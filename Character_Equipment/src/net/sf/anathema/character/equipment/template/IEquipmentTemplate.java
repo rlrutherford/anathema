@@ -1,19 +1,21 @@
 package net.sf.anathema.character.equipment.template;
 
+import net.sf.anathema.character.equipment.ItemCost;
 import net.sf.anathema.character.equipment.MagicalMaterial;
 import net.sf.anathema.character.equipment.MaterialComposition;
 import net.sf.anathema.character.generic.equipment.weapon.IEquipmentStats;
-import net.sf.anathema.character.generic.rules.IExaltedRuleSet;
 
 public interface IEquipmentTemplate {
 
-  public String getName();
+  String getName();
 
-  public String getDescription();
+  String getDescription();
 
-  public IEquipmentStats[] getStats(IExaltedRuleSet ruleSet);
+  IEquipmentStats[] getStats();
 
-  public MaterialComposition getComposition();
+  MaterialComposition getComposition();
 
-  public MagicalMaterial getMaterial();
+  MagicalMaterial getMaterial();
+  
+  ItemCost getCost();
 }

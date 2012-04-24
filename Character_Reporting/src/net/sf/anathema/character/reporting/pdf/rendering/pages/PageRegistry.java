@@ -1,10 +1,10 @@
 package net.sf.anathema.character.reporting.pdf.rendering.pages;
 
 import net.sf.anathema.character.reporting.pdf.content.BasicContent;
-import net.sf.anathema.character.reporting.pdf.content.ReportContent;
+import net.sf.anathema.character.reporting.pdf.content.ReportSession;
 import net.sf.anathema.character.reporting.pdf.rendering.boxes.EncoderRegistry;
-import net.sf.anathema.character.reporting.pdf.rendering.page.PageConfiguration;
 import net.sf.anathema.character.reporting.pdf.rendering.page.PageEncoder;
+import net.sf.anathema.framework.reporting.pdf.PageSize;
 import net.sf.anathema.initialization.InitializationException;
 import net.sf.anathema.initialization.Instantiater;
 import net.sf.anathema.lib.logging.Logger;
@@ -21,14 +21,14 @@ public class PageRegistry {
     this.instantiater = instantiater;
   }
 
-  public PageEncoder[] createEncoders(PageConfiguration configuration, EncoderRegistry encoderRegistry, IResources resources,
-                                      ReportContent content) {
-    return findFactory(content).create(encoderRegistry, resources, configuration);
+  public PageEncoder[] createEncoders(PageSize pageSize, EncoderRegistry encoderRegistry, IResources resources,
+          ReportSession session) {
+    return findFactory(session).create(encoderRegistry, resources, pageSize);
   }
 
-  private PageFactory findFactory(ReportContent content) {
+  private PageFactory findFactory(ReportSession session) {
     for (PageFactory factory : createPageFactories()) {
-      BasicContent basicContent = createBasicContent(content);
+      BasicContent basicContent = createBasicContent(session);
       if (factory.supports(basicContent)) {
         return factory;
       }
@@ -45,7 +45,7 @@ public class PageRegistry {
     }
   }
 
-  private BasicContent createBasicContent(ReportContent content) {
-    return content.createSubContent(BasicContent.class);
+  private BasicContent createBasicContent(ReportSession session) {
+    return session.createContent(BasicContent.class);
   }
 }

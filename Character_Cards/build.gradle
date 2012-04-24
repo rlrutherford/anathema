@@ -1,0 +1,17 @@
+dependencies {
+  compile project(':Platform')
+  compile project(':Character_Generic')
+  compile project(':Character_Generic_Impl')
+  compile project(':Character_Main')
+  compile project(':Character_Main_Impl')
+  compile project(':Character_Equipment')
+  compile project(':Character_Reporting')
+}
+
+sourceSets {
+  main {
+    resources {
+      srcDir 'resources'
+    }
+  }
+}

@@ -6,7 +6,6 @@ import net.sf.anathema.character.generic.dummy.magic.DummyMartialArtsRules;
 import net.sf.anathema.character.generic.dummy.template.DummyXmlTemplateRegistry;
 import net.sf.anathema.character.generic.framework.xml.magic.GenericMagicTemplate;
 import net.sf.anathema.character.generic.framework.xml.magic.GenericMagicTemplateParser;
-import net.sf.anathema.character.generic.impl.rules.ExaltedRuleSet;
 import net.sf.anathema.character.generic.impl.template.magic.DefaultMartialArtsRules;
 import net.sf.anathema.character.generic.magic.charms.MartialArtsLevel;
 import net.sf.anathema.character.generic.magic.spells.CircleType;
@@ -33,13 +32,12 @@ public class MagicTemplateParserTest {
     + "<martialArts level=\"Mortal\"/></charmTemplate>" //$NON-NLS-1$
     + "<spellTemplate maximumSorceryCircle=\"None\" maximumNecromancyCircle=\"None\"/>" //$NON-NLS-1$
     + "</magicTemplate>"; //$NON-NLS-1$
-  private DummyXmlTemplateRegistry<GenericMagicTemplate> templateRegistry;
   private GenericMagicTemplateParser parser;
 
   @Before
   public void setUp() throws Exception {
-    templateRegistry = new DummyXmlTemplateRegistry<GenericMagicTemplate>();
-    parser = new GenericMagicTemplateParser(templateRegistry, null);
+    DummyXmlTemplateRegistry<GenericMagicTemplate> templateRegistry = new DummyXmlTemplateRegistry<GenericMagicTemplate>();
+    parser = new GenericMagicTemplateParser(templateRegistry, null, null);
   }
 
   @Test
@@ -96,7 +94,7 @@ public class MagicTemplateParserTest {
     GenericMagicTemplate template = parser.parseTemplate(templateElement);
     ICharmTemplate charmTemplate = template.getCharmTemplate();
     assertEquals(MartialArtsLevel.Mortal, charmTemplate.getMartialArtsRules().getStandardLevel());
-    assertFalse(charmTemplate.canLearnCharms(ExaltedRuleSet.CoreRules));
+    assertFalse(charmTemplate.canLearnCharms());
   }
 
   @Test

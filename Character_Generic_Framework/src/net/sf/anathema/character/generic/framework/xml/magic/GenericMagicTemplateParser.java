@@ -3,12 +3,12 @@ package net.sf.anathema.character.generic.framework.xml.magic;
 import net.sf.anathema.character.generic.framework.xml.core.AbstractXmlTemplateParser;
 import net.sf.anathema.character.generic.framework.xml.registry.IXmlTemplateRegistry;
 import net.sf.anathema.character.generic.impl.magic.UniqueCharmType;
-import net.sf.anathema.character.generic.impl.magic.persistence.CharmCache;
+import net.sf.anathema.character.generic.impl.magic.persistence.ICharmCache;
 import net.sf.anathema.character.generic.impl.template.magic.CharmSet;
 import net.sf.anathema.character.generic.impl.template.magic.CharmTemplate;
 import net.sf.anathema.character.generic.impl.template.magic.CustomizableFreePicksPredicate;
 import net.sf.anathema.character.generic.impl.template.magic.DefaultMartialArtsRules;
-import net.sf.anathema.character.generic.impl.template.magic.ICharmSet;
+import net.sf.anathema.character.generic.template.magic.ICharmSet;
 import net.sf.anathema.character.generic.impl.template.magic.NullCharmSet;
 import net.sf.anathema.character.generic.impl.template.magic.SpellMagicTemplate;
 import net.sf.anathema.character.generic.magic.charms.MartialArtsLevel;
@@ -53,11 +53,14 @@ public class GenericMagicTemplateParser extends AbstractXmlTemplateParser<Generi
   private static final String TAG_GROUP_EXCEPTION = "groupException"; //$NON-NLS-1$
   private static final String ATTRIB_SUB_TEMPLATE = "subTemplate";
   private final ICharacterTemplate hostTemplate;
+  private final ICharmCache cache;
 
   public GenericMagicTemplateParser(IXmlTemplateRegistry<GenericMagicTemplate> templateRegistry,
-                                    ICharacterTemplate template) {
+                                    ICharacterTemplate template,
+                                    ICharmCache cache) {
     super(templateRegistry);
     this.hostTemplate = template;
+    this.cache = cache;
   }
 
   @Override
@@ -140,12 +143,6 @@ public class GenericMagicTemplateParser extends AbstractXmlTemplateParser<Generi
     }
     String charmType = ElementUtilities.getRequiredAttrib(charmTemplateElement, ATTRIB_CHARM_TYPE);
     ICharmSet charmSet;
-    if (charmType.equals(VALUE_NONE)) {
-      charmSet = new NullCharmSet();
-    } else {
-      charmSet = CharmSet.createRegularCharmSet(CharmCache.getInstance(), CharacterType.getById(charmType),
-              hostTemplate.getEdition());
-    }
     IUniqueCharmType uniqueCharms = null;
     for (Object node : charmTemplateElement.elements(TAG_UNIQUE_CHARM_TYPE)) {
       Element specialNode = (Element) node;
@@ -154,6 +151,11 @@ public class GenericMagicTemplateParser extends AbstractXmlTemplateParser<Generi
       String specialKeyword = specialNode.attributeValue(ATTRIB_KEYWORD);
       uniqueCharms = new UniqueCharmType(specialType, specialLabel, specialKeyword);
     }
+    if (charmType.equals(VALUE_NONE)) {
+        charmSet = new NullCharmSet();
+      } else {
+        charmSet = CharmSet.createRegularCharmSet(cache, CharacterType.getById(charmType), uniqueCharms);
+      }
     CharmTemplate charmTemplate = new CharmTemplate(createMartialArtsRules(charmTemplateElement), charmSet,
             uniqueCharms);
     setAlienAllowedCastes(charmTemplate, charmTemplateElement);

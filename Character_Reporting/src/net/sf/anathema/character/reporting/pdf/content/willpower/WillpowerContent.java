@@ -1,7 +1,6 @@
 package net.sf.anathema.character.reporting.pdf.content.willpower;
 
 import net.sf.anathema.character.generic.character.IGenericCharacter;
-import net.sf.anathema.character.generic.rules.IExaltedEdition;
 import net.sf.anathema.character.generic.traits.types.OtherTraitType;
 import net.sf.anathema.character.reporting.pdf.content.AbstractSubBoxContent;
 import net.sf.anathema.character.reporting.pdf.content.general.BulletList;
@@ -26,10 +25,6 @@ public class WillpowerContent extends AbstractSubBoxContent {
     return character.getTraitCollection().getTrait(OtherTraitType.Willpower).getCurrentValue();
   }
 
-  public IExaltedEdition getEdition() {
-    return character.getRules().getEdition();
-  }
-
   public String getWillpowerSpendingNote() {
     return getString("Sheet.WillpowerSpendingNote");
   }
@@ -43,8 +38,8 @@ public class WillpowerContent extends AbstractSubBoxContent {
   }
 
   private BulletList createBulletList(String resourceBase) {
-    String header = ListUtils.getRequiredString(getResources(), getEdition(), resourceBase);
-    String[] items = ListUtils.getAvailableLineItems(getResources(), getEdition(), resourceBase);
+    String header = ListUtils.getRequiredString(getResources(), resourceBase);
+    String[] items = ListUtils.getAvailableLineItems(getResources(), resourceBase);
     return new BulletList(header, items);
   }
 }

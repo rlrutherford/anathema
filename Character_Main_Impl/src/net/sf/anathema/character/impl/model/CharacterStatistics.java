@@ -5,6 +5,7 @@ import net.sf.anathema.character.generic.framework.ICharacterGenerics;
 import net.sf.anathema.character.generic.framework.additionaltemplate.model.ICharacterModelContext;
 import net.sf.anathema.character.generic.impl.magic.SpellException;
 import net.sf.anathema.character.generic.impl.magic.persistence.ISpellCache;
+import net.sf.anathema.character.generic.impl.magic.persistence.IThaumaturgyCache;
 import net.sf.anathema.character.generic.template.ICharacterTemplate;
 import net.sf.anathema.character.generic.traits.IGenericTrait;
 import net.sf.anathema.character.generic.traits.ITraitType;
@@ -87,7 +88,7 @@ public class CharacterStatistics implements ICharacterStatistics {
     combos.addComboConfigurationListener(new CharacterChangeComboListener(context.getCharacterListening()));
     this.spells = new SpellConfiguration(charms, context.getSpellLearnStrategy(), template,
     		generics.getDataSet(ISpellCache.class));
-    this.thaumaturgy = new ThaumaturgyConfiguration();
+    this.thaumaturgy = new ThaumaturgyConfiguration(generics.getDataSet(IThaumaturgyCache.class));
     this.spells.addChangeListener(new IChangeListener() {
       @Override
       public void changeOccurred() {

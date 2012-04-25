@@ -54,6 +54,9 @@ public class ThaumaturgyCompiler implements IExtensibleDataSetCompiler{
 		}
 		for (IIdentificate art : cache.getArts()) {
 			for (ThaumaturgyRank rank : ThaumaturgyRank.values()) {
+				if (rank == ThaumaturgyRank.Initiate) {
+					continue;
+				}
 				cache.addThaumaturgy(new ThaumaturgyDegree(art, rank));
 			}
 		}

@@ -18,6 +18,7 @@ import net.sf.anathema.character.presenter.magic.detail.MagicDetailPresenterFact
 import net.sf.anathema.character.presenter.magic.detail.NullMagicDetailPresenter;
 import net.sf.anathema.character.presenter.magic.detail.RegisteredMagicDetailPresenterFactory;
 import net.sf.anathema.character.presenter.magic.spells.SpellContentPresenter;
+import net.sf.anathema.character.presenter.magic.thaumaturgy.ThaumaturgyContentPresenter;
 import net.sf.anathema.character.view.magic.IMagicViewFactory;
 import net.sf.anathema.charmtree.presenter.view.CharmDisplayPropertiesMap;
 import net.sf.anathema.framework.IAnathemaModel;
@@ -64,6 +65,8 @@ public class MagicPresenter implements IContentPresenter {
       subPresenters
               .add(SpellContentPresenter.ForNecromancy(createMagicDetailPresenter(), statistics, resources, factory));
     }
+    subPresenters
+                .add(ThaumaturgyContentPresenter.create(createMagicDetailPresenter(), statistics, resources, factory));
   }
 
   private ComboConfigurationModel createComboModel(ICharacterStatistics statistics) {

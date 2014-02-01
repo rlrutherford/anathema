@@ -18,7 +18,7 @@ public class CategorizedNameGeneratorView implements ICategorizedNameGeneratorVi
     content = new JPanel(new MigLayout(new LC().wrapAfter(columnCount)));
     comboBoxes = new JComboBox[columnCount];
     for (int index = 0; index < comboBoxes.length; index++) {
-      comboBoxes[index] = new JComboBox(categories);
+      comboBoxes[index] = new JComboBox<>(categories);
       comboBoxes[index].setRenderer(renderer);
       content.add(comboBoxes[index]);
     }

@@ -17,7 +17,7 @@ public class SimpleMagicEncoder extends AbstractContentEncoder<AllMagicContent> 
   public void encode(SheetGraphics graphics, ReportSession reportSession, Bounds bounds) throws DocumentException {
     float top = bounds.getMinY();
     Bounds remainingBounds = new Bounds(bounds.getMinX(), top, bounds.getWidth(), bounds.getMaxY() - top);
-    MagicTableEncoder tableEncoder = new MagicTableEncoder(false, AllMagicContent.class);
+    MagicTableEncoder<AllMagicContent> tableEncoder = new MagicTableEncoder(false, AllMagicContent.class);
     tableEncoder.encodeTable(graphics, reportSession, remainingBounds);
   }
 }

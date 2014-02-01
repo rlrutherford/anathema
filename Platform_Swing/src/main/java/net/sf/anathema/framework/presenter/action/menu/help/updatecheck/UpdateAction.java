@@ -35,7 +35,7 @@ public class UpdateAction implements Command {
     Version installedVersion = updateSystem.getInstalledVersion();
     UpdateDialogPage page = new UpdateDialogPage(resources, currentVersion);
     prepareForInstallation(page, updater);
-    DefaultDialogConfiguration dialogConfiguration = DefaultDialogConfiguration.createWithOkOnly(page);
+    DefaultDialogConfiguration<UpdateDialogPage> dialogConfiguration = DefaultDialogConfiguration.createWithOkOnly(page);
     UserDialog dialog = new UserDialog(SwingApplicationFrame.getParentComponent(), dialogConfiguration);
     updateSystem.reportAllProgressTo(new VersionDiscoveryReport(page, installedVersion));
     updateSystem.reportAllProgressTo(new InstallationProgressReport(page));

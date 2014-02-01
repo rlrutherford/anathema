@@ -9,14 +9,12 @@ import net.sf.anathema.hero.spiritual.SpiritualTraitModel;
 import net.sf.anathema.hero.template.TemplateFactory;
 import net.sf.anathema.hero.traits.TraitModel;
 
-@SuppressWarnings("UnusedDeclaration")
 public class LanguagesModelFactory extends SimpleModelTreeEntry implements HeroModelFactory {
 
   public LanguagesModelFactory() {
     super(LanguagesModel.ID, AbilitiesModel.ID, SpiritualTraitModel.ID, TraitModel.ID, ExperienceModel.ID, HeroConcept.ID);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public LanguagesModel create(TemplateFactory templateFactory, String templateId) {
     return new LanguagesModelImpl();

@@ -11,7 +11,7 @@ public class MultiEntryMap<K, V> {
 
   private final Map<K, List<V>> map = new HashMap<>();
 
-  public void add(K key, V... value) {
+    public void add(K key, V... value) {
     List<V> list;
     if (!containsKey(key)) {
       list = new ArrayList<>();
@@ -20,10 +20,9 @@ public class MultiEntryMap<K, V> {
     else {
       list = getList(key);
     }
-    Collections.addAll(list, value);
+     Collections.addAll(list, value);
   }
 
-  @SuppressWarnings("unchecked")
   public void replace(K key, V oldValue, V newValue) {
     if (!containsKey(key)) {
       add(key, newValue);
